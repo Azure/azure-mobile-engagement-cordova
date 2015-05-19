@@ -1,19 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
+/*
  * Copyright (c) Microsoft Corporation.  All rights reserved.
- * Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
+ * Licensed under the MIT license. See License.txt in the project root for license information.
+ */
  -->
 
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
-        id="cordova-plugin-ms-azme" version="1.0.4">
+        id="cordova-plugin-ms-azme" version="1.0.0">
 
     <name>Cordova plugin for AZME</name>
     <description>Cordova plugin for Azure Mobile Engagement</description>
     <keywords>cordova,azme</keywords>
 
     <author>Olivier Goguel</author>
-    <license>Apache 2.0</license>
+    <license>MIT</license>
 
     <js-module src="www/AZME.js" name="AZME">
            <clobbers target="AZME" />

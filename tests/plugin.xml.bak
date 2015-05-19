@@ -6,7 +6,7 @@
  -->
  
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
-     id="cordova-plugin-ms-azme-tests" version="1.0.4">
+     id="cordova-plugin-ms-azme-tests" version="1.0.0">
     <name>Cordova plugin for AZME Tests</name>
     <js-module src="tests.js" >
     </js-module>

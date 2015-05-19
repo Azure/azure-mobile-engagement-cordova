@@ -1,6 +1,6 @@
 /*
  * Copyright (c) Microsoft Corporation.  All rights reserved.
- * Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
+ * Licensed under the MIT license. See License.txt in the project root for license information.
  */
 
 package com.del7a.azme;
@@ -117,7 +117,7 @@ public class AZME extends CordovaPlugin {
 	        	String response = "{";
 	            response = "{"+
 		            "\"pluginVersion\": \""+pluginVersion+"\","+
-		            "\"AZMEVersion\": \"2.4.1\","+
+		            "\"AZMEVersion\": \"3.0.0\","+
 		            "\"deviceId\": \""+deviceId+"\""+
 	            "}";
 	            try {

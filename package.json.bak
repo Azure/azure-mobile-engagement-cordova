@@ -1,6 +1,6 @@
 {
   "name": "cordova-plugin-ms-azme",
-  "version": "1.0.4",
+  "version": "1.0.0",
   "description": "Cordova plugin for Azure Mobile Engagement",
   "cordova": {
     "id": "cordova-plugin-ms-azme",

@@ -22,21 +22,21 @@ cordova plugin add cordova-plugin-ms-azme --variable KEY=<value>
 ```
 #### Generic Variables
 
-- `$AZME_ENABLE_LOG` : `true`|`false`, enable both plugin and AZME native logs
-- `$AZME_REDIRECT_URL` : the url schemes of your application when using redirect actions in your campaign. Must be the url prefix without :// (ex: `myapp` to handle urls such as `myapp://shop`)
+- `AZME_ENABLE_LOG` : `true`|`false`, enable both plugin and AZME native logs
+- `AZME_REDIRECT_URL` : the url schemes of your application when using redirect actions in your campaign. Must be the url prefix without :// (ex: `myapp` to handle urls such as `myapp://shop`)
 
 #### iOS Variables
-- `$AZME_IOS_APPID` : the AZME application ID of your iOS application
-- `$AZME_IOS_SDKKEY` : the sdk key 
-- `$AZME_IOS_COLLECTION` : the collection
-- `$AZME_IOS_REACH_ICON` : the icon used for reach notification : must be the name of the resource with its extension (ex: `icon.png`)
+- `AZME_IOS_APPID` : the AZME application ID of your iOS application
+- `AZME_IOS_SDKKEY` : the sdk key 
+- `AZME_IOS_COLLECTION` : the collection
+- `AZME_IOS_REACH_ICON` : the icon used for reach notification : must be the name of the resource with its extension (ex: `icon.png`)
 
 #### Android Variables
-- `$AZME_ANDROID_APPID` : the AZME application ID of your Android application
-- `$AZME_ANDROID_SDKKEY` : the sdk key 
-- `$AZME_ANDROID_COLLECTION` : the collextion
-- `$AZME_ANDROID_REACH_ICON` : the icon used for reach notification : must be the name of the resource without any extension, nor drawable prefix  (ex: `icon`)
-- `$AZME_GOOGLE_PROJECT_NUMBER` : the project number used as the GCM (Google Cloud Messaging) sender ID
+- `AZME_ANDROID_APPID` : the AZME application ID of your Android application
+- `AZME_ANDROID_SDKKEY` : the sdk key 
+- `AZME_ANDROID_COLLECTION` : the collextion
+- `AZME_ANDROID_REACH_ICON` : the icon used for reach notification : must be the name of the resource without any extension, nor drawable prefix  (ex: `icon`)
+- `AZME_GOOGLE_PROJECT_NUMBER` : the project number used as the GCM (Google Cloud Messaging) sender ID
  
 *The AppId, SDKKey and Collection can easily be retrieved from the connection string `Endpoint={YOUR_APP_COLLECTION.DOMAIN};SdkKey={YOUR_SDK_KEY};AppId={YOUR_APPID}`*
 

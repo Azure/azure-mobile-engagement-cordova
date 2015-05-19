@@ -11,7 +11,7 @@ cordova platform add ios
 Retrieve your credentials for the AZURE Portal to configure the AZME plugin
 ``````sh
 cordova plugin add cordova-plugin-ms-azme --variable AZME_IOS_COLLECTION=<yourCollection> --variable AZME_IOS_SDKKEY=<yourSDKKey> --variable AZME_IOS_APPID=<yourAppId> --variable AZME_IOS_REACH_ICON=Icon 
---variable AZME_REDIRECT_URL=myRedirect --variable AZME_ENABLE_LOG=true
+--variable AZME_REDIRECT_URL=myapp --variable AZME_ENABLE_LOG=true
 ```
 #### Send a screen to the AZME portal
 Edit `www/js/index.js`to add the call to AZME to declare a new activity once the ``deviceReady``event is received.
@@ -50,7 +50,7 @@ cordova run ios
 ```
 ... a popup should appear to the user to allow notifications
 
-You can then create a Reach campaign with an Action URL ``myRedirect://test``
+You can then create a Reach campaign with an Action URL ``myapp://test``
 
 Activating the campaign shoud trigger the webview, and when the action button is being pressed, the alert box in the handler should be triggered 
 
