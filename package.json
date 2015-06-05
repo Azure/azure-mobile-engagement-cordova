@@ -21,5 +21,5 @@
     "cordova-ios"
   ],
   "author": "Olivier Goguel",
-  "license": "Apache 2.0"
+  "license": "MIT"
 }
