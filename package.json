@@ -1,9 +1,9 @@
 {
-  "name": "cordova-plugin-ms-azme",
+  "name": "cordova-plugin-ms-azure-mobile-engagement",
   "version": "1.0.0",
   "description": "Cordova plugin for Azure Mobile Engagement",
   "cordova": {
-    "id": "cordova-plugin-ms-azme",
+    "id": "cordova-plugin-ms-azure-mobile-engagement",
     "platforms": [
       "android",
       "ios"
@@ -21,5 +21,5 @@
     "cordova-ios"
   ],
   "author": "Olivier Goguel",
-  "license": "Apache 2.0"
+  "license": "MIT"
 }

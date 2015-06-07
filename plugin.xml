@@ -8,7 +8,7 @@
  -->
 
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
-        id="cordova-plugin-ms-azme" version="1.0.0">
+        id="cordova-plugin-ms-azure-mobile-engagement" version="1.0.0">
 
     <name>Cordova plugin for AZME</name>
     <description>Cordova plugin for Azure Mobile Engagement</description>

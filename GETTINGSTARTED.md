@@ -10,7 +10,7 @@ cordova platform add ios
 ```
 Retrieve your credentials for the AZURE Portal to configure the AZME plugin
 ``````sh
-cordova plugin add cordova-plugin-ms-azme --variable AZME_IOS_COLLECTION=<yourCollection> --variable AZME_IOS_SDKKEY=<yourSDKKey> --variable AZME_IOS_APPID=<yourAppId> --variable AZME_IOS_REACH_ICON=Icon 
+cordova plugin add cordova-plugin-ms-azure-mobile-engagement --variable AZME_IOS_COLLECTION=<yourCollection> --variable AZME_IOS_SDKKEY=<yourSDKKey> --variable AZME_IOS_APPID=<yourAppId> --variable AZME_IOS_REACH_ICON=Icon 
 --variable AZME_REDIRECT_URL=myapp --variable AZME_ENABLE_LOG=true
 ```
 #### Send a screen to the AZME portal
