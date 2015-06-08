@@ -18,7 +18,7 @@ Installation
 To install the plugin, just add it to your Cordova project using your proper AZME credentials through Cordova variables.
 ```sh
 cd <your project>
-cordova plugin add cordova-plugin-ms-azme --variable KEY=<value>
+cordova plugin add cordova-plugin-ms-azure-mobile-engagement --variable KEY=<value>
 ```
 #### Generic Variables
 
@@ -42,7 +42,7 @@ cordova plugin add cordova-plugin-ms-azme --variable KEY=<value>
 
 Example:
 ```sh
-cordova plugin add cordova-plugin-ms-azme	--variable AZME_IOS_COLLECTION=$AZME_IOS_COLLECTION \
+cordova plugin add cordova-plugin-ms-azure-mobile-engagement	--variable AZME_IOS_COLLECTION=$AZME_IOS_COLLECTION \
 								--variable AZME_IOS_SDKKEY=$AZME_IOS_SDKKEY \
 								--variable AZME_IOS_APPID=$AZME_IOS_APPID \
 								--variable AZME_IOS_REACH_ICON=$AZME_IOS_REACH_ICON \
@@ -56,7 +56,7 @@ cordova plugin add cordova-plugin-ms-azme	--variable AZME_IOS_COLLECTION=$AZME_I
 ```
 To remove the plugin,
 ```sh
-cordova plugin rm cordova-plugin-ms-azme
+cordova plugin rm cordova-plugin-ms-azure-mobile-engagement
 ```
 
 Methods
