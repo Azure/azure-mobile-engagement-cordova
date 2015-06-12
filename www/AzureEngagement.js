@@ -5,8 +5,8 @@
 
 module.exports = {
   
-    pluginName : "AZME",
-    pluginVersion : "1.0.0",
+    pluginName : "AzureEngagement",
+    pluginVersion : "1.0.1",
 
     onOpenURL : function (_handler) {
       var _this = this;
