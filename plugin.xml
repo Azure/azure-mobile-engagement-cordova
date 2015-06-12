@@ -8,7 +8,7 @@
  -->
 
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
-        id="cordova-plugin-ms-azure-mobile-engagement" version="1.0.0">
+        id="cordova-plugin-ms-azure-mobile-engagement" version="1.0.1">
 
     <name>Cordova plugin for AZME</name>
     <description>Cordova plugin for Azure Mobile Engagement</description>
@@ -17,8 +17,8 @@
     <author>Olivier Goguel</author>
     <license>MIT</license>
 
-    <js-module src="www/AZME.js" name="AZME">
-           <clobbers target="AZME" />
+    <js-module src="www/AzureEngagement.js" name="AzureEngagement">
+           <clobbers target="AzureEngagement" />
     </js-module>
     
     <!-- android -->
@@ -34,7 +34,7 @@
 		<preference name="AZME_ENABLE_LOG" />
 
         <config-file target="res/xml/config.xml" parent="plugins">
-             <feature name="AZME">
+             <feature name="AzureEngagement">
                 <param name="android-package" value="com.del7a.azme.AZME" />
                   <param name="onload" value="true" />
              </feature>
@@ -165,7 +165,7 @@
 		<preference name="AZME_ENABLE_LOG" />
 
         <config-file target="config.xml" parent="/*">
-            <feature name="AZME">
+            <feature name="AzureEngagement">
                 <param name="ios-package" value="AZME" /> 
                 <param name="onload" value="true" />
             </feature>

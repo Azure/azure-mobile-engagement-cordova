@@ -30,7 +30,7 @@ public class AZME extends CordovaPlugin {
     private CordovaInterface cordova;
     private String previousActivityName = null;
     private String lastRedirect = null;
-	private final String pluginVersion = "1.0.0";
+	private final String pluginVersion = "1.0.1";
 
     public void initialize(CordovaInterface _cordova, CordovaWebView webView) {
 
@@ -45,22 +45,16 @@ public class AZME extends CordovaPlugin {
         cordova = _cordova;
 
 
-        try {
-    ApplicationInfo ai = activity.getPackageManager().getApplicationInfo(activity.getPackageName(), PackageManager.GET_META_DATA);
-    Bundle bundle = ai.metaData;
-    String appId = bundle.getString("engagement:appId");
-     String sdkKey = bundle.getString("engagement:sdkKey");
-     String collection = bundle.getString("engagement:collection");
+    try {
+    	ApplicationInfo ai = activity.getPackageManager().getApplicationInfo(activity.getPackageName(), PackageManager.GET_META_DATA);
+    	Bundle bundle = ai.metaData;
+    	String appId = bundle.getString("engagement:appId");
+     	String sdkKey = bundle.getString("engagement:sdkKey");
+     	String collection = bundle.getString("engagement:collection");
 
-
- //	EngagementAgent.getInstance(activity).setEnabled(true);
-
-       EngagementConfiguration engagementConfiguration = new EngagementConfiguration();
+       	EngagementConfiguration engagementConfiguration = new EngagementConfiguration();
         engagementConfiguration.setConnectionString("Endpoint="+collection+";AppId="+appId+";SdkKey="+sdkKey);
         EngagementAgent.getInstance(activity).init(engagementConfiguration);
-
-
-
 
         Bundle b = new Bundle();   
 		b.putString("CDVAZMEVersion",pluginVersion);

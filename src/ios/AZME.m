@@ -10,7 +10,7 @@
 #import <objc/runtime.h>
 #import <objc/message.h>
 
-#define AZME_PLUGIN_VERSION "1.0.0"
+#define AZME_PLUGIN_VERSION "1.0.1"
 
 @implementation AppDelegate(AZME)
 
@@ -231,7 +231,7 @@ void MethodSwizzle(Class c, SEL orig, SEL new) {
 - (void)handleOpenURL:(NSNotification*)notification
 {
     NSString* url = [notification object];
-    NSString* jsString = [NSString stringWithFormat:@"AZME.handleOpenURL(\"%@\");", url];
+    NSString* jsString = [NSString stringWithFormat:@"AzureEngagement.handleOpenURL(\"%@\");", url];
     [self.commandDelegate evalJs:jsString];
     
 }

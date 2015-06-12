@@ -5,50 +5,50 @@
 
 exports.defineAutoTests = function () {
   
-    describe('AZME Object', function () {
+    describe('AzureEngagement Object', function () {
 
-        it("AZME should exist", function () {
-            expect(AZME).toBeDefined();
+        it("AzureEngagement should exist", function () {
+            expect(AzureEngagement).toBeDefined();
         });
 
-        it("AZME should contain a startActivity function", function () {
-            expect(AZME.startActivity).toBeDefined();
-            expect(typeof AZME.startActivity == 'function').toBe(true);
+        it("AzureEngagement should contain a startActivity function", function () {
+            expect(AzureEngagement.startActivity).toBeDefined();
+            expect(typeof AzureEngagement.startActivity == 'function').toBe(true);
         });
 
-        it("AZME should contain a endActivity function", function () {
-            expect(AZME.endActivity).toBeDefined();
-            expect(typeof AZME.endActivity == 'function').toBe(true);
+        it("AzureEngagement should contain a endActivity function", function () {
+            expect(AzureEngagement.endActivity).toBeDefined();
+            expect(typeof AzureEngagement.endActivity == 'function').toBe(true);
         });
 
-         it("AZME should contain a sendAppInfo function", function () {
-            expect(AZME.sendAppInfo).toBeDefined();
-            expect(typeof AZME.sendAppInfo == 'function').toBe(true);
+         it("AzureEngagement should contain a sendAppInfo function", function () {
+            expect(AzureEngagement.sendAppInfo).toBeDefined();
+            expect(typeof AzureEngagement.sendAppInfo == 'function').toBe(true);
         });     
 
-        it("AZME should contain a startJob function", function () {
-            expect(AZME.startJob).toBeDefined();
-            expect(typeof AZME.startJob == 'function').toBe(true);
+        it("AzureEngagement should contain a startJob function", function () {
+            expect(AzureEngagement.startJob).toBeDefined();
+            expect(typeof AzureEngagement.startJob == 'function').toBe(true);
         });
 
-        it("AZME should contain a endJob function", function () {
-            expect(AZME.endJob).toBeDefined();
-            expect(typeof AZME.endJob == 'function').toBe(true);
+        it("AzureEngagement should contain a endJob function", function () {
+            expect(AzureEngagement.endJob).toBeDefined();
+            expect(typeof AzureEngagement.endJob == 'function').toBe(true);
         });     
 
-        it("AZME should contain a onOpenURL function", function () {
-            expect(AZME.onOpenURL).toBeDefined();
-            expect(typeof AZME.onOpenURL == 'function').toBe(true);
+        it("AzureEngagement should contain a onOpenURL function", function () {
+            expect(AzureEngagement.onOpenURL).toBeDefined();
+            expect(typeof AzureEngagement.onOpenURL == 'function').toBe(true);
         }); 
 
-        it("AZME should contain a handleOpenURL function", function () {
-            expect(AZME.handleOpenURL).toBeDefined();
-            expect(typeof AZME.handleOpenURL == 'function').toBe(true);
+        it("AzureEngagement should contain a handleOpenURL function", function () {
+            expect(AzureEngagement.handleOpenURL).toBeDefined();
+            expect(typeof AzureEngagement.handleOpenURL == 'function').toBe(true);
         });     
 
-        it("AZME should contain a getStatus function", function () {
-            expect(AZME.getStatus).toBeDefined();
-            expect(typeof AZME.getStatus == 'function').toBe(true);
+        it("AzureEngagement should contain a getStatus function", function () {
+            expect(AzureEngagement.getStatus).toBeDefined();
+            expect(typeof AzureEngagement.getStatus == 'function').toBe(true);
         });     
     });
 
@@ -56,15 +56,15 @@ exports.defineAutoTests = function () {
         
         var info;
         beforeEach(function(done) {
-               AZME.getStatus(function(_info) {
+               AzureEngagement.getStatus(function(_info) {
                     info = _info;
                     done();
                 });
         });
 
-        it("AZME plugin version should be the same as the js plugin version", function () {
+        it("AzureEngagement plugin version should be the same as the js plugin version", function () {
                 expect(info.pluginVersion).toBeDefined();
-                expect(info.pluginVersion == AZME.pluginVersion).toBe(true);
+                expect(info.pluginVersion == AzureEngagement.pluginVersion).toBe(true);
         });
     });
 

@@ -8,7 +8,7 @@
  -->
  
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
-     id="cordova-plugin-ms-azure-mobile-engagement-tests" version="1.0.0">
+     id="cordova-plugin-ms-azure-mobile-engagement-tests" version="1.0.1">
     <name>Cordova plugin for Azure Mobile Engagement Tests</name>
     <js-module src="tests.js" >
     </js-module>

@@ -61,97 +61,97 @@ cordova plugin rm cordova-plugin-ms-azure-mobile-engagement
 
 Methods
 --
-Once the `deviceready` event has been triggered by the Cordova framework, a `AZME` object is available to interact with the native AZME SDK.
+Once the `deviceready` event has been triggered by the Cordova framework, a `AzureEngagement` object is available to interact with the native AZME SDK.
 
-* AZME.startActivity
-* AZME.endActivity
-* AZME.sendAppInfo
-* AZME.startJob
-* AZME.endJob
-* AZME.sendEvent
-* AZME.onOpenURL
-* AZME.registerForRemoteNotification
-* AZME.getStatus
+* AzureEngagement.startActivity
+* AzureEngagement.endActivity
+* AzureEngagement.sendAppInfo
+* AzureEngagement.startJob
+* AzureEngagement.endJob
+* AzureEngagement.sendEvent
+* AzureEngagement.onOpenURL
+* AzureEngagement.registerForRemoteNotification
+* AzureEngagement.getStatus
 
-### AZME.startActivity
+### AzureEngagement.startActivity
 
 Start a new activty  with the corresponding extra infos object.
 ```javascript
-AZME.startActivity(_activityName, _extraInfos,[ _success], [_failure]);
+AzureEngagement.startActivity(_activityName, _extraInfos,[ _success], [_failure]);
 ```
 ##### Params
 * `_activityName`: the name of the activity
 * `_extraInfos`: a json object containing the extra infos attached to this activity
 
-### AZME.endActivity
+### AzureEngagement.endActivity
 Ends the current Actvity. Would trigger a new session on the next startActivity
 ```javascript
-AZME.endActivity([ _success], [_failure]);
+AzureEngagement.endActivity([ _success], [_failure]);
 ```
-### AZME.sendEvent
+### AzureEngagement.sendEvent
 Send an event  with the corresponding extra infos object.
 ```javascript
-AZME.sendEvent(_eventName, _extraInfos,[ _success], [_failure]);
+AzureEngagement.sendEvent(_eventName, _extraInfos,[ _success], [_failure]);
 ```
 ##### Params
 * `_eventName`: the name of the event
 * `_extraInfos`: a json object containing the extra infos attached to this event
 
-### AZME.startJob
+### AzureEngagement.startJob
 Start an new job  with the corresponding extra infos object.
 ```javascript
-AZME.startJob(_jobName, _extraInfos,[ _success], [_failure]);
+AzureEngagement.startJob(_jobName, _extraInfos,[ _success], [_failure]);
 ```
 ##### Params
 * `_jobName`: the name of the job
 * `_extraInfos`: a json object containing the extra infos attached to this job
 
-### AZME.endJob
+### AzureEngagement.endJob
 End a job previously created by startJob
 ```javascript
-AZME.endJob(_jobName,[ _success], [_failure]);
+AzureEngagement.endJob(_jobName,[ _success], [_failure]);
 ```
 ##### Params
 * `_jobName`: the name of the job
 
-### AZME.sendAppInfo
+### AzureEngagement.sendAppInfo
 Send App Infos atttached to the currente device.
 ```javascript
-AZME.sendAppInfo( _appInfos,[ _success], [_failure]);
+AzureEngagement.sendAppInfo( _appInfos,[ _success], [_failure]);
 ```
 ##### Params
 * `_appInfos`: the json object containing the app infos to be sent
 
-### AZME.onOpenURL
+### AzureEngagement.onOpenURL
 Set an event handler when an application specific URL is triggered (from a push campaign for example). The URL scheme must match the one defined in the `$AZME_REDIRECT_URL` setting
 ```javascript
-AZME.onOpenURL( _urlHandler,[ _success], [_failure]);
+AzureEngagement.onOpenURL( _urlHandler,[ _success], [_failure]);
 ```
 #####Params
 * `_urlHandler`:  the handler that is passed the url that has been triggerd
 
 #####Example
 ```javascript
-	AZME.onOpenURL(function(_url) {
+	AzureEngagement.onOpenURL(function(_url) {
 			console.log("user triggered url/action "+_url);
 		});
 ```
-### AZME.registerForPushNotification
+### AzureEngagement.registerForPushNotification
 Register the application to receive push notifications on iOS (this function does nothing on the other platforms)
 ```javascript
-AZME.registerForPushNotification( [_success], [_failure]);
+AzureEngagement.registerForPushNotification( [_success], [_failure]);
 ```
-### AZME.getStatus
+### AzureEngagement.getStatus
 Returns information about the AZME library
 ```javascript
-AZME.getStatus( _statusCallback, [_failure]);
+AzureEngagement.getStatus( _statusCallback, [_failure]);
 ```
 ##### Params
 * `_statusCallback`:  the handler that is passed a json object containing information about the AZME library
 
 ##### Example
 ```javascript
-	AZME.getStatus(function(_info) {
+	AzureEngagement.getStatus(function(_info) {
 		    console.log("AZME SDK Version : "+_info.AZMEVersion);
 		      console.log("AZME plugin Version : "+_info.pluginVersion);
 		});
@@ -160,6 +160,9 @@ AZME.getStatus( _statusCallback, [_failure]);
 
 History
 ----
+
+1.0.1
+* Using AzureEngagement instead of AZME as the javascript object
 
 1.0.0
 * Initial Release
