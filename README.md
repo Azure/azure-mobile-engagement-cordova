@@ -161,9 +161,6 @@ AzureEngagement.getStatus( _statusCallback, [_failure]);
 History
 ----
 
-1.0.1
-* Using AzureEngagement instead of AZME as the javascript object
-
 1.0.0
 * Initial Release
     

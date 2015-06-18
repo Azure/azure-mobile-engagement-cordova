@@ -1,262 +1,210 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <!--
 /*
  * Copyright (c) Microsoft Corporation.  All rights reserved.
  * Licensed under the MIT license. See License.txt in the project root for license information.
  */
  -->
-
-<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
-        id="cordova-plugin-ms-azure-mobile-engagement" version="1.0.1">
-
+<plugin id="cordova-plugin-ms-azure-mobile-engagement" version="1.0.0" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
     <name>Cordova plugin for AZME</name>
     <description>Cordova plugin for Azure Mobile Engagement</description>
     <keywords>cordova,azme</keywords>
-
     <author>Olivier Goguel</author>
     <license>MIT</license>
-
-    <js-module src="www/AzureEngagement.js" name="AzureEngagement">
-           <clobbers target="AzureEngagement" />
+    <js-module name="AzureEngagement" src="www/AzureEngagement.js">
+        <clobbers target="AzureEngagement"/>
     </js-module>
-    
     <!-- android -->
     <platform name="android">
-
-		<preference name="AZME_ANDROID_GOOGLE_PROJECT_NUMBER" />
-    	<preference name="AZME_ANDROID_APPID" />
-    	<preference name="AZME_ANDROID_COLLECTION" />
-    	<preference name="AZME_ANDROID_SDKKEY" />
-    		
-		<preference name="AZME_ANDROID_REACH_ICON" />
-		<preference name="AZME_REDIRECT_URL" />
-		<preference name="AZME_ENABLE_LOG" />
-
-        <config-file target="res/xml/config.xml" parent="plugins">
-             <feature name="AzureEngagement">
-                <param name="android-package" value="com.del7a.azme.AZME" />
-                  <param name="onload" value="true" />
-             </feature>
-        </config-file>
-        
-		<config-file target="AndroidManifest.xml" parent="/manifest/application">
-			<meta-data android:name="engagement:appId" android:value="$AZME_ANDROID_APPID"/>
-			<meta-data android:name="engagement:collection" android:value="$AZME_ANDROID_COLLECTION"/>
-			<meta-data android:name="engagement:sdkKey" android:value="$AZME_ANDROID_SDKKEY"/>
-			
-			<meta-data android:name="engagement:reach:notification:icon" android:value="$AZME_ANDROID_REACH_ICON" />
-
-	 		<!-- If only 1 sender, don't forget the \n, otherwise it will be parsed as a negative number... -->
-	        <meta-data android:name="engagement:gcm:sender" android:value="$AZME_ANDROID_GOOGLE_PROJECT_NUMBER\n" />
-
-			<service
-			      android:name="com.microsoft.azure.engagement.service.EngagementService"
-			      android:exported="false"
-			      android:label="$PACKAGE_NAME-Service"
-			      android:process=":Engagement"/>
-
-  			<meta-data android:name="engagement:log:test" android:value="$AZME_ENABLE_LOG" /> 
-			<meta-data android:name="engagement:reach:notification:icon" android:value="$AZME_ANDROID_REACH_ICON" />
-
-  			 <activity android:name="com.microsoft.azure.engagement.reach.activity.EngagementTextAnnouncementActivity" android:theme="@android:style/Theme.Light">
-		      <intent-filter>
-		        <action android:name="com.microsoft.azure.engagement.reach.intent.action.ANNOUNCEMENT"/>
-		        <category android:name="android.intent.category.DEFAULT" />
-		        <data android:mimeType="text/plain" />
-		      </intent-filter>
-		    </activity>
-		    <activity android:name="com.microsoft.azure.engagement.reach.activity.EngagementWebAnnouncementActivity" android:theme="@android:style/Theme.Light">
-		      <intent-filter>
-		        <action android:name="com.microsoft.azure.engagement.reach.intent.action.ANNOUNCEMENT"/>
-		        <category android:name="android.intent.category.DEFAULT" />
-		        <data android:mimeType="text/html" />
-		      </intent-filter>
-		    </activity>
-		    <activity android:name="com.microsoft.azure.engagement.reach.activity.EngagementPollActivity" android:theme="@android:style/Theme.Light">
-		      <intent-filter>
-		        <action android:name="com.microsoft.azure.engagement.reach.intent.action.POLL"/>
-		        <category android:name="android.intent.category.DEFAULT" />
-		      </intent-filter>
-		    </activity>
-		    <receiver android:name="com.microsoft.azure.engagement.reach.EngagementReachReceiver"
-		      android:exported="false">
-		      <intent-filter>
-		        <action android:name="android.intent.action.BOOT_COMPLETED"/>
-		        <action android:name="com.microsoft.azure.engagement.intent.action.AGENT_CREATED"/>
-		        <action android:name="com.microsoft.azure.engagement.intent.action.MESSAGE"/>
-		        <action android:name="com.microsoft.azure.engagement.reach.intent.action.ACTION_NOTIFICATION"/>
-		        <action android:name="com.microsoft.azure.engagement.reach.intent.action.EXIT_NOTIFICATION"/>
-		        <action android:name="android.intent.action.DOWNLOAD_COMPLETE"/>
-		        <action android:name="com.microsoft.azure.engagement.reach.intent.action.DOWNLOAD_TIMEOUT"/>
-
-		      </intent-filter>
-		    </receiver>
- 	
- 	<receiver android:name="com.microsoft.azure.engagement.gcm.EngagementGCMEnabler"
-          android:exported="false">
-          <intent-filter>
-            <action android:name="com.microsoft.azure.engagement.intent.action.APPID_GOT" />
-          </intent-filter>
-        </receiver>
-
-        <receiver android:name="com.microsoft.azure.engagement.gcm.EngagementGCMReceiver" android:permission="com.google.android.c2dm.permission.SEND">
-          <intent-filter>
-            <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
-            <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-            <category android:name="$PACKAGE_NAME" />
-          </intent-filter>
-        </receiver>
-
-		</config-file>
-
-    
-    	<config-file target="AndroidManifest.xml" parent="/manifest/application/activity">
-    		<intent-filter>   
-					<action android:name="android.intent.action.VIEW" /> 
-					<category android:name="android.intent.category.DEFAULT" />   
-					<category android:name="android.intent.category.BROWSABLE" />   
-					<data android:scheme="$AZME_REDIRECT_URL" />  
-			</intent-filter>
-		</config-file>
-
-       <config-file target="AndroidManifest.xml" parent="/manifest">
-       		<uses-permission android:name="android.permission.INTERNET"/>
-			<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-			<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-			<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-
-			<uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION"/>
-			<uses-permission android:name="android.permission.VIBRATE" />
-			<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-			
-			<uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
-			<uses-permission android:name="$PACKAGE_NAME.permission.C2D_MESSAGE" />
-			<permission android:name="$PACKAGE_NAME.permission.C2D_MESSAGE" android:protectionLevel="signature" />
-			
-	 	</config-file>
-
-        <source-file src="src/android/AZME.java" target-dir="src/com/del7a/azme" />
-        <source-file src="src/android/EngagementSDK/mobile-engagement-3.0.0.jar"  target-dir="libs"/>
-        <source-file src="src/android/libs/android-support-v4.jar"  target-dir="libs"/>
-    
-       	<source-file src="src/android/EngagementSDK/res/drawable/engagement_close.png" target-dir="res/drawable" />
-		<source-file src="src/android/EngagementSDK/res/drawable/engagement_content_title.xml" target-dir="res/drawable" />
-		<source-file src="src/android/EngagementSDK/res/layout/engagement_button_bar.xml" target-dir="res/layout" />
-       	<source-file src="src/android/EngagementSDK/res/layout/engagement_content_title.xml" target-dir="res/layout" />
-		<source-file src="src/android/EngagementSDK/res/layout/engagement_notification_area.xml" target-dir="res/layout" />
-		<source-file src="src/android/EngagementSDK/res/layout/engagement_notification_overlay.xml" target-dir="res/layout" />
-		<source-file src="src/android/EngagementSDK/res/layout/engagement_poll_choice.xml" target-dir="res/layout" />
-		<source-file src="src/android/EngagementSDK/res/layout/engagement_poll_question.xml" target-dir="res/layout" />
-		<source-file src="src/android/EngagementSDK/res/layout/engagement_poll.xml" target-dir="res/layout" />
-		<source-file src="src/android/EngagementSDK/res/layout/engagement_text_announcement.xml" target-dir="res/layout" />
-		<source-file src="src/android/EngagementSDK/res/layout/engagement_web_announcement.xml" target-dir="res/layout" />
-
-    </platform>
-   
-    <!-- ios -->
-    <platform name="ios">    
-    	
-    	<preference name="AZME_IOS_COLLECTION" />
-    	<preference name="AZME_IOS_SDKKEY" />
-    	<preference name="AZME_IOS_APPID" />
-		<preference name="AZME_IOS_REACH_ICON" />
-		<preference name="AZME_REDIRECT_URL" />
-		<preference name="AZME_ENABLE_LOG" />
-
-        <config-file target="config.xml" parent="/*">
+        <preference name="AZME_ANDROID_GOOGLE_PROJECT_NUMBER"/>
+        <preference name="AZME_ANDROID_APPID"/>
+        <preference name="AZME_ANDROID_COLLECTION"/>
+        <preference name="AZME_ANDROID_SDKKEY"/>
+        <preference name="AZME_ANDROID_REACH_ICON"/>
+        <preference name="AZME_REDIRECT_URL"/>
+        <preference name="AZME_ENABLE_LOG"/>
+        <config-file parent="plugins" target="res/xml/config.xml">
             <feature name="AzureEngagement">
-                <param name="ios-package" value="AZME" /> 
-                <param name="onload" value="true" />
+                <param name="android-package" value="com.microsoft.azure.engagement.cordova.AZME"/>
+                <param name="onload" value="true"/>
             </feature>
         </config-file>
-
-        <config-file target="*-Info.plist" parent="AZME_IOS_COLLECTION">
-		    <string>$AZME_IOS_COLLECTION</string>
-		</config-file>
-		  <config-file target="*-Info.plist" parent="AZME_IOS_SDKKEY">
-		    <string>$AZME_IOS_SDKKEY</string>
-		</config-file>
-		  <config-file target="*-Info.plist" parent="AZME_IOS_APPID">
-		    <string>$AZME_IOS_APPID</string>
-		</config-file>
-
-		 <config-file target="*-Info.plist" parent="AZME_IOS_REACH_ICON">
-		    <string>$AZME_IOS_REACH_ICON</string>	   
-		</config-file>
-
-        <config-file target="*-Info.plist" parent="AZME_ENABLE_LOG">
-		    <string>$AZME_ENABLE_LOG</string>
-		</config-file>
-
-		 <config-file target="*-Info.plist" parent="CFBundleURLTypes">
-			<array>
-				<dict>
-					<key>CFBundleTypeRole</key>
-					<string>None</string>
-					<key>CFBundleURLName</key>
-					<string>$PACKAGE_NAME.redirect</string>
-					<key>CFBundleURLSchemes</key>
-					<array>
-						<string>$AZME_REDIRECT_URL</string>
-					</array>
-				</dict>
-			</array>
-		 </config-file >
-
-        <header-file src="src/ios/AZME.h" />
-        <source-file src="src/ios/AZME.m" />
-        <header-file src="src/ios/EngagementSDK/Classes/AEIdfaProvider.h" />
-        <source-file src="src/ios/EngagementSDK/Classes/AEIdfaProvider.m" />
-	    
-	   	<header-file src="src/ios/EngagementSDK/Headers/AEModule.h" />
-	   	<header-file src="src/ios/EngagementSDK/Headers/AEPushMessage.h" />
-	   	<header-file src="src/ios/EngagementSDK/Headers/AEPushDelegate.h" />
-	  	<header-file src="src/ios/EngagementSDK/Headers/AEStorage.h" />
-	  	<header-file src="src/ios/EngagementSDK/Headers/EngagementAgent.h" />
-	  	<header-file src="src/ios/EngagementSDK/Headers/EngagementTableViewController.h" />
-	  	<header-file src="src/ios/EngagementSDK/Headers/EngagementViewController.h" />
-	   	
-	    <source-file src="src/ios/EngagementSDK/libengagement.a" framework="true" />
-
-	   	<header-file src="src/ios/EngagementReach/Headers/AE_TBXML.h" />
-		<header-file src="src/ios/EngagementReach/Headers/AEAnnouncementViewController.h" />
-		<header-file src="src/ios/EngagementReach/Headers/AEAutorotateView.h" />
-		<header-file src="src/ios/EngagementReach/Headers/AEContentViewController.h" />
-		<header-file src="src/ios/EngagementReach/Headers/AEDefaultAnnouncementViewController.h" />
-		<header-file src="src/ios/EngagementReach/Headers/AEDefaultNotifier.h" />
-		<header-file src="src/ios/EngagementReach/Headers/AEDefaultPollViewController.h" />
-		<header-file src="src/ios/EngagementReach/Headers/AEInteractiveContent.h" />
-		<header-file src="src/ios/EngagementReach/Headers/AENotificationView.h" />
-		<header-file src="src/ios/EngagementReach/Headers/AENotifier.h" />
-		<header-file src="src/ios/EngagementReach/Headers/AEPollViewController.h" />
-		<header-file src="src/ios/EngagementReach/Headers/AEReachAbstractAnnouncement.h" />
-		<header-file src="src/ios/EngagementReach/Headers/AEReachAnnouncement.h" />
-		<header-file src="src/ios/EngagementReach/Headers/AEReachContent.h" />
-		<header-file src="src/ios/EngagementReach/Headers/AEReachDataPush.h" />
-		<header-file src="src/ios/EngagementReach/Headers/AEReachDataPushDelegate.h" />
-		<header-file src="src/ios/EngagementReach/Headers/AEReachModule.h" />
-		<header-file src="src/ios/EngagementReach/Headers/AEReachNotifAnnouncement.h" />
-		<header-file src="src/ios/EngagementReach/Headers/AEReachPoll.h" />
-		<header-file src="src/ios/EngagementReach/Headers/AEReachPollQuestion.h" />
-		<header-file src="src/ios/EngagementReach/Headers/AEViewControllerUtil.h" />
-		<header-file src="src/ios/EngagementReach/Headers/AEWebAnnouncementJsBridge.h" />
-
-		<resource-file src="src/ios/EngagementReach/res/close.png" />
-		<resource-file src="src/ios/EngagementReach/res/AEDefaultAnnouncementView.xib" />
-		<resource-file src="src/ios/EngagementReach/res/AEDefaultPollView.xib" />
-		<resource-file src="src/ios/EngagementReach/res/AENotificationView.xib" />
-
-		<source-file src="src/ios/EngagementReach/libreach.a" framework="true" />
-
-  		<framework src="SystemConfiguration.framework" />
-  		<framework src="CoreTelephony.framework" />
-  		<framework src="CFNetwork.framework" />
-  		<framework src="CoreLocation.framework" />
-  		<framework src="AdSupport.framework" />
-  		<framework src="libxml2.dylib" />
-
-  	
+        <config-file parent="/manifest/application" target="AndroidManifest.xml">
+            <meta-data android:name="engagement:appId" android:value="$AZME_ANDROID_APPID"/>
+            <meta-data android:name="engagement:collection" android:value="$AZME_ANDROID_COLLECTION"/>
+            <meta-data android:name="engagement:sdkKey" android:value="$AZME_ANDROID_SDKKEY"/>
+            <meta-data android:name="engagement:reach:notification:icon" android:value="$AZME_ANDROID_REACH_ICON"/>
+            <!-- If only 1 sender, don't forget the \n, otherwise it will be parsed as a negative number... -->
+            <meta-data android:name="engagement:gcm:sender" android:value="$AZME_ANDROID_GOOGLE_PROJECT_NUMBER\n"/>
+            <service android:exported="false" android:label="$PACKAGE_NAME-Service" android:name="com.microsoft.azure.engagement.service.EngagementService" android:process=":Engagement"/>
+            <meta-data android:name="engagement:log:test" android:value="$AZME_ENABLE_LOG"/>
+            <meta-data android:name="engagement:reach:notification:icon" android:value="$AZME_ANDROID_REACH_ICON"/>
+            <activity android:name="com.microsoft.azure.engagement.reach.activity.EngagementTextAnnouncementActivity" android:theme="@android:style/Theme.Light">
+                <intent-filter>
+                    <action android:name="com.microsoft.azure.engagement.reach.intent.action.ANNOUNCEMENT"/>
+                    <category android:name="android.intent.category.DEFAULT"/>
+                    <data android:mimeType="text/plain"/>
+                </intent-filter>
+            </activity>
+            <activity android:name="com.microsoft.azure.engagement.reach.activity.EngagementWebAnnouncementActivity" android:theme="@android:style/Theme.Light">
+                <intent-filter>
+                    <action android:name="com.microsoft.azure.engagement.reach.intent.action.ANNOUNCEMENT"/>
+                    <category android:name="android.intent.category.DEFAULT"/>
+                    <data android:mimeType="text/html"/>
+                </intent-filter>
+            </activity>
+            <activity android:name="com.microsoft.azure.engagement.reach.activity.EngagementPollActivity" android:theme="@android:style/Theme.Light">
+                <intent-filter>
+                    <action android:name="com.microsoft.azure.engagement.reach.intent.action.POLL"/>
+                    <category android:name="android.intent.category.DEFAULT"/>
+                </intent-filter>
+            </activity>
+            <receiver android:exported="false" android:name="com.microsoft.azure.engagement.reach.EngagementReachReceiver">
+                <intent-filter>
+                    <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                    <action android:name="com.microsoft.azure.engagement.intent.action.AGENT_CREATED"/>
+                    <action android:name="com.microsoft.azure.engagement.intent.action.MESSAGE"/>
+                    <action android:name="com.microsoft.azure.engagement.reach.intent.action.ACTION_NOTIFICATION"/>
+                    <action android:name="com.microsoft.azure.engagement.reach.intent.action.EXIT_NOTIFICATION"/>
+                    <action android:name="android.intent.action.DOWNLOAD_COMPLETE"/>
+                    <action android:name="com.microsoft.azure.engagement.reach.intent.action.DOWNLOAD_TIMEOUT"/>
+                </intent-filter>
+            </receiver>
+            <receiver android:exported="false" android:name="com.microsoft.azure.engagement.gcm.EngagementGCMEnabler">
+                <intent-filter>
+                    <action android:name="com.microsoft.azure.engagement.intent.action.APPID_GOT"/>
+                </intent-filter>
+            </receiver>
+            <receiver android:name="com.microsoft.azure.engagement.gcm.EngagementGCMReceiver" android:permission="com.google.android.c2dm.permission.SEND">
+                <intent-filter>
+                    <action android:name="com.google.android.c2dm.intent.REGISTRATION"/>
+                    <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
+                    <category android:name="$PACKAGE_NAME"/>
+                </intent-filter>
+            </receiver>
+        </config-file>
+        <config-file parent="/manifest/application/activity" target="AndroidManifest.xml">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="$AZME_REDIRECT_URL"/>
+            </intent-filter>
+        </config-file>
+        <config-file parent="/manifest" target="AndroidManifest.xml">
+            <uses-permission android:name="android.permission.INTERNET"/>
+            <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+            <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+            <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+            <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION"/>
+            <uses-permission android:name="android.permission.VIBRATE"/>
+            <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+            <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
+            <uses-permission android:name="$PACKAGE_NAME.permission.C2D_MESSAGE"/>
+            <permission android:name="$PACKAGE_NAME.permission.C2D_MESSAGE" android:protectionLevel="signature"/>
+        </config-file>
+        <source-file src="src/android/AZME.java" target-dir="src/com/microsoft/azure/engagement"/>
+        <source-file src="src/android/EngagementSDK/mobile-engagement-3.0.0.jar" target-dir="libs"/>
+        <framework src="com.android.support:support-v4:+" />
+        <source-file src="src/android/EngagementSDK/res/drawable/engagement_close.png" target-dir="res/drawable"/>
+        <source-file src="src/android/EngagementSDK/res/drawable/engagement_content_title.xml" target-dir="res/drawable"/>
+        <source-file src="src/android/EngagementSDK/res/layout/engagement_button_bar.xml" target-dir="res/layout"/>
+        <source-file src="src/android/EngagementSDK/res/layout/engagement_content_title.xml" target-dir="res/layout"/>
+        <source-file src="src/android/EngagementSDK/res/layout/engagement_notification_area.xml" target-dir="res/layout"/>
+        <source-file src="src/android/EngagementSDK/res/layout/engagement_notification_overlay.xml" target-dir="res/layout"/>
+        <source-file src="src/android/EngagementSDK/res/layout/engagement_poll_choice.xml" target-dir="res/layout"/>
+        <source-file src="src/android/EngagementSDK/res/layout/engagement_poll_question.xml" target-dir="res/layout"/>
+        <source-file src="src/android/EngagementSDK/res/layout/engagement_poll.xml" target-dir="res/layout"/>
+        <source-file src="src/android/EngagementSDK/res/layout/engagement_text_announcement.xml" target-dir="res/layout"/>
+        <source-file src="src/android/EngagementSDK/res/layout/engagement_web_announcement.xml" target-dir="res/layout"/>
     </platform>
-
+    <!-- ios -->
+    <platform name="ios">
+        <preference name="AZME_IOS_COLLECTION"/>
+        <preference name="AZME_IOS_SDKKEY"/>
+        <preference name="AZME_IOS_APPID"/>
+        <preference name="AZME_IOS_REACH_ICON"/>
+        <preference name="AZME_REDIRECT_URL"/>
+        <preference name="AZME_ENABLE_LOG"/>
+        <config-file parent="/*" target="config.xml">
+            <feature name="AzureEngagement">
+                <param name="ios-package" value="AZME"/>
+                <param name="onload" value="true"/>
+            </feature>
+        </config-file>
+        <config-file parent="AZME_IOS_COLLECTION" target="*-Info.plist">
+            <string>$AZME_IOS_COLLECTION</string>
+        </config-file>
+        <config-file parent="AZME_IOS_SDKKEY" target="*-Info.plist">
+            <string>$AZME_IOS_SDKKEY</string>
+        </config-file>
+        <config-file parent="AZME_IOS_APPID" target="*-Info.plist">
+            <string>$AZME_IOS_APPID</string>
+        </config-file>
+        <config-file parent="AZME_IOS_REACH_ICON" target="*-Info.plist">
+            <string>$AZME_IOS_REACH_ICON</string>
+        </config-file>
+        <config-file parent="AZME_ENABLE_LOG" target="*-Info.plist">
+            <string>$AZME_ENABLE_LOG</string>
+        </config-file>
+        <config-file parent="CFBundleURLTypes" target="*-Info.plist">
+            <array>
+                <dict>
+                    <key>CFBundleTypeRole</key>
+                    <string>None</string>
+                    <key>CFBundleURLName</key>
+                    <string>$PACKAGE_NAME.redirect</string>
+                    <key>CFBundleURLSchemes</key>
+                    <array>
+                        <string>$AZME_REDIRECT_URL</string>
+                    </array>
+                </dict>
+            </array>
+        </config-file>
+        <header-file src="src/ios/AZME.h"/>
+        <source-file src="src/ios/AZME.m"/>
+        <header-file src="src/ios/EngagementSDK/Classes/AEIdfaProvider.h"/>
+        <source-file src="src/ios/EngagementSDK/Classes/AEIdfaProvider.m"/>
+        <header-file src="src/ios/EngagementSDK/Headers/AEModule.h"/>
+        <header-file src="src/ios/EngagementSDK/Headers/AEPushMessage.h"/>
+        <header-file src="src/ios/EngagementSDK/Headers/AEPushDelegate.h"/>
+        <header-file src="src/ios/EngagementSDK/Headers/AEStorage.h"/>
+        <header-file src="src/ios/EngagementSDK/Headers/EngagementAgent.h"/>
+        <header-file src="src/ios/EngagementSDK/Headers/EngagementTableViewController.h"/>
+        <header-file src="src/ios/EngagementSDK/Headers/EngagementViewController.h"/>
+        <source-file framework="true" src="src/ios/EngagementSDK/libengagement.a"/>
+        <header-file src="src/ios/EngagementReach/Headers/AE_TBXML.h"/>
+        <header-file src="src/ios/EngagementReach/Headers/AEAnnouncementViewController.h"/>
+        <header-file src="src/ios/EngagementReach/Headers/AEAutorotateView.h"/>
+        <header-file src="src/ios/EngagementReach/Headers/AEContentViewController.h"/>
+        <header-file src="src/ios/EngagementReach/Headers/AEDefaultAnnouncementViewController.h"/>
+        <header-file src="src/ios/EngagementReach/Headers/AEDefaultNotifier.h"/>
+        <header-file src="src/ios/EngagementReach/Headers/AEDefaultPollViewController.h"/>
+        <header-file src="src/ios/EngagementReach/Headers/AEInteractiveContent.h"/>
+        <header-file src="src/ios/EngagementReach/Headers/AENotificationView.h"/>
+        <header-file src="src/ios/EngagementReach/Headers/AENotifier.h"/>
+        <header-file src="src/ios/EngagementReach/Headers/AEPollViewController.h"/>
+        <header-file src="src/ios/EngagementReach/Headers/AEReachAbstractAnnouncement.h"/>
+        <header-file src="src/ios/EngagementReach/Headers/AEReachAnnouncement.h"/>
+        <header-file src="src/ios/EngagementReach/Headers/AEReachContent.h"/>
+        <header-file src="src/ios/EngagementReach/Headers/AEReachDataPush.h"/>
+        <header-file src="src/ios/EngagementReach/Headers/AEReachDataPushDelegate.h"/>
+        <header-file src="src/ios/EngagementReach/Headers/AEReachModule.h"/>
+        <header-file src="src/ios/EngagementReach/Headers/AEReachNotifAnnouncement.h"/>
+        <header-file src="src/ios/EngagementReach/Headers/AEReachPoll.h"/>
+        <header-file src="src/ios/EngagementReach/Headers/AEReachPollQuestion.h"/>
+        <header-file src="src/ios/EngagementReach/Headers/AEViewControllerUtil.h"/>
+        <header-file src="src/ios/EngagementReach/Headers/AEWebAnnouncementJsBridge.h"/>
+        <resource-file src="src/ios/EngagementReach/res/close.png"/>
+        <resource-file src="src/ios/EngagementReach/res/AEDefaultAnnouncementView.xib"/>
+        <resource-file src="src/ios/EngagementReach/res/AEDefaultPollView.xib"/>
+        <resource-file src="src/ios/EngagementReach/res/AENotificationView.xib"/>
+        <source-file framework="true" src="src/ios/EngagementReach/libreach.a"/>
+        <framework src="SystemConfiguration.framework"/>
+        <framework src="CoreTelephony.framework"/>
+        <framework src="CFNetwork.framework"/>
+        <framework src="CoreLocation.framework"/>
+        <framework src="AdSupport.framework"/>
+        <framework src="libxml2.dylib"/>
+    </platform>
 </plugin>

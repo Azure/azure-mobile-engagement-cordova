@@ -1,6 +1,6 @@
 {
   "name": "cordova-plugin-ms-azure-mobile-engagement",
-  "version": "1.0.1",
+  "version": "1.0.0",
   "description": "Cordova plugin for Azure Mobile Engagement",
   "cordova": {
     "id": "cordova-plugin-ms-azure-mobile-engagement",
@@ -12,6 +12,15 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/Azure/azure-mobile-engagement-cordova"
+  },
+   "devDependencies": {
+    "jshint": "2.5.8",
+    "jscs" : "1.13.1"
+  },
+  "scripts": {
+    "test": "npm run jshint && npm run jscs",
+    "jshint": "node node_modules/jshint/bin/jshint www && node node_modules/jshint/bin/jshint tests  ",
+    "jscs": "node node_modules/jscs/bin/jscs www && node node_modules/jscs/bin/jscs tests"
   },
   "keywords": [
     "cordova",

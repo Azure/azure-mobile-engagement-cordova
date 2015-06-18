@@ -4,35 +4,35 @@
  */
 
 module.exports = {
-  
-    pluginName : "AzureEngagement",
-    pluginVersion : "1.0.1",
+
+    pluginName : 'AzureEngagement',
+    pluginVersion : '1.0.1',
 
     onOpenURL : function (_handler) {
-      var _this = this;
-      _this.openURLHandler  = _handler;
-      cordova.exec(function( _url) {
-        if (_url)
-          _this.handleOpenURL(_url);
+        var _this = this;
+        _this.openURLHandler  = _handler;
+        cordova.exec(function( _url) {
+            if (_url)
+              _this.handleOpenURL(_url);
         }, undefined, _this.pluginName, 'checkRedirect', [] );
     },
 
     handleOpenURL : function(_url) {
-      if (this.openURLHandler) {
-        this.openURLHandler(_url);
-      }
+        if (this.openURLHandler) {
+            this.openURLHandler(_url);
+        }
     },
 
     startActivity: function (_activityName,_extraInfos,_success,_failure) {
-       cordova.exec(_success, _failure, this.pluginName, 'startActivity', [_activityName,JSON.stringify(_extraInfos)] );
+        cordova.exec(_success, _failure, this.pluginName, 'startActivity', [_activityName,JSON.stringify(_extraInfos)] );
     },
 
     endActivity: function (_success,_failure) {
-       cordova.exec(_success, _failure, this.pluginName, 'endActivity', [] );
+        cordova.exec(_success, _failure, this.pluginName, 'endActivity', [] );
     },
 
     sendAppInfo: function (_appInfos,_success,_failure) {
-       cordova.exec(_success,_failure, this.pluginName, 'sendAppInfo', [JSON.stringify(_appInfos)] );
+        cordova.exec(_success,_failure, this.pluginName, 'sendAppInfo', [JSON.stringify(_appInfos)] );
     },
 
     sendEvent: function (_eventName,_extraInfos,_success,_failure) {
