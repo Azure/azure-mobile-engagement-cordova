@@ -6,7 +6,7 @@
 module.exports = {
 
     pluginName : 'AzureEngagement',
-    pluginVersion : '1.0.1',
+    pluginVersion : '1.0.0',
 
     onOpenURL : function (_handler) {
         var _this = this;
