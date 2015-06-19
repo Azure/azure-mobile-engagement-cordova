@@ -18,7 +18,7 @@ Edit `www/js/index.js`to add the call to AZME to declare a new activity once the
 ``````js
  onDeviceReady: function() {
         app.receivedEvent('deviceready');
-        AZME.startActivity("myPage",{});
+        AzureEngagement.startActivity("myPage",{});
     },
 ```
 Launch your application...
@@ -39,9 +39,9 @@ Edit `www/js/index.js`to add the call to AZME to request push new notification, 
 ``````js
  onDeviceReady: function() {
         app.receivedEvent('deviceready');
-        AZME.registerForPushNotification();
-        AZME.onOpenURL(function(_url) { alert(_url); });
-        AZME.startActivity("myPage",{});
+        AzureEngagement.registerForPushNotification();
+        AzureEngagement.onOpenURL(function(_url) { alert(_url); });
+        AzureEngagement.startActivity("myPage",{});
     },
 ```
 Launch your application...

@@ -13,6 +13,15 @@
     "type": "git",
     "url": "https://github.com/Azure/azure-mobile-engagement-cordova"
   },
+   "devDependencies": {
+    "jshint": "2.5.8",
+    "jscs" : "1.13.1"
+  },
+  "scripts": {
+    "test": "npm run jshint && npm run jscs",
+    "jshint": "node node_modules/jshint/bin/jshint www && node node_modules/jshint/bin/jshint tests  ",
+    "jscs": "node node_modules/jscs/bin/jscs www && node node_modules/jscs/bin/jscs tests"
+  },
   "keywords": [
     "cordova",
     "azme",

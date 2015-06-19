@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <!--
 /*
  * Copyright (c) Microsoft Corporation.  All rights reserved.
  * Licensed under the MIT license. See License.txt in the project root for license information.
  */
  -->
- 
-<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
-     id="cordova-plugin-ms-azure-mobile-engagement-tests" version="1.0.0">
+<plugin id="cordova-plugin-ms-azure-mobile-engagement-tests" version="1.0.0" xmlns="http://apache.org/cordova/ns/plugins/1.0">
     <name>Cordova plugin for Azure Mobile Engagement Tests</name>
-    <js-module src="tests.js" >
-    </js-module>
+    <js-module src="tests.js"/>
 </plugin>
