@@ -5,7 +5,7 @@
  * Licensed under the MIT license. See License.txt in the project root for license information.
  */
  -->
-<plugin id="cordova-plugin-ms-azure-mobile-engagement" version="1.0.0" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
+<plugin id="cordova-plugin-ms-azure-mobile-engagement" version="2.0.0" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
     <name>Cordova plugin for AZME</name>
     <description>Cordova plugin for Azure Mobile Engagement</description>
     <keywords>cordova,azme</keywords>
@@ -59,6 +59,12 @@
                     <category android:name="android.intent.category.DEFAULT"/>
                 </intent-filter>
             </activity>
+            <activity android:name="com.microsoft.azure.engagement.reach.activity.EngagementLoadingActivity" android:theme="@android:style/Theme.Dialog">
+                <intent-filter>
+                    <action android:name="com.microsoft.azure.engagement.reach.intent.action.LOADING"/>
+                    <category android:name="android.intent.category.DEFAULT"/>
+              </intent-filter>
+            </activity>
             <receiver android:exported="false" android:name="com.microsoft.azure.engagement.reach.EngagementReachReceiver">
                 <intent-filter>
                     <action android:name="android.intent.action.BOOT_COMPLETED"/>
@@ -66,8 +72,12 @@
                     <action android:name="com.microsoft.azure.engagement.intent.action.MESSAGE"/>
                     <action android:name="com.microsoft.azure.engagement.reach.intent.action.ACTION_NOTIFICATION"/>
                     <action android:name="com.microsoft.azure.engagement.reach.intent.action.EXIT_NOTIFICATION"/>
-                    <action android:name="android.intent.action.DOWNLOAD_COMPLETE"/>
                     <action android:name="com.microsoft.azure.engagement.reach.intent.action.DOWNLOAD_TIMEOUT"/>
+                </intent-filter>
+            </receiver>
+            <receiver android:name="com.microsoft.azure.engagement.reach.EngagementReachDownloadReceiver">
+                <intent-filter>
+                    <action android:name="android.intent.action.DOWNLOAD_COMPLETE"/>
                 </intent-filter>
             </receiver>
             <receiver android:exported="false" android:name="com.microsoft.azure.engagement.gcm.EngagementGCMEnabler">
@@ -104,7 +114,7 @@
             <permission android:name="$PACKAGE_NAME.permission.C2D_MESSAGE" android:protectionLevel="signature"/>
         </config-file>
         <source-file src="src/android/AZME.java" target-dir="src/com/microsoft/azure/engagement"/>
-        <source-file src="src/android/EngagementSDK/mobile-engagement-3.0.0.jar" target-dir="libs"/>
+        <source-file src="src/android/EngagementSDK/mobile-engagement-4.0.0.jar" target-dir="libs"/>
         <framework src="com.android.support:support-v4:+" />
         <source-file src="src/android/EngagementSDK/res/drawable/engagement_close.png" target-dir="res/drawable"/>
         <source-file src="src/android/EngagementSDK/res/drawable/engagement_content_title.xml" target-dir="res/drawable"/>
@@ -117,6 +127,7 @@
         <source-file src="src/android/EngagementSDK/res/layout/engagement_poll.xml" target-dir="res/layout"/>
         <source-file src="src/android/EngagementSDK/res/layout/engagement_text_announcement.xml" target-dir="res/layout"/>
         <source-file src="src/android/EngagementSDK/res/layout/engagement_web_announcement.xml" target-dir="res/layout"/>
+        <source-file src="src/android/EngagementSDK/res/layout/engagement_loading.xml" target-dir="res/layout"/>
     </platform>
     <!-- ios -->
     <platform name="ios">

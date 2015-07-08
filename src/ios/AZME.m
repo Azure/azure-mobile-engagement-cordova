@@ -10,7 +10,7 @@
 #import <objc/runtime.h>
 #import <objc/message.h>
 
-#define AZME_PLUGIN_VERSION "1.0.0"
+#define AZME_PLUGIN_VERSION "2.0.0"
 
 @implementation AppDelegate(AZME)
 

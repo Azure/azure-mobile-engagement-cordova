@@ -160,6 +160,8 @@ AzureEngagement.getStatus( _statusCallback, [_failure]);
 
 History
 ----
+2.0.0
+* Upgraded Native Android SDK to v4.0.0
 
 1.0.0
 * Initial Release

@@ -29,7 +29,7 @@ public class AZME extends CordovaPlugin {
     private CordovaInterface cordova;
     private String previousActivityName = null;
     private String lastRedirect = null;
-    private final String pluginVersion = "1.0.0";
+    private final String pluginVersion = "2.0.0";
 
     public void initialize(CordovaInterface _cordova, CordovaWebView webView) {
         CordovaActivity activity =  (CordovaActivity) _cordova.getActivity();
@@ -102,7 +102,7 @@ public class AZME extends CordovaPlugin {
                     String response = "{";
                     response = "{" +
                                "\"pluginVersion\": \"" + pluginVersion + "\"," +
-                               "\"AZMEVersion\": \"3.0.0\"," +
+                               "\"AZMEVersion\": \"4.0.0\"," +
                                "\"deviceId\": \"" + deviceId + "\"" +
                                "}";
                     try {
