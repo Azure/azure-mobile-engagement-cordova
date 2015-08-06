@@ -43,42 +43,33 @@
 @optional
 
 /**
- * Called when one or several push messages are received by Engagement.
+ * Called when a push message is received by Engagement.
  * This does not include the push message if it has been received following application launch
- * (typically when the user clicks on the Apple Push notification of the notification center).
- * This message will be passed to the method <displayPushMessageNotification:> instead.
+ * It stores the message locally and tried to process the message. If app is in the background,
+ * message is processed once app becomes active.
  *
- * @param msgs A list of <AEPushMessage> objects.
+ * @param msg The push message.
  * @see AEPushMessage
  */
-- (void)pushMessagesReceived:(NSArray*)msgs;
-
-/**
- * Called after the user clicks on an Apple notification handled by Engagement.
- * The module receive the Engagement push message associated to the Apple
- * notification in order to display it to the end-user.
- * @param msg The Engagement push message to display.
- * @result YES if given message has been processed and displayed, NO otherwise.
- * @see AEPushMessage
- */
-- (BOOL)displayPushMessageNotification:(AEPushMessage*)msg;
-
-/**
- * Called after the user clicks on an Apple notification that contains an action url.
- * The module receive the Engagement push message associated to the Apple
- * notification in order to display it to the end-user.
- * @param userInfo The notification object.
- * @result YES if given message has been processed and displayed, NO otherwise.
- * @see AEPushMessage
- */
-- (BOOL)displayPushMessageNotificationWithActionUrl:(NSDictionary*)userInfo;
+- (void)pushMessageReceived:(AEPushMessage*)msg;
 
 /**
  * Called when remote notification is received.
  * @param userInfo The notification object.
- * @result YES if given message has been processed and displayed, NO otherwise.
  */
-- (BOOL)processRemoteNotification:(NSDictionary*)userInfo;
+- (void)processRemoteNotification:(NSDictionary*)userInfo;
+
+/**
+ * Called when message with downloadble content is downloaded.
+ * @param message Downloaded message.
+ */
+- (void)dlcDownloaded:(AEPushMessage*)message;
+
+/**
+ * Called when a content of a messsage has failed to download.
+ * @param messageId Message Id.
+ */
+- (void)dlcDownloadFailed:(NSString*)messageId;
 
 /**
  * Called when Engagement has detected that the current activity has changed.

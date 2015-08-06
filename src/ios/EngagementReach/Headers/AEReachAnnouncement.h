@@ -12,13 +12,12 @@ typedef NS_ENUM (NSInteger, AEAnnouncementType)
 {
   /** Unknwon announcement type */
   AEAnnouncementTypeUnknown = -1,
-
+  
   /** Announcement with a text plain content */
   AEAnnouncementTypeText = 1,
-
+  
   /** Announcement with an HTML content */
   AEAnnouncementTypeHtml = 2
-
 };
 
 /**
@@ -31,15 +30,16 @@ typedef NS_ENUM (NSInteger, AEAnnouncementType)
 @interface AEReachAnnouncement : AEReachAbstractAnnouncement {
   @private
   AEAnnouncementType _type;
+  NSDictionary* _cachedParams;
 }
 
 /**
  * Parse an announcement
- * @param element Parsed XML root DOM element.
- * @param params special parameters to replace in the action URL and body of the announcement.
+ * @param reachValues Parsed reach values.
+ * @param params Special parameters to replace in the action URL and body of the announcement.
  * @result A new announcement or nil if it couldn't be parsed.
  */
-+ (id)announcementWithElement:(AE_TBXMLElt*)element params:(NSDictionary*)params;
++ (id)announcementWithReachValues:(NSDictionary*)reachValues params:(NSDictionary*)params;
 
 /**
  * Get the mime type for this announcement. This is useful to interpret the text returned by

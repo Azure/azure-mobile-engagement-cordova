@@ -18,7 +18,6 @@
  */
 + (instancetype)storageWithName:(NSString*)name version:(double)version autoSync:(BOOL)autoSync;
 
-
 /**
  * Create a new storage.
  * @param name The name of the store

@@ -162,6 +162,7 @@ History
 ----
 2.0.0
 * Upgraded Native Android SDK to v4.0.0
+* Upgraded Native iOS SDK to v3.0.0
 
 1.0.0
 * Initial Release

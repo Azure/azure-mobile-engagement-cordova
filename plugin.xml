@@ -172,19 +172,24 @@
                 </dict>
             </array>
         </config-file>
+        <config-file parent="UIBackgroundModes" target="*-Info.plist">
+             <array>
+                <dict>
+                    <key>remote-notification</key>
+                </dict>
+            </array>
+        </config-file>
         <header-file src="src/ios/AZME.h"/>
         <source-file src="src/ios/AZME.m"/>
         <header-file src="src/ios/EngagementSDK/Classes/AEIdfaProvider.h"/>
         <source-file src="src/ios/EngagementSDK/Classes/AEIdfaProvider.m"/>
         <header-file src="src/ios/EngagementSDK/Headers/AEModule.h"/>
         <header-file src="src/ios/EngagementSDK/Headers/AEPushMessage.h"/>
-        <header-file src="src/ios/EngagementSDK/Headers/AEPushDelegate.h"/>
         <header-file src="src/ios/EngagementSDK/Headers/AEStorage.h"/>
         <header-file src="src/ios/EngagementSDK/Headers/EngagementAgent.h"/>
         <header-file src="src/ios/EngagementSDK/Headers/EngagementTableViewController.h"/>
         <header-file src="src/ios/EngagementSDK/Headers/EngagementViewController.h"/>
         <source-file framework="true" src="src/ios/EngagementSDK/libengagement.a"/>
-        <header-file src="src/ios/EngagementReach/Headers/AE_TBXML.h"/>
         <header-file src="src/ios/EngagementReach/Headers/AEAnnouncementViewController.h"/>
         <header-file src="src/ios/EngagementReach/Headers/AEAutorotateView.h"/>
         <header-file src="src/ios/EngagementReach/Headers/AEContentViewController.h"/>

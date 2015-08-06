@@ -7,18 +7,17 @@
 #import <Cordova/CDVPlugin.h>
 #import "AZME.h"
 #import "EngagementAgent.h"
-#import "AEPushDelegate.h"
+#import "AEReachDataPushDelegate.h"
 #import "AppDelegate.h"
-
 #import "AEReachModule.h"
 
 @interface AppDelegate (AZME)
 - (void)application:(UIApplication *)application customdidRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken;
 - (void)application:(UIApplication *)application customdidFailToRegisterForRemoteNotificationsWithError:(NSError *)error;
-- (void)application:(UIApplication *)application customdidReceiveRemoteNotification:(NSDictionary *)userInfo;
+- (void)application:(UIApplication *)application customdidReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))handler;
 @end
 
-@interface AZME : CDVPlugin <AEPushDelegate>
+@interface AZME : CDVPlugin <AEReachDataPushDelegate>
 {
     NSString* AZME_IOS_SDKKEY ;
     NSString* AZME_IOS_APPID ;

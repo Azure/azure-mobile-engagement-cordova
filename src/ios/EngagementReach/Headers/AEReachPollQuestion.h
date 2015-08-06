@@ -3,7 +3,6 @@
  */
 
 #import <Foundation/Foundation.h>
-#import "AE_TBXML.h"
 
 /**
  * The `AEReachPollQuestion` class defines objects that represent poll's questions

@@ -4,7 +4,6 @@
 
 #import <UIKit/UIKit.h>
 #import "AEReachContent.h"
-#import "AE_TBXML.h"
 
 /**
  * Reach content behavior.
@@ -19,9 +18,6 @@ typedef NS_ENUM (NSInteger, AEContentBehavior)
 
   /** A reach content that can be displayed during application session time. */
   AEContentBehaviorSession = 3,
-
-  /** A reach content that can be displayed only during some activities. */
-  AEContentBehaviorActivity = 4
 };
 
 /**
@@ -75,6 +71,12 @@ typedef NS_ENUM (NSInteger, AEContentBehavior)
 
 /** Report content has been displayed */
 - (void)displayContent;
+
+/** Set is displayed value */
+- (void)setDisplayed:(BOOL)displayed;
+
+/** Set is actioned value */
+- (void)setActioned:(BOOL)actioned;
 
 /** Reach content's title */
 @property(nonatomic, readonly) NSString* title;

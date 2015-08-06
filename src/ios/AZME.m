@@ -19,10 +19,10 @@
     NSLog(@"didFailToRegisterForRemoteNotificationsWithError %@", error);
 }
 
-- (void)application:(UIApplication *)application  customdidReceiveRemoteNotification:(NSDictionary *)userInfo
+- (void)application:(UIApplication *)application  customdidReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))handler
 {
     NSLog(@"customdidReceiveRemoteNotification");
-    [[EngagementAgent shared] applicationDidReceiveRemoteNotification:userInfo];
+    [[EngagementAgent shared] applicationDidReceiveRemoteNotification:userInfo fetchCompletionHandler:handler];
 }
 
 - (void)application:(UIApplication *)application customdidRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
@@ -50,8 +50,9 @@ void MethodSwizzle(Class c, SEL orig, SEL new)
                   @selector(application:didFailToRegisterForRemoteNotificationsWithError:) );
 
     MethodSwizzle(self,
-                  @selector(application:customdidReceiveRemoteNotification:),
-                  @selector(application:didReceiveRemoteNotification:) );
+
+                  @selector(application:customdidReceiveRemoteNotification:fetchCompletionHandler:),
+                  @selector( application:didReceiveRemoteNotification:fetchCompletionHandler:) );
 
     MethodSwizzle(self,
                   @selector(application:customdidRegisterForRemoteNotificationsWithDeviceToken:),
@@ -92,13 +93,12 @@ void MethodSwizzle(Class c, SEL orig, SEL new)
 
             NSString* endPoint = [NSString stringWithFormat:@"Endpoint=%@;SdkKey=%@;AppId=%@", AZME_IOS_COLLECTION, AZME_IOS_SDKKEY, AZME_IOS_APPID];
             [EngagementAgent init:endPoint modules:reach, nil];
+                        
             if (reach != nil )
-                [[EngagementAgent shared] setPushDelegate:self];
-
+                [reach setDataPushDelegate:self];
 
             if (enableLog)
                 [EngagementAgent setTestLogEnabled:YES];
-
 
             NSDictionary *dict = [[NSDictionary alloc] initWithObjectsAndKeys:
                                   [NSString stringWithUTF8String:AZME_PLUGIN_VERSION],  @"CDVAZMEVersion",  nil];
@@ -196,7 +196,7 @@ void MethodSwizzle(Class c, SEL orig, SEL new)
 {
     NSDictionary* dict = [NSDictionary dictionaryWithObjectsAndKeys:
                           [NSString stringWithUTF8String:AZME_PLUGIN_VERSION], @"pluginVersion",
-                          @"2.1.0", @"AZMEVersion", // à récuperer du SDK!
+                          @"3.0.0", @"AZMEVersion", // à récuperer du SDK!
                           [[EngagementAgent shared] deviceId], @"deviceId",
                           nil];
 

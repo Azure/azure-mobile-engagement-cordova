@@ -6,7 +6,6 @@
 
 extern NSString* const kEngagementAgentEnabled;
 
-@protocol AEPushDelegate;
 @protocol AEModule;
 
 /**
@@ -59,7 +58,7 @@ extern NSString* const kEngagementAgentEnabled;
  * `Endpoint={YOUR_APP_COLLECTION.DOMAIN};SdkKey={YOUR_APPID};AppId={YOUR_APPID}`
  * @param modules Array of optional Engagement modules.
  */
-+ (void)init:(NSString*)connectionString modulesArray:(NSArray *)modules;
++ (void)init:(NSString*)connectionString modulesArray:(NSArray*)modules;
 
 /**
  * ---------------------
@@ -322,13 +321,6 @@ extern NSString* const kEngagementAgentEnabled;
  */
 
 /**
- * Register a push delegate.
- * The given delegate will be notified when Engagement agent receive push messages.
- * @param delegate The delegate that will handle push messages.
- */
-- (void)setPushDelegate:(id<AEPushDelegate>)delegate;
-
-/**
  * ---------------------------------
  * @name Getting Engagement agent data
  * ---------------------------------
@@ -372,10 +364,20 @@ extern NSString* const kEngagementAgentEnabled;
 /**
  * If you are using the Engagement agent Push Service or Reach module,
  * you should call this function from the application delegate:
- * - application:didReceiveRemoteNotification:
+ * - application:didReceiveRemoteNotification:fetchCompletionHandler:
  * @param userInfo A dictionary that contains information related to the remote
  * notification
+ * @param completionHandler The block to execute when the download operation is completed.
+ * Our SDK will pass in the fetch result value that best describes the results of the download operation.
+ * If you want your application to manually handle completion, you can pass nil for this parameter and handle the completion in your delegate method.
+ * @see UIBackgroundFetchResult
  */
-- (void)applicationDidReceiveRemoteNotification:(NSDictionary*)userInfo;
+- (void)applicationDidReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))completionHandler;
+
+/**
+ * Download the downloadable content.
+ * @param msgId Message dlc id
+ */
+- (void)getMessage:(NSString*)msgId;
 
 @end
