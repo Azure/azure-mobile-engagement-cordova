@@ -15,14 +15,11 @@
 - (void)application:(UIApplication *)application customdidRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken;
 - (void)application:(UIApplication *)application customdidFailToRegisterForRemoteNotificationsWithError:(NSError *)error;
 - (void)application:(UIApplication *)application customdidReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))handler;
+- (void)application:(UIApplication *)application customdidReceiveRemoteNotification:(NSDictionary *)userInfo ;
 @end
 
 @interface AZME : CDVPlugin <AEReachDataPushDelegate>
 {
-    NSString* AZME_IOS_SDKKEY ;
-    NSString* AZME_IOS_APPID ;
-    NSString* AZME_IOS_COLLECTION ;
-    NSString* AZME_IOS_REACH_ICON;
     BOOL enableLog;
 }
 
@@ -35,6 +32,4 @@
 - (void)checkRedirect:(CDVInvokedUrlCommand*)command;
 - (void)getStatus:(CDVInvokedUrlCommand*)command;
 - (void)handleOpenURL:(NSNotification*)notification;
-
-
 @end

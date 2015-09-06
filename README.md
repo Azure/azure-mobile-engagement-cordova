@@ -26,33 +26,19 @@ cordova plugin add cordova-plugin-ms-azure-mobile-engagement --variable KEY=<val
 - `AZME_REDIRECT_URL` : the url schemes of your application when using redirect actions in your campaign. Must be the url prefix without :// (ex: `myapp` to handle urls such as `myapp://shop`)
 
 #### iOS Variables
-- `AZME_IOS_APPID` : the AZME application ID of your iOS application
-- `AZME_IOS_SDKKEY` : the sdk key 
-- `AZME_IOS_COLLECTION` : the collection
+- `AZME_IOS_CONNECTION_STRING` : the iOS connection string (to retrive from the AZME portal)
 - `AZME_IOS_REACH_ICON` : the icon used for reach notification : must be the name of the resource with its extension (ex: `icon.png`)
 
 #### Android Variables
-- `AZME_ANDROID_APPID` : the AZME application ID of your Android application
-- `AZME_ANDROID_SDKKEY` : the sdk key 
-- `AZME_ANDROID_COLLECTION` : the collextion
+- `AZME_ANDROID_CONNECTION_STRING` : the iOS connection string (to retrive from the AZME portal)
 - `AZME_ANDROID_REACH_ICON` : the icon used for reach notification : must be the name of the resource without any extension, nor drawable prefix  (ex: `icon`)
 - `AZME_GOOGLE_PROJECT_NUMBER` : the project number used as the GCM (Google Cloud Messaging) sender ID
  
-*The AppId, SDKKey and Collection can easily be retrieved from the connection string `Endpoint={YOUR_APP_COLLECTION.DOMAIN};SdkKey={YOUR_SDK_KEY};AppId={YOUR_APPID}`*
+Only the `AZME_ANDROID_CONNECTION_STRING` and/or `AZME_IOS_CONNECTION_STRING` : all the other variables are required
 
 Example:
 ```sh
-cordova plugin add cordova-plugin-ms-azure-mobile-engagement	--variable AZME_IOS_COLLECTION=$AZME_IOS_COLLECTION \
-								--variable AZME_IOS_SDKKEY=$AZME_IOS_SDKKEY \
-								--variable AZME_IOS_APPID=$AZME_IOS_APPID \
-								--variable AZME_IOS_REACH_ICON=$AZME_IOS_REACH_ICON \
-								--variable AZME_ANDROID_GOOGLE_PROJECT_NUMBER=$AZME_ANDROID_GOOGLE_PROJECT_NUMBER \
-								--variable AZME_ANDROID_APPID=$AZME_ANDROID_APPID \
-								--variable AZME_ANDROID_COLLECTION=$AZME_ANDROID_COLLECTION \
-								--variable AZME_ANDROID_SDKKEY=$AZME_ANDROID_SDKKEY \
-								--variable AZME_ANDROID_REACH_ICON=$AZME_ANDROID_REACH_ICON \
-								--variable AZME_REDIRECT_URL=$AZME_REDIRECT_URL \
-								--variable AZME_ENABLE_LOG=$AZME_ENABLE_LOG
+cordova plugin add cordova-plugin-ms-azure-mobile-engagement --variable AZME_IOS_CONNECTION_STRING=AZME_IOS_CONNECTION_STRING --variable AZME_ANDROID_CONNECTION_STRING=AZME_ANDROID_CONNECTION_STRING 
 ```
 To remove the plugin,
 ```sh
@@ -132,9 +118,9 @@ AzureEngagement.onOpenURL( _urlHandler,[ _success], [_failure]);
 
 #####Example
 ```javascript
-	AzureEngagement.onOpenURL(function(_url) {
-			console.log("user triggered url/action "+_url);
-		});
+    AzureEngagement.onOpenURL(function(_url) {
+            console.log("user triggered url/action "+_url);
+        });
 ```
 ### AzureEngagement.registerForPushNotification
 Register the application to receive push notifications on iOS (this function does nothing on the other platforms)
@@ -151,10 +137,10 @@ AzureEngagement.getStatus( _statusCallback, [_failure]);
 
 ##### Example
 ```javascript
-	AzureEngagement.getStatus(function(_info) {
-		    console.log("AZME SDK Version : "+_info.AZMEVersion);
-		      console.log("AZME plugin Version : "+_info.pluginVersion);
-		});
+    AzureEngagement.getStatus(function(_info) {
+            console.log("AZME SDK Version : "+_info.AZMEVersion);
+              console.log("AZME plugin Version : "+_info.pluginVersion);
+        });
 ```
 
 
@@ -162,7 +148,9 @@ History
 ----
 2.0.0
 * Upgraded Native Android SDK to v4.0.0
-* Upgraded Native iOS SDK to v3.0.0
+* Upgraded Native iOS SDK to v3.1.0
+* Using the ConnectionString instead of the former AppID/SDKKey/Collection
+* Added debug logs
 
 1.0.0
 * Initial Release

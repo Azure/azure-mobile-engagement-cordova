@@ -11,18 +11,27 @@
 #import <objc/message.h>
 
 #define AZME_PLUGIN_VERSION "2.0.0"
+#define NATIVE_PLUGIN_VERSION "3.1.0"
+#define CDVAZME_TAG @"[cdvazme-test] "
 
 @implementation AppDelegate(AZME)
 
 - (void)application:(UIApplication *)application  customdidFailToRegisterForRemoteNotificationsWithError:(NSError *)error
 {
-    NSLog(@"didFailToRegisterForRemoteNotificationsWithError %@", error);
+    NSLog(CDVAZME_TAG @"didFailToRegisterForRemoteNotificationsWithError %@", error);
 }
 
 - (void)application:(UIApplication *)application  customdidReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))handler
 {
-    NSLog(@"customdidReceiveRemoteNotification");
+    NSLog(CDVAZME_TAG @"customdidReceiveRemoteNotificationfetchCompletionHandler");
     [[EngagementAgent shared] applicationDidReceiveRemoteNotification:userInfo fetchCompletionHandler:handler];
+}
+
+// IOS6 Sypport
+- (void)application:(UIApplication*)application customdidReceiveRemoteNotification:(NSDictionary*)userInfo
+{
+    NSLog(CDVAZME_TAG @"customdidReceiveRemoteNotification");
+    [[EngagementAgent shared] applicationDidReceiveRemoteNotification:userInfo fetchCompletionHandler:nil];
 }
 
 - (void)application:(UIApplication *)application customdidRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
@@ -50,9 +59,12 @@ void MethodSwizzle(Class c, SEL orig, SEL new)
                   @selector(application:didFailToRegisterForRemoteNotificationsWithError:) );
 
     MethodSwizzle(self,
-
                   @selector(application:customdidReceiveRemoteNotification:fetchCompletionHandler:),
                   @selector( application:didReceiveRemoteNotification:fetchCompletionHandler:) );
+
+    MethodSwizzle(self,
+                  @selector(application:customdidReceiveRemoteNotification:),
+                  @selector( application:didReceiveRemoteNotification:) );
 
     MethodSwizzle(self,
                   @selector(application:customdidRegisterForRemoteNotificationsWithDeviceToken:),
@@ -67,39 +79,37 @@ void MethodSwizzle(Class c, SEL orig, SEL new)
 {
     enableLog = false;
 
-    AZME_IOS_SDKKEY = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"AZME_IOS_SDKKEY"];
-    AZME_IOS_APPID = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"AZME_IOS_APPID"];
-    AZME_IOS_COLLECTION = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"AZME_IOS_COLLECTION"];
-    AZME_IOS_REACH_ICON = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"AZME_IOS_REACH_ICON"];
+    NSString* AZME_IOS_CONNECTION_STRING = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"AZME_IOS_CONNECTION_STRING"];
+    NSString* AZME_IOS_REACH_ICON = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"AZME_IOS_REACH_ICON"];
+  
     NSString* str = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"AZME_ENABLE_LOG"];
-
     if ([str compare:@"1"] == NSOrderedSame || [str caseInsensitiveCompare:@"true"] == NSOrderedSame )
         enableLog = true;
 
-    if (AZME_IOS_SDKKEY.length != 0 && AZME_IOS_APPID.length != 0 && AZME_IOS_COLLECTION.length != 0)
+
+
+    if (AZME_IOS_CONNECTION_STRING.length != 0)
     {
 
-        NSLog(@"Initializing AZME for AppId:%@", AZME_IOS_APPID);
+        if (enableLog)
+        {
+            NSLog(CDVAZME_TAG @"Initializing AZME with ConnectionString:%@", AZME_IOS_CONNECTION_STRING);
+            [EngagementAgent setTestLogEnabled:YES];
+        }
 
         @try {
 
             AEReachModule* reach = nil;
             if (AZME_IOS_REACH_ICON.length > 0)
             {
-                NSLog(@"Preparing Reach with Icon :%@", AZME_IOS_REACH_ICON);
+                if (enableLog)
+                   NSLog(CDVAZME_TAG @" Preparing Reach with Icon :%@", AZME_IOS_REACH_ICON);
                 reach = [AEReachModule moduleWithNotificationIcon:[UIImage imageNamed:AZME_IOS_REACH_ICON]];
                 [reach setAutoBadgeEnabled:YES];
             }
 
-            NSString* endPoint = [NSString stringWithFormat:@"Endpoint=%@;SdkKey=%@;AppId=%@", AZME_IOS_COLLECTION, AZME_IOS_SDKKEY, AZME_IOS_APPID];
-            [EngagementAgent init:endPoint modules:reach, nil];
-                        
-            if (reach != nil )
-                [reach setDataPushDelegate:self];
-
-            if (enableLog)
-                [EngagementAgent setTestLogEnabled:YES];
-
+            [EngagementAgent init:AZME_IOS_CONNECTION_STRING modules:reach, nil];
+        
             NSDictionary *dict = [[NSDictionary alloc] initWithObjectsAndKeys:
                                   [NSString stringWithUTF8String:AZME_PLUGIN_VERSION],  @"CDVAZMEVersion",  nil];
 
@@ -111,7 +121,7 @@ void MethodSwizzle(Class c, SEL orig, SEL new)
         }
     }
     else
-        NSLog(@"*** AZME_IOS_APPID, AZME_IOS_SDKKEY or AZME_IOS_COLLECTION not set");
+        NSLog(@"*** AZME_IOS_CONNECTION_STRING not set");
 }
 
 - (void)startActivity:(CDVInvokedUrlCommand*)command
@@ -196,7 +206,7 @@ void MethodSwizzle(Class c, SEL orig, SEL new)
 {
     NSDictionary* dict = [NSDictionary dictionaryWithObjectsAndKeys:
                           [NSString stringWithUTF8String:AZME_PLUGIN_VERSION], @"pluginVersion",
-                          @"3.0.0", @"AZMEVersion", // à récuperer du SDK!
+                           [NSString stringWithUTF8String:NATIVE_PLUGIN_VERSION], @"AZMEVersion", 
                           [[EngagementAgent shared] deviceId], @"deviceId",
                           nil];
 
@@ -213,7 +223,12 @@ void MethodSwizzle(Class c, SEL orig, SEL new)
 
 - (void)handleOpenURL:(NSNotification*)notification
 {
+    
     NSString* url = [notification object];
+    
+    if (enableLog)
+        NSLog(CDVAZME_TAG @"handleOpenURL with :%@",url);
+
     NSString* jsString = [NSString stringWithFormat:@"AzureEngagement.handleOpenURL(\"%@\");", url];
     [self.commandDelegate evalJs:jsString];
 }
@@ -223,7 +238,7 @@ void MethodSwizzle(Class c, SEL orig, SEL new)
     CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK ];
 
     if (enableLog)
-        NSLog(@"registerForPushNotification");
+        NSLog(CDVAZME_TAG @"registerForPushNotification enabled");
 
     if ([[UIApplication sharedApplication] respondsToSelector:@selector(registerUserNotificationSettings:)]) {
         [[UIApplication sharedApplication] registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:(UIUserNotificationTypeBadge | UIUserNotificationTypeSound | UIUserNotificationTypeAlert) categories:nil]];

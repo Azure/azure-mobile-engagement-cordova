@@ -11,18 +11,25 @@
     <keywords>cordova,azme</keywords>
     <author>Olivier Goguel</author>
     <license>MIT</license>
+
+    <engines>
+        <!-- required for CB-9171 & CB-9162 -->
+        <engine name="cordova-plugman" version=">=5.2.0" />
+    </engines>
+
     <js-module name="AzureEngagement" src="www/AzureEngagement.js">
         <clobbers target="AzureEngagement"/>
     </js-module>
+
+    <preference name="AZME_REDIRECT_URL" default="null"/>
+    <preference name="AZME_ENABLE_LOG" default="true"/>
+
     <!-- android -->
     <platform name="android">
-        <preference name="AZME_ANDROID_GOOGLE_PROJECT_NUMBER"/>
-        <preference name="AZME_ANDROID_APPID"/>
-        <preference name="AZME_ANDROID_COLLECTION"/>
-        <preference name="AZME_ANDROID_SDKKEY"/>
-        <preference name="AZME_ANDROID_REACH_ICON"/>
-        <preference name="AZME_REDIRECT_URL"/>
-        <preference name="AZME_ENABLE_LOG"/>
+        <preference name="AZME_ANDROID_GOOGLE_PROJECT_NUMBER" default="null"/>
+        <preference name="AZME_ANDROID_REACH_ICON" default="icon"/>
+        <preference name="AZME_ANDROID_CONNECTION_STRING"/>
+
         <config-file parent="plugins" target="res/xml/config.xml">
             <feature name="AzureEngagement">
                 <param name="android-package" value="com.microsoft.azure.engagement.cordova.AZME"/>
@@ -30,9 +37,12 @@
             </feature>
         </config-file>
         <config-file parent="/manifest/application" target="AndroidManifest.xml">
-            <meta-data android:name="engagement:appId" android:value="$AZME_ANDROID_APPID"/>
-            <meta-data android:name="engagement:collection" android:value="$AZME_ANDROID_COLLECTION"/>
-            <meta-data android:name="engagement:sdkKey" android:value="$AZME_ANDROID_SDKKEY"/>
+
+            <preference name="android-minSdkVersion" value="99" />
+
+            <!-- to pass the variables to the plugin -->
+            <meta-data android:name="AZME_ANDROID_CONNECTION_STRING" android:value="$AZME_ANDROID_CONNECTION_STRING"/>
+            <!-- to configure the native sdk -->
             <meta-data android:name="engagement:reach:notification:icon" android:value="$AZME_ANDROID_REACH_ICON"/>
             <!-- If only 1 sender, don't forget the \n, otherwise it will be parsed as a negative number... -->
             <meta-data android:name="engagement:gcm:sender" android:value="$AZME_ANDROID_GOOGLE_PROJECT_NUMBER\n"/>
@@ -114,7 +124,7 @@
             <permission android:name="$PACKAGE_NAME.permission.C2D_MESSAGE" android:protectionLevel="signature"/>
         </config-file>
         <source-file src="src/android/AZME.java" target-dir="src/com/microsoft/azure/engagement"/>
-        <source-file src="src/android/EngagementSDK/mobile-engagement-4.0.0.jar" target-dir="libs"/>
+        <source-file src="src/android/EngagementSDK/mobile-engagement-4.1.0.jar" target-dir="libs"/>
         <framework src="com.android.support:support-v4:+" />
         <source-file src="src/android/EngagementSDK/res/drawable/engagement_close.png" target-dir="res/drawable"/>
         <source-file src="src/android/EngagementSDK/res/drawable/engagement_content_title.xml" target-dir="res/drawable"/>
@@ -131,27 +141,19 @@
     </platform>
     <!-- ios -->
     <platform name="ios">
-        <preference name="AZME_IOS_COLLECTION"/>
-        <preference name="AZME_IOS_SDKKEY"/>
-        <preference name="AZME_IOS_APPID"/>
-        <preference name="AZME_IOS_REACH_ICON"/>
-        <preference name="AZME_REDIRECT_URL"/>
-        <preference name="AZME_ENABLE_LOG"/>
+        <preference name="AZME_IOS_CONNECTION_STRING"/>
+        <preference name="AZME_IOS_REACH_ICON" default="icon.png"/>
+
         <config-file parent="/*" target="config.xml">
             <feature name="AzureEngagement">
                 <param name="ios-package" value="AZME"/>
                 <param name="onload" value="true"/>
             </feature>
         </config-file>
-        <config-file parent="AZME_IOS_COLLECTION" target="*-Info.plist">
-            <string>$AZME_IOS_COLLECTION</string>
+        <config-file parent="AZME_IOS_CONNECTION_STRING" target="*-Info.plist">
+            <string>$AZME_IOS_CONNECTION_STRING</string>
         </config-file>
-        <config-file parent="AZME_IOS_SDKKEY" target="*-Info.plist">
-            <string>$AZME_IOS_SDKKEY</string>
-        </config-file>
-        <config-file parent="AZME_IOS_APPID" target="*-Info.plist">
-            <string>$AZME_IOS_APPID</string>
-        </config-file>
+      
         <config-file parent="AZME_IOS_REACH_ICON" target="*-Info.plist">
             <string>$AZME_IOS_REACH_ICON</string>
         </config-file>
@@ -174,9 +176,7 @@
         </config-file>
         <config-file parent="UIBackgroundModes" target="*-Info.plist">
              <array>
-                <dict>
-                    <key>remote-notification</key>
-                </dict>
+                <key>remote-notification</key>
             </array>
         </config-file>
         <header-file src="src/ios/AZME.h"/>
