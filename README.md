@@ -34,7 +34,7 @@ cordova plugin add cordova-plugin-ms-azure-mobile-engagement --variable KEY=<val
 - `AZME_ANDROID_REACH_ICON` : the icon used for reach notification : must be the name of the resource without any extension, nor drawable prefix  (ex: `icon`)
 - `AZME_GOOGLE_PROJECT_NUMBER` : the project number used as the GCM (Google Cloud Messaging) sender ID
  
-Only the `AZME_ANDROID_CONNECTION_STRING` and/or `AZME_IOS_CONNECTION_STRING` : all the other variables are required
+Only the `AZME_ANDROID_CONNECTION_STRING` and/or `AZME_IOS_CONNECTION_STRING` are required : all the other variables are optionals.
 
 Example:
 ```sh
@@ -139,7 +139,8 @@ AzureEngagement.getStatus( _statusCallback, [_failure]);
 ```javascript
     AzureEngagement.getStatus(function(_info) {
             console.log("AZME SDK Version : "+_info.AZMEVersion);
-              console.log("AZME plugin Version : "+_info.pluginVersion);
+            console.log("AZME plugin Version : "+_info.pluginVersion);
+             console.log("Device ID : "+_info.deviceId);
         });
 ```
 

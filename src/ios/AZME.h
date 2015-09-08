@@ -12,15 +12,14 @@
 #import "AEReachModule.h"
 
 @interface AppDelegate (AZME)
-- (void)application:(UIApplication *)application customdidRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken;
-- (void)application:(UIApplication *)application customdidFailToRegisterForRemoteNotificationsWithError:(NSError *)error;
-- (void)application:(UIApplication *)application customdidReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))handler;
-- (void)application:(UIApplication *)application customdidReceiveRemoteNotification:(NSDictionary *)userInfo ;
+- (void)application:(UIApplication *)application azmeDidRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken;
+- (void)application:(UIApplication *)application azmeDidFailToRegisterForRemoteNotificationsWithError:(NSError *)error;
+- (void)application:(UIApplication *)application azmeDidReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))handler;
+- (void)application:(UIApplication *)application azmeDidReceiveRemoteNotification:(NSDictionary *)userInfo ;
 @end
 
 @interface AZME : CDVPlugin <AEReachDataPushDelegate>
 {
-    BOOL enableLog;
 }
 
 - (void)startActivity:(CDVInvokedUrlCommand*)command;
