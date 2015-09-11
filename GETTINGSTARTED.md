@@ -1,32 +1,32 @@
 ## Getting Started with Cordova Plugin for AZME
 #### App Creation
 Create a Sample Cordova App
-``````sh
+```sh
 cordova create <myAppName> <myAppBundleId> <myAppShortName>
 ```
 Add the platform you'd like to support (iOS in this case)
-``````sh
+```sh
 cordova platform add ios
 ```
 Retrieve your credentials for the AZURE Portal to configure the AZME plugin
-``````sh
-cordova plugin add cordova-plugin-ms-azure-mobile-engagement --variable AZME_IOS_COLLECTION=<yourCollection> --variable AZME_IOS_SDKKEY=<yourSDKKey> --variable AZME_IOS_APPID=<yourAppId> --variable AZME_IOS_REACH_ICON=Icon 
---variable AZME_REDIRECT_URL=myapp --variable AZME_ENABLE_LOG=true
+```sh
+cordova plugin add cordova-plugin-ms-azure-mobile-engagement --variable CONNECTION_STRING=<yourConnectionString> 
+--variable AZME_REDIRECT_URL=myapp 
 ```
-#### Send a screen to the AZME portal
+#### Send an activity to the AZME portal
 Edit `www/js/index.js`to add the call to AZME to declare a new activity once the ``deviceReady``event is received.
-``````js
+```js
  onDeviceReady: function() {
         app.receivedEvent('deviceready');
         AzureEngagement.startActivity("myPage",{});
     },
 ```
 Launch your application...
-``````sh
+```sh
 cordova run ios
 ```
 ... a new session should appear in the AZME portal and you should see the following log in your iOS application
- ``````log
+ ```log
 [Engagement] Agent: Session started
 [Engagement] Agent: Activity 'myPage' started
 [Engagement] Connection: Established
@@ -36,7 +36,7 @@ cordova run ios
 ```
 #### Extend your app to add Reach Support
 Edit `www/js/index.js`to add the call to AZME to request push new notification, and declare an handler
-``````js
+```js
  onDeviceReady: function() {
         app.receivedEvent('deviceready');
         AzureEngagement.registerForPushNotification();
@@ -45,7 +45,7 @@ Edit `www/js/index.js`to add the call to AZME to request push new notification, 
     },
 ```
 Launch your application...
-``````sh
+```sh
 cordova run ios
 ```
 ... a popup should appear to the user to allow notifications

@@ -16,11 +16,10 @@
 
 /**
  * Parse a notif announcement
- * @param element Parsed XML root DOM element.
+ * @param reachValues Parsed reach values.
  * @param params special parameters to replace in the action URL.
  * @result A new notif announcement or nil if it couldn't be parsed.
  */
-+ (id)notifAnnouncementWithElement:(AE_TBXMLElt*)element params:(NSDictionary*)params;
-
++ (id)notifAnnouncementWithReachValues:(NSDictionary*)reachValues params:(NSDictionary*)params;
 
 @end

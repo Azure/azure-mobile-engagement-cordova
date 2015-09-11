@@ -25,14 +25,15 @@ typedef enum _AEReachModuleState
 {
   AEReachModuleStateIdle = 1,
   AEReachModuleStateNotifying = 2,
-  AEReachModuleStateShowing = 3
+  AEReachModuleStateLoading = 3,
+  AEReachModuleStateShowing = 4
 } AEReachModuleState;
 
 /**
  * The Reach Engagement module
  *
  * This is the module that manage reach functionalities. It listens push messages thanks to
- * <[AEModule pushMessagesReceived:]> and <[AEModule displayPushMessageNotification:]> and notify the user
+ * <[AEModule pushMessageReceived:]> and <[AEModule displayPushMessageNotification:]> and notify the user
  * about announcements and polls.<br>
  * You usually create the module using the method moduleWithNotificationIcon: and pass it when you initialize Engagement
  * (using method <[EngagementAgent init:modules:]>)
@@ -41,7 +42,8 @@ typedef enum _AEReachModuleState
  *
  *  - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
  *      AEReachModule* reach = [AEReachModule moduleWithNotificationIcon:[UIImage imageNamed:@"icon.png"]];
- *      [EngagementAgent init:@"Endpoint={YOUR_APP_COLLECTION.DOMAIN};SdkKey={YOUR_APPID};AppId={YOUR_APPID}" modules:reach, nil];
+ *      [EngagementAgent init:@"Endpoint={YOUR_APP_COLLECTION.DOMAIN};SdkKey={YOUR_APPID};AppId={YOUR_APPID}"
+ *modules:reach, nil];
  *
  *      ...
  *
@@ -54,12 +56,13 @@ typedef enum _AEReachModuleState
   @private
   /* Storage */
   AEStorage* _db;
-  
-  /* Processed messages storage */
-  AEStorage* _processedMessages;
-  
-  /* Remote Notification Info */
-  NSDictionary* _remoteNotificationInfo;
+  AEStorage* _feedbackDb;
+
+  /* Set of DLCs that are pending download (key = localId) */
+  NSMutableIndexSet* _pendingDlcs;
+
+  /* Cached Reach Values */
+  NSDictionary* _cachedReachValues;
 
   /* Entries scheduled to be removed */
   NSMutableIndexSet* _trash;
@@ -71,7 +74,7 @@ typedef enum _AEReachModuleState
   AEReachModuleState _state;
 
   /** The message identifier being processed */
-  NSUInteger _processingId;
+  NSInteger _processingId;
 
   /* Current activity */
   NSString* _currentActivity;
@@ -156,10 +159,22 @@ typedef enum _AEReachModuleState
 - (void)markContentProcessed:(AEReachContent*)content;
 
 /**
+ * Called when loading page is dismissed by user.
+ */
+- (void)onLoadingViewDismissed;
+
+/**
  * Called when a notification is actioned.
  * @param content The content associated to the notification.
  */
 - (void)onNotificationActioned:(AEReachContent*)content;
+
+/**
+ * Indicate if feedback with status code should be sent for a push message.
+ * This method queries the db and updates the db at the same time.
+ * @param The flag indicating if feedback should be sent or not.
+ */
+- (BOOL)shouldSendFeedback:(NSString*)status forPushId:(NSString*)pushId;
 
 /** The delegate that will handle data pushes.  */
 @property(nonatomic, retain) id<AEReachDataPushDelegate> dataPushDelegate;

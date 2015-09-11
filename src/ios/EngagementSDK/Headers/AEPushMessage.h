@@ -7,26 +7,28 @@
 /**
  * A `AEPushMessage` object represents a Engagement push message.
  *
- * Engagement push messages are passed through Engagement agent to modules and Engagement push delegate.
+ * Engagement push messages are passed through Engagement agent to modules.
  *
  * **See also**
  *
- * - <[EngagementAgent setPushDelegate:]>
- * - <AEPushDelegate>
  * - <AEModule>
  */
 @interface AEPushMessage : NSObject<NSCoding>
 
 /** Message's identifier */
-@property(nonatomic, copy) NSString* messageId;
+@property(nonatomic, retain) NSString* messageId;
+
+/** Reach values */
+@property(nonatomic, retain) NSDictionary* reachValues;
 
 /** Message's payload */
-@property(nonatomic, copy) NSString* payload;
+@property(nonatomic, retain) NSDictionary* payload;
 
-/** optional XMPP address to reply to (can be `nil`). */
-@property(nonatomic, copy) NSString* replyTo;
-
-/** YES if this message was retrieved from the cache, NO otherwise */
-@property(nonatomic, assign) BOOL cached;
+/**
+ * Parse payload data.
+ * @param payloadData in NSData format.
+ * @return Parsing error.
+ */
+- (NSError*)parseJsonPayload:(NSData*)payloadData;
 
 @end

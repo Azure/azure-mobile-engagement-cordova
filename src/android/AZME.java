@@ -8,6 +8,8 @@ package com.microsoft.azure.engagement.cordova;
 import java.util.Iterator;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
+
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaInterface;
 import org.apache.cordova.CordovaPlugin;
@@ -29,15 +31,21 @@ public class AZME extends CordovaPlugin {
     private CordovaInterface cordova;
     private String previousActivityName = null;
     private String lastRedirect = null;
-    private final String pluginVersion = "1.0.0";
+    private boolean enableLog = false;
+    private static final String LOG_TAG = "cdvazme-test";
+    private final String pluginVersion = "2.0.0";
+    private final String nativeSDKVersion = "4.1.0"; // to eventually retrieve from the SDK itself
 
     public void initialize(CordovaInterface _cordova, CordovaWebView webView) {
         CordovaActivity activity =  (CordovaActivity) _cordova.getActivity();
-        final String invokeString = activity.getIntent().getDataString();
 
+     
+
+        final String invokeString = activity.getIntent().getDataString();
         if (invokeString != "" && invokeString != null) {
             lastRedirect = invokeString;
-            System.out.println("Preparing Redirect to " + lastRedirect);
+            if (enableLog)
+                  Log.i(AZME.LOG_TAG,"Preparing Redirect to " + lastRedirect);
         }
         super.initialize(_cordova, webView);
         cordova = _cordova;
@@ -45,12 +53,15 @@ public class AZME extends CordovaPlugin {
         try {
             ApplicationInfo ai = activity.getPackageManager().getApplicationInfo(activity.getPackageName(), PackageManager.GET_META_DATA);
             Bundle bundle = ai.metaData;
-            String appId = bundle.getString("engagement:appId");
-            String sdkKey = bundle.getString("engagement:sdkKey");
-            String collection = bundle.getString("engagement:collection");
+          
+            enableLog = bundle.getBoolean("engagement:log:test");     
 
+            String connectionString = bundle.getString("AZME_ANDROID_CONNECTION_STRING");     
+            if (enableLog)
+                  Log.i(AZME.LOG_TAG,"Initializing AZME with connectionString " + connectionString);
             EngagementConfiguration engagementConfiguration = new EngagementConfiguration();
-            engagementConfiguration.setConnectionString("Endpoint=" + collection + ";AppId=" + appId + ";SdkKey=" + sdkKey);
+            engagementConfiguration.setConnectionString(connectionString);
+
             EngagementAgent.getInstance(activity).init(engagementConfiguration);
 
             Bundle b = new Bundle();
@@ -97,12 +108,12 @@ public class AZME extends CordovaPlugin {
             EngagementAgent.getInstance(cordova.getActivity()).getDeviceId(new EngagementAgent.Callback<String>() {
                 @Override
                 public void onResult(String deviceId) {
-                    System.out.println("Got my device id:" + deviceId);
+                    Log.i(AZME.LOG_TAG,"DeviceID:" + deviceId);
                     JSONObject j;
                     String response = "{";
                     response = "{" +
                                "\"pluginVersion\": \"" + pluginVersion + "\"," +
-                               "\"AZMEVersion\": \"3.0.0\"," +
+                               "\"AZMEVersion\": \""+nativeSDKVersion+"\"," +
                                "\"deviceId\": \"" + deviceId + "\"" +
                                "}";
                     try {

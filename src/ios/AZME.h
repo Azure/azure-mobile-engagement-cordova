@@ -7,24 +7,19 @@
 #import <Cordova/CDVPlugin.h>
 #import "AZME.h"
 #import "EngagementAgent.h"
-#import "AEPushDelegate.h"
+#import "AEReachDataPushDelegate.h"
 #import "AppDelegate.h"
-
 #import "AEReachModule.h"
 
 @interface AppDelegate (AZME)
-- (void)application:(UIApplication *)application customdidRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken;
-- (void)application:(UIApplication *)application customdidFailToRegisterForRemoteNotificationsWithError:(NSError *)error;
-- (void)application:(UIApplication *)application customdidReceiveRemoteNotification:(NSDictionary *)userInfo;
+- (void)application:(UIApplication *)application azmeDidRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken;
+- (void)application:(UIApplication *)application azmeDidFailToRegisterForRemoteNotificationsWithError:(NSError *)error;
+- (void)application:(UIApplication *)application azmeDidReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))handler;
+- (void)application:(UIApplication *)application azmeDidReceiveRemoteNotification:(NSDictionary *)userInfo ;
 @end
 
-@interface AZME : CDVPlugin <AEPushDelegate>
+@interface AZME : CDVPlugin <AEReachDataPushDelegate>
 {
-    NSString* AZME_IOS_SDKKEY ;
-    NSString* AZME_IOS_APPID ;
-    NSString* AZME_IOS_COLLECTION ;
-    NSString* AZME_IOS_REACH_ICON;
-    BOOL enableLog;
 }
 
 - (void)startActivity:(CDVInvokedUrlCommand*)command;
@@ -36,6 +31,4 @@
 - (void)checkRedirect:(CDVInvokedUrlCommand*)command;
 - (void)getStatus:(CDVInvokedUrlCommand*)command;
 - (void)handleOpenURL:(NSNotification*)notification;
-
-
 @end

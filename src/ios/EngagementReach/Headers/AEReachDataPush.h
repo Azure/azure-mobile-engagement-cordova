@@ -11,14 +11,16 @@ typedef NS_ENUM (NSInteger, AEDatapushType)
 {
   /** Unknwon data-push type */
   AEDatapushTypeUnknown = -1,
-
+  
   /** Data-push with a text content */
   AEDatapushTypeText = 1,
-
+  
   /** Data-push with a base 64 encoded content */
   AEDatapushTypeBase64 = 2
-
 };
+
+/** Datapush kind */
+static NSString* const kAEDatapushKind = @"d";
 
 /**
  * The `AEReachDataPush` class defines objects that represent a generic reach content.
@@ -27,15 +29,24 @@ typedef NS_ENUM (NSInteger, AEDatapushType)
 {
   @private
   AEDatapushType _type;
+  NSDictionary* _cachedParams;
 }
 
 /**
  * Parse an announcement
- * @param element Parsed XML root DOM element.
+ * @param reachValues Parsed reach values.
  * @param params special parameters to replace in the body of the datapush.
  * @result A new announcement or nil if it couldn't be parsed.
  */
-+ (id)datapushWithElement:(AE_TBXMLElt*)element params:(NSDictionary*)params;
++ (id)datapushWithReachValues:(NSDictionary*)reachValues params:(NSDictionary*)params;
+
+/**
+ * Intialize data push.
+ * @param reachValues Parsed reach values.
+ * @param params special parameters to replace in the body of the datapush.
+ * @result A new announcement or nil if it couldn't be parsed.
+ */
+- (id)initWithReachValues:(NSDictionary*)reachValues params:(NSDictionary*)params;
 
 /**
  * Get the type for this data push.

@@ -5,6 +5,9 @@
 #import <Foundation/Foundation.h>
 #import "AEInteractiveContent.h"
 
+/** Announcement kind */
+static NSString* const kAEPollKind = @"p";
+
 /**
  * The `AEReachPoll` class defines objects that represent generic Engagement poll.
  *
@@ -29,10 +32,10 @@
 
 /**
  * Parse a poll
- * @param element Parsed XML root DOM element.
+ * @param reachValues Parsed reach values.
  * @result A new poll or nil if it couldn't be parsed.
  */
-+ (id)pollWithElement:(AE_TBXMLElt*)element;
++ (id)pollWithReachValues:(NSDictionary*)reachValues;
 
 /**
  * Fill answer for a given question. Answers are sent when calling <[AEReachContent actionContent]>.
