@@ -15,13 +15,22 @@
 - (void)application:(UIApplication *)application azmeDidRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken;
 - (void)application:(UIApplication *)application azmeDidFailToRegisterForRemoteNotificationsWithError:(NSError *)error;
 - (void)application:(UIApplication *)application azmeDidReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))handler;
-- (void)application:(UIApplication *)application azmeDidReceiveRemoteNotification:(NSDictionary *)userInfo ;
+- (void)application:(UIApplication *)application azmeDidReceiveRemoteNotification:(NSDictionary *)userInfo;
+- (void)application:(UIApplication *)application azmeEmpty:(id)_fake;
++ (void)swizzleInstanceSelector:(SEL)originalSelector withNewSelector:(SEL)newSelector;
++ (void)load;
 @end
 
 @interface AZME : CDVPlugin <AEReachDataPushDelegate>
 {
+    bool readyForPush;
+    NSMutableArray*  dataPushes ;
 }
-
+- (void)pluginInitialize;
+- (void)processDataPush;
+- (void)addDataPush:(NSString*)category withBody:(NSString*)body;
+- (BOOL)didReceiveStringDataPushWithCategory:(NSString*)category body:(NSString*)body;
+-(BOOL)didReceiveBase64DataPushWithCategory:(NSString*)category decodedBody:(NSData *)decodedBody encodedBody:(NSString *)encodedBody;
 - (void)startActivity:(CDVInvokedUrlCommand*)command;
 - (void)endActivity:(CDVInvokedUrlCommand*)command;
 - (void)sendAppInfo:(CDVInvokedUrlCommand*)command;
@@ -31,4 +40,5 @@
 - (void)checkRedirect:(CDVInvokedUrlCommand*)command;
 - (void)getStatus:(CDVInvokedUrlCommand*)command;
 - (void)handleOpenURL:(NSNotification*)notification;
+- (void)registerForPushNotification:(CDVInvokedUrlCommand*)command;
 @end

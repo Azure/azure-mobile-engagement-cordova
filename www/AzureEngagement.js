@@ -1,12 +1,14 @@
+
 /*
  * Copyright (c) Microsoft Corporation.  All rights reserved.
  * Licensed under the MIT license. See License.txt in the project root for license information.
  */
 
+
 module.exports = {
 
     pluginName : 'AzureEngagement',
-    pluginVersion : '2.0.0',
+    pluginVersion : '2.1.0',
 
     onOpenURL : function (_handler) {
         var _this = this;
@@ -14,12 +16,27 @@ module.exports = {
         cordova.exec(function( _url) {
             if (_url)
               _this.handleOpenURL(_url);
-        }, undefined, _this.pluginName, 'checkRedirect', [] );
+        }, undefined, _this.pluginName, 'checkRedirect', ['url'] );
+    },
+
+    onDataPushReceived : function(_handler) {
+         var _this = this;
+        _this.dataPushHandler = _handler;
+        cordova.exec( undefined, undefined, _this.pluginName, 'checkRedirect', ['data'] );
     },
 
     handleOpenURL : function(_url) {
         if (this.openURLHandler) {
             this.openURLHandler(_url);
+        }
+    },
+    
+    handleDataPush : function(_category,_body) {
+
+        if (this.dataPushHandler) {
+            var decodedCategory = decodeURIComponent(_category);
+            var decodedBody = decodeURIComponent(_body);
+            this.dataPushHandler(decodedCategory,decodedBody);
         }
     },
 
@@ -56,4 +73,6 @@ module.exports = {
     },
 
 };
+
+
 
