@@ -6,8 +6,8 @@
 package com.microsoft.azure.engagement.cordova;
 
 import java.util.Iterator;
-import android.content.Context;
-import android.content.Intent;
+import java.util.Map;
+
 import android.util.Log;
 
 import org.apache.cordova.CallbackContext;
@@ -25,30 +25,35 @@ import android.os.Bundle;
 
 import com.microsoft.azure.engagement.EngagementConfiguration;
 import com.microsoft.azure.engagement.EngagementAgent;
-import com.microsoft.azure.engagement.EngagementAgentUtils;
 
 public class AZME extends CordovaPlugin {
-    private CordovaInterface cordova;
+
+    public static final String LOG_TAG = "cdvazme-test";
+    private static final String pluginVersion = "2.1.0";
+    private static final String nativeSDKVersion = "4.1.0"; // to eventually retrieve from the SDK itself
+
+    public static AZME singleton = null;
+
+    public CordovaInterface cordova = null;
+    public CordovaWebView webView = null;
+    public boolean isPaused = true;
     private String previousActivityName = null;
     private String lastRedirect = null;
     private boolean enableLog = false;
-    private static final String LOG_TAG = "cdvazme-test";
-    private final String pluginVersion = "2.0.0";
-    private final String nativeSDKVersion = "4.1.0"; // to eventually retrieve from the SDK itself
+    public boolean readyForPush = false;
 
-    public void initialize(CordovaInterface _cordova, CordovaWebView webView) {
+    public void initialize(CordovaInterface _cordova, CordovaWebView _webView) {
         CordovaActivity activity =  (CordovaActivity) _cordova.getActivity();
-
-     
 
         final String invokeString = activity.getIntent().getDataString();
         if (invokeString != "" && invokeString != null) {
             lastRedirect = invokeString;
             if (enableLog)
-                  Log.i(AZME.LOG_TAG,"Preparing Redirect to " + lastRedirect);
+                Log.i(AZME.LOG_TAG,"Preparing Redirect to " + lastRedirect);
         }
-        super.initialize(_cordova, webView);
+        super.initialize(_cordova, _webView);
         cordova = _cordova;
+        webView  = _webView;
 
         try {
             ApplicationInfo ai = activity.getPackageManager().getApplicationInfo(activity.getPackageName(), PackageManager.GET_META_DATA);
@@ -58,7 +63,7 @@ public class AZME extends CordovaPlugin {
 
             String connectionString = bundle.getString("AZME_ANDROID_CONNECTION_STRING");     
             if (enableLog)
-                  Log.i(AZME.LOG_TAG,"Initializing AZME with connectionString " + connectionString);
+                Log.i(AZME.LOG_TAG,"Initializing AZME with connectionString " + connectionString);
             EngagementConfiguration engagementConfiguration = new EngagementConfiguration();
             engagementConfiguration.setConnectionString(connectionString);
 
@@ -66,13 +71,15 @@ public class AZME extends CordovaPlugin {
 
             Bundle b = new Bundle();
             b.putString("CDVAZMEVersion", pluginVersion);
-            EngagementAgent.getInstance(activity).sendAppInfo( b);
+            EngagementAgent.getInstance(activity).sendAppInfo(b);
 
         } catch (PackageManager.NameNotFoundException e) {
-            System.err.println("Failed to load meta-data, NameNotFound: " + e.getMessage());
+            Log.e(AZME.LOG_TAG,"Failed to load meta-data, NameNotFound: " + e.getMessage());
         } catch (NullPointerException e) {
-            System.err.println("Failed to load meta-data, NullPointer: " + e.getMessage());
+            Log.e(AZME.LOG_TAG,"Failed to load meta-data, NullPointer: " + e.getMessage());
         }
+
+        singleton = this;
     }
 
     private Bundle stringToBundle(String _param) {
@@ -96,13 +103,50 @@ public class AZME extends CordovaPlugin {
         }
     }
 
+    public void checkDataPush()
+    {
+        if (readyForPush==false || isPaused==true) {
+             return;
+        }
+        Map<String,String> m = com.microsoft.azure.engagement.cordova.AZMEDataPushReceiver.getPendingDataPushes(cordova.getActivity().getApplicationContext());
+        for (Map.Entry<String, ?> entry : m.entrySet())
+        {
+            String timestamp = entry.getKey();
+            String[] p = entry.getValue().toString().split(" ");
+            String encodedCategory = p[0];
+            String encodedBody = p[1];
+            if (enableLog)
+                Log.i(AZME.LOG_TAG,"handling data push ("+timestamp+") w/ category:"+encodedCategory);
+            webView.sendJavascript("AzureEngagement.handleDataPush('" + encodedCategory + "','" + encodedBody + "')");
+        }
+    }
+
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext)   {
+        if (enableLog)
+            Log.i(AZME.LOG_TAG,"execute: "+action+" w/ "+args.toString());
+        
         if (action.equals("checkRedirect")) {
-            callbackContext.success(lastRedirect);
-            lastRedirect = null;
+
+            String redirectType;
+            try {
+                redirectType = args.getString(0);
+                if (redirectType.equals( "url")) {
+                    callbackContext.success(lastRedirect);
+                    lastRedirect = null;
+                } else if (redirectType.equals("data")) {
+                    readyForPush = true;
+                    checkDataPush();
+                    callbackContext.success();
+                } else
+                    callbackContext.error("unsupport type:" + redirectType);
+
+            } catch (JSONException e) {
+                callbackContext.error("missing arg for checkRedirect");
+            }
+
             return true;
         }
-        if (action.equals("getStatus")) {
+        else if (action.equals("getStatus")) {
 
             final CallbackContext cb = callbackContext;
             EngagementAgent.getInstance(cordova.getActivity()).getDeviceId(new EngagementAgent.Callback<String>() {
@@ -117,7 +161,6 @@ public class AZME extends CordovaPlugin {
                                "\"deviceId\": \"" + deviceId + "\"" +
                                "}";
                     try {
-
                         cb.success(new JSONObject(response));
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -214,18 +257,22 @@ public class AZME extends CordovaPlugin {
             callbackContext.success();
             return true;
         }
-        callbackContext.error("unrecognized command :" + action);
+        String str = "Unrecognized Command : "+action;
+        Log.e(AZME.LOG_TAG,str);
+        callbackContext.error(str);
         return false;
     }
 
     public void onPause(boolean multitasking) {
+        isPaused = true;
         EngagementAgent.getInstance(cordova.getActivity()).endActivity();
     }
 
     public void onResume(boolean multitasking) {
         if (previousActivityName != null)
             EngagementAgent.getInstance(cordova.getActivity()).startActivity(cordova.getActivity(), previousActivityName, null);
+        isPaused = false;
+        checkDataPush();
     }
-
 
 }
