@@ -64,7 +64,7 @@ Once the `deviceready` event has been triggered by the Cordova framework, a `Azu
 * AzureEngagement.endJob
 * AzureEngagement.sendEvent
 * AzureEngagement.onOpenURL
-* AzureEngagement.onDataPush
+* AzureEngagement.onDataPushReceived
 * AzureEngagement.registerForPushNotification
 * AzureEngagement.getStatus
 
@@ -184,6 +184,9 @@ AzureEngagement.getStatus( _statusCallback, [_failure]);
 
 History
 ----
+2.1.1
+* Refactor Native <-> JS Bridge
+
 2.1.0
 * Added data push support
 

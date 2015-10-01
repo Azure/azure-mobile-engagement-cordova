@@ -10,7 +10,7 @@
 #import <objc/runtime.h>
 #import <objc/message.h>
 
-#define AZME_PLUGIN_VERSION @"2.1.0"
+#define AZME_PLUGIN_VERSION @"2.1.1"
 #define NATIVE_PLUGIN_VERSION @"3.1.0"
 #define CDVAZME_TAG @"[cdvazme-test] "
 #define CDVAZME_ERROR @"[cdvazme-test] ERROR: "
@@ -127,6 +127,8 @@ static bool enableLog = false;
     NSString* AZME_IOS_REACH_ICON = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"AZME_IOS_REACH_ICON"];
     
     readyForPush = false;
+    readyForURL  = false;
+    lastURL = nil;
     dataPushes  = [[NSMutableArray alloc] init];
     
     if (AZME_IOS_CONNECTION_STRING.length != 0)
@@ -174,6 +176,7 @@ static bool enableLog = false;
     }
     else
         NSLog( CDVAZME_ERROR @"AZME_IOS_CONNECTION_STRING not set");
+    
 }
 
 -(void)processDataPush
@@ -183,13 +186,13 @@ static bool enableLog = false;
     
     for (NSArray* push in dataPushes) {
      
-          NSString* encodedCategory = push[0];
+        NSString* encodedCategory = push[0];
         NSString* encodedBody = push[1];
 
         if (enableLog)
              NSLog(CDVAZME_TAG @"handling data push w/ category %@", encodedCategory);
 
-        NSString* jsString = [NSString stringWithFormat:@"AzureEngagement.handleDataPush(\"%@\",\"%@\");", encodedCategory,encodedBody ];
+        NSString* jsString = [NSString stringWithFormat:@"AzureEngagement.handleDataPush({\"category\":\"%@\",\"body\":\"%@\"});", encodedCategory,encodedBody ];
         [self.commandDelegate evalJs:jsString];
     }
     
@@ -344,22 +347,47 @@ static bool enableLog = false;
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
-// CheckRedirect does nothing on iOS
+
 - (void)checkRedirect:(CDVInvokedUrlCommand*)command
 {
     NSString *type = [command.arguments objectAtIndex:0];
-    
+    CDVPluginResult* pluginResult ;
+
     if (enableLog)
         NSLog(CDVAZME_TAG @"checkRedirect:%@",type);
-    
+
+    if ([type compare:@"url"]==NSOrderedSame)
+    {
+        readyForURL = true;
+        [self processURL];
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK  messageAsString:nil ];
+    }
+    else
     if ([type compare:@"data"]==NSOrderedSame)
     {
         readyForPush = true;
         [self processDataPush];
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK  messageAsString:nil ];
     }
+    else
+    {
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR  messageAsString:@"unsupported type" ];
+    }
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
+
+
+-(void)processURL
+{
+    if (readyForURL == FALSE || lastURL==nil)
+        return ;
     
-    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK  messageAsString:nil ];
-    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    if (enableLog)
+        NSLog(CDVAZME_TAG @"processing URL : %@",lastURL);
+    
+    NSString* jsString = [NSString stringWithFormat:@"AzureEngagement.handleOpenURL(\"%@\");", lastURL];
+    [self.commandDelegate evalJs:jsString];
+    lastURL = nil;
 }
 
 - (void)handleOpenURL:(NSNotification*)notification
@@ -367,10 +395,11 @@ static bool enableLog = false;
     NSString* url = [notification object];
     
     if (enableLog)
-        NSLog(CDVAZME_TAG @"handleOpenURL with :%@",url);
+        NSLog(CDVAZME_TAG @"handling URL :%@",url);
     
-    NSString* jsString = [NSString stringWithFormat:@"AzureEngagement.handleOpenURL(\"%@\");", url];
-    [self.commandDelegate evalJs:jsString];
+    lastURL = url;
+    [self processURL];
+   
 }
 
 - (void)registerForPushNotification:(CDVInvokedUrlCommand*)command

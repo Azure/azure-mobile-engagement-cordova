@@ -25,12 +25,14 @@
 {
     bool readyForPush;
     NSMutableArray*  dataPushes ;
+    bool readyForURL;
+    NSString*  lastURL ;
 }
 - (void)pluginInitialize;
 - (void)processDataPush;
 - (void)addDataPush:(NSString*)category withBody:(NSString*)body;
 - (BOOL)didReceiveStringDataPushWithCategory:(NSString*)category body:(NSString*)body;
--(BOOL)didReceiveBase64DataPushWithCategory:(NSString*)category decodedBody:(NSData *)decodedBody encodedBody:(NSString *)encodedBody;
+- (BOOL)didReceiveBase64DataPushWithCategory:(NSString*)category decodedBody:(NSData *)decodedBody encodedBody:(NSString *)encodedBody;
 - (void)startActivity:(CDVInvokedUrlCommand*)command;
 - (void)endActivity:(CDVInvokedUrlCommand*)command;
 - (void)sendAppInfo:(CDVInvokedUrlCommand*)command;
