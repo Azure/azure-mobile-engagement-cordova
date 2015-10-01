@@ -140,7 +140,7 @@ AzureEngagement.onDataPushReceived( _dataPushHandler,[ _success], [_failure]);
 #### Params
 * `_dataPushHandler`:  the function handler to receive the data push. The function needs to accept two parameters : the `category` , and the `body` 
 
-#### Remarques
+#### Notes
 * If no category was defined during the creation of the data push, the category will contain `None`
 * If the body contains non-text data, it will be  received encoded in base64 format 
   * If the data is an image, it can be directly displayed using the prefix  `data:image/png;base64` (cf. example)
