@@ -8,36 +8,49 @@
 module.exports = {
 
     pluginName : 'AzureEngagement',
-    pluginVersion : '2.1.0',
+    pluginVersion : '2.1.1',
+
+    onError : function(_error) {
+        console.error(_error);
+    },
 
     onOpenURL : function (_handler) {
         var _this = this;
         _this.openURLHandler  = _handler;
-        cordova.exec(function( _url) {
-            if (_url)
-              _this.handleOpenURL(_url);
-        }, undefined, _this.pluginName, 'checkRedirect', ['url'] );
+        cordova.exec(_this.handleOpenURL,_this.onError, _this.pluginName, 'checkRedirect', ['url'] );
     },
 
     onDataPushReceived : function(_handler) {
          var _this = this;
         _this.dataPushHandler = _handler;
-        cordova.exec( undefined, undefined, _this.pluginName, 'checkRedirect', ['data'] );
+        cordova.exec( _this.handleDataPush, _this.onError, _this.pluginName, 'checkRedirect', ['data'] );
     },
 
     handleOpenURL : function(_url) {
-        if (this.openURLHandler) {
-            this.openURLHandler(_url);
+        if (!_url)
+            return ;
+        var handler = /*this*/AzureEngagement.openURLHandler;
+        if (handler) {
+            handler(_url);
         }
+        else
+            console.error("missing openURLHandler");
     },
-    
-    handleDataPush : function(_category,_body) {
 
-        if (this.dataPushHandler) {
-            var decodedCategory = decodeURIComponent(_category);
-            var decodedBody = decodeURIComponent(_body);
-            this.dataPushHandler(decodedCategory,decodedBody);
+    // called by the plugin
+    handleDataPush : function(_result) {
+        if (!_result ||_result=="OK")
+             // ignore the checkredirect result
+            return;
+
+        var handler = /*this*/AzureEngagement.dataPushHandler;
+        if (handler) {
+            var decodedCategory = decodeURIComponent(_result.category);
+            var decodedBody = decodeURIComponent(_result.body);
+           handler(decodedCategory,decodedBody);
         }
+        else
+            console.error("missing dataPushHandler");
     },
 
     startActivity: function (_activityName,_extraInfos,_success,_failure) {
@@ -72,6 +85,13 @@ module.exports = {
         cordova.exec(_success,_failure, this.pluginName, 'registerForPushNotification', [] );
     },
 
+    requestPermissions: function (_permissions,_success,_failure) {
+        cordova.exec(_success,_failure, this.pluginName, 'requestPermissions', _permissions );
+    },
+
+    refreshPermissions: function (_success,_failure) {
+        cordova.exec(_success,_failure, this.pluginName, 'refreshPermissions', [] );
+    },
 };
 
 
