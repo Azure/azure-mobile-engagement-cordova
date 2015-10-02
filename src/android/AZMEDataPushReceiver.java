@@ -11,6 +11,7 @@ import java.net.URLEncoder;
 import java.util.Map;
 import java.util.TreeMap;
 
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
@@ -41,6 +42,7 @@ public class AZMEDataPushReceiver extends EngagementReachDataPushReceiver
     }
 
     public static Map<String,String> getPendingDataPushes(Context context) {
+
         Map<String, String> smap = new TreeMap<String, String>();
 
         SharedPreferences settings = context.getSharedPreferences(AZME_PREFERENCES, 0/*MODE_PRIVATE*/);
@@ -57,17 +59,19 @@ public class AZMEDataPushReceiver extends EngagementReachDataPushReceiver
         return smap;
     }
 
-    public void addDataPush(Context context,String category, String body) {
+    public static void addDataPush(Context context,String category, String body) {
         SharedPreferences settings = context.getSharedPreferences(AZME_PREFERENCES, 0/*MODE_PRIVATE*/);
         SharedPreferences.Editor prefEditor = settings.edit();
 
         Long tsLong = System.currentTimeMillis()/1000;
         String ts = tsLong.toString();
         String value=  category+" "+body;
-        prefEditor.putString(ts,value);
+        prefEditor.putString(ts, value);
         prefEditor.commit();
 
-        Log.i(AZME.LOG_TAG, "received data push ("+ts+") w/ category:"+category);
+        final int MAX_CHAR = 128;
+        int maxLength = (value.length() < MAX_CHAR)?value.length():MAX_CHAR;
+        Log.i(AZME.LOG_TAG, "received data push (" + ts + ") : " + value.substring(0,maxLength));
     }
 
     @Override

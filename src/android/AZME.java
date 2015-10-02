@@ -5,9 +5,14 @@
 
 package com.microsoft.azure.engagement.cordova;
 
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Map;
 
+import android.annotation.TargetApi;
+import android.content.pm.PackageInfo;
+import android.content.pm.PermissionInfo;
+import android.os.Build;
 import android.util.Log;
 
 import org.apache.cordova.CallbackContext;
@@ -15,6 +20,7 @@ import org.apache.cordova.CordovaInterface;
 import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.CordovaActivity;
 import org.apache.cordova.CordovaWebView;
+import org.apache.cordova.PluginResult;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,7 +35,7 @@ import com.microsoft.azure.engagement.EngagementAgent;
 public class AZME extends CordovaPlugin {
 
     public static final String LOG_TAG = "cdvazme-test";
-    private static final String pluginVersion = "2.1.0";
+    private static final String pluginVersion = "2.1.1";
     private static final String nativeSDKVersion = "4.1.0"; // to eventually retrieve from the SDK itself
 
     public static AZME singleton = null;
@@ -41,12 +47,13 @@ public class AZME extends CordovaPlugin {
     private String lastRedirect = null;
     private boolean enableLog = false;
     public boolean readyForPush = false;
+    private CallbackContext dataPushHandlerContext;
 
     public void initialize(CordovaInterface _cordova, CordovaWebView _webView) {
         CordovaActivity activity =  (CordovaActivity) _cordova.getActivity();
 
         final String invokeString = activity.getIntent().getDataString();
-        if (invokeString != "" && invokeString != null) {
+        if ( invokeString != null && !invokeString.equals("") ) {
             lastRedirect = invokeString;
             if (enableLog)
                 Log.i(AZME.LOG_TAG,"Preparing Redirect to " + lastRedirect);
@@ -105,7 +112,7 @@ public class AZME extends CordovaPlugin {
 
     public void checkDataPush()
     {
-        if (readyForPush==false || isPaused==true) {
+        if (!readyForPush || isPaused) {
              return;
         }
         Map<String,String> m = com.microsoft.azure.engagement.cordova.AZMEDataPushReceiver.getPendingDataPushes(cordova.getActivity().getApplicationContext());
@@ -116,15 +123,28 @@ public class AZME extends CordovaPlugin {
             String encodedCategory = p[0];
             String encodedBody = p[1];
             if (enableLog)
-                Log.i(AZME.LOG_TAG,"handling data push ("+timestamp+") w/ category:"+encodedCategory);
-            webView.sendJavascript("AzureEngagement.handleDataPush('" + encodedCategory + "','" + encodedBody + "')");
+                Log.i(AZME.LOG_TAG,"handling data push ("+timestamp+")");
+
+            JSONObject ret = new JSONObject();
+
+            try {
+                ret.put("category", encodedCategory);
+                ret.put("body",encodedBody);
+                PluginResult result = new PluginResult(PluginResult.Status.OK, ret);
+                result.setKeepCallback(true);
+                dataPushHandlerContext.sendPluginResult(result);
+            } catch (JSONException e) {
+                Log.e(AZME.LOG_TAG, "Failed to prepare data push " + e.getMessage());
+            }
+
         }
     }
 
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext)   {
         if (enableLog)
             Log.i(AZME.LOG_TAG,"execute: "+action+" w/ "+args.toString());
-        
+
+
         if (action.equals("checkRedirect")) {
 
             String redirectType;
@@ -134,9 +154,14 @@ public class AZME extends CordovaPlugin {
                     callbackContext.success(lastRedirect);
                     lastRedirect = null;
                 } else if (redirectType.equals("data")) {
+
+                    PluginResult result = new PluginResult(PluginResult.Status.OK);
+                    result.setKeepCallback(true);
+                    callbackContext.sendPluginResult(result);
+                    dataPushHandlerContext = callbackContext;
                     readyForPush = true;
                     checkDataPush();
-                    callbackContext.success();
+
                 } else
                     callbackContext.error("unsupport type:" + redirectType);
 
@@ -163,7 +188,7 @@ public class AZME extends CordovaPlugin {
                     try {
                         cb.success(new JSONObject(response));
                     } catch (JSONException e) {
-                        e.printStackTrace();
+                     //   e.printStackTrace();
                         cb.error("could not retrieve status");
                     }
                 }
@@ -257,6 +282,7 @@ public class AZME extends CordovaPlugin {
             callbackContext.success();
             return true;
         }
+      
         String str = "Unrecognized Command : "+action;
         Log.e(AZME.LOG_TAG,str);
         callbackContext.error(str);
