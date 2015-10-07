@@ -32,7 +32,7 @@ cordova plugin add cordova-plugin-ms-azure-mobile-engagement --variable KEY=<val
 #### Android Variables
 - `AZME_ANDROID_CONNECTION_STRING` : the iOS connection string (to retrive from the AZME portal)
 - `AZME_ANDROID_REACH_ICON` : the icon used for reach notification : must be the name of the resource without any extension, nor drawable prefix  (ex: `mynotificationicon`), and the icon file must be copied into your android project (`platforms/android/res/drawable)`
-- `AZME_GOOGLE_PROJECT_NUMBER` : the project number used as the GCM (Google Cloud Messaging) sender ID
+- `AZME_ANDROID_GOOGLE_PROJECT_NUMBER` : the project number used as the GCM (Google Cloud Messaging) sender ID
  
 Only the `AZME_ANDROID_CONNECTION_STRING` and/or `AZME_IOS_CONNECTION_STRING` are required : all the other variables are optionals.
 
