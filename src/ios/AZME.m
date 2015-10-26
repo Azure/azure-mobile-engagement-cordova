@@ -10,7 +10,7 @@
 #import <objc/runtime.h>
 #import <objc/message.h>
 
-#define AZME_PLUGIN_VERSION @"2.1.1"
+#define AZME_PLUGIN_VERSION @"2.2.0"
 #define NATIVE_PLUGIN_VERSION @"3.1.0"
 #define CDVAZME_TAG @"[cdvazme-test] "
 #define CDVAZME_ERROR @"[cdvazme-test] ERROR: "
@@ -125,6 +125,17 @@ static bool enableLog = false;
     
     NSString* AZME_IOS_CONNECTION_STRING = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"AZME_IOS_CONNECTION_STRING"];
     NSString* AZME_IOS_REACH_ICON = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"AZME_IOS_REACH_ICON"];
+    NSString* AZME_LAZYAREA_LOCATION = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"AZME_LAZYAREA_LOCATION"];
+    NSString* AZME_REALTIME_LOCATION = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"AZME_REALTIME_LOCATION"];
+    NSString* AZME_FINEREALTIME_LOCATION = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"AZME_FINEREALTIME_LOCATION"];
+    NSString* AZME_BACKGROUND_REPORTING = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"AZME_BACKGROUND_REPORTING"];
+    NSString* AZME_FOREGROUND_REPORTING = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"AZME_FOREGROUND_REPORTING"];
+    
+    bool lazyareaLocation =  AZME_LAZYAREA_LOCATION && [ AZME_LAZYAREA_LOCATION caseInsensitiveCompare:@"true"] == NSOrderedSame ;
+    bool realtimeLocation =  AZME_REALTIME_LOCATION && [ AZME_REALTIME_LOCATION caseInsensitiveCompare:@"true"] == NSOrderedSame ;
+    bool finerealtimeLocation =  AZME_FINEREALTIME_LOCATION && [ AZME_FINEREALTIME_LOCATION caseInsensitiveCompare:@"true"] == NSOrderedSame ;
+    bool foregroundReporting = AZME_FOREGROUND_REPORTING && [ AZME_FOREGROUND_REPORTING caseInsensitiveCompare:@"true"] == NSOrderedSame ;
+    bool backgroundReporting = AZME_BACKGROUND_REPORTING && [ AZME_BACKGROUND_REPORTING caseInsensitiveCompare:@"true"] == NSOrderedSame ;
     
     readyForPush = false;
     readyForURL  = false;
@@ -159,10 +170,69 @@ static bool enableLog = false;
                 {
                     [reach setAutoBadgeEnabled:YES];
                     [reach setDataPushDelegate:self];
+
+                #if TARGET_IPHONE_SIMULATOR
+                    NSLog(CDVAZME_TAG @"Running on iOS Simulator -- push notifications are disabled");        
+                #endif
+
                 }
             }
-            
+
             [EngagementAgent init:AZME_IOS_CONNECTION_STRING modules:reach, nil];
+
+            if ( lazyareaLocation )
+            {
+                [[EngagementAgent shared] setLazyAreaLocationReport:YES];
+                if (enableLog)
+                    NSLog(CDVAZME_TAG @"Lazy Area Location enabled");
+            }
+            else
+            if ( realtimeLocation )
+            {
+                [[EngagementAgent shared] setRealtimeLocationReport:YES];
+                if (enableLog)
+                    NSLog(CDVAZME_TAG @"Real Time Location enabled");
+
+            }
+            else
+            if ( finerealtimeLocation )
+            {
+                [[EngagementAgent shared] setRealtimeLocationReport:YES];
+                [[EngagementAgent shared] setFineRealtimeLocationReport:YES];
+                if (enableLog)
+                    NSLog(CDVAZME_TAG @"Fine Real Time Location enabled");
+
+            }
+
+            if ( backgroundReporting )
+            {
+                if ( realtimeLocation || finerealtimeLocation )
+                {
+         
+                    [[EngagementAgent shared] setBackgroundRealtimeLocationReport:YES withLaunchOptions:nil];
+                      if (enableLog)
+                        NSLog(CDVAZME_TAG @"Enabling Background Mode for realtime reporting");
+                }
+                else
+                     NSLog(CDVAZME_ERROR @"Background mode requires realtime location");
+            }
+            else
+            if (foregroundReporting)
+            {
+                if ( lazyareaLocation || realtimeLocation || finerealtimeLocation )
+                {
+
+                }
+                else
+                     NSLog(CDVAZME_ERROR @"Location required when using Foreground Location");
+            }
+            else
+            {
+                if ( lazyareaLocation || realtimeLocation || finerealtimeLocation )
+                {
+                        NSLog(CDVAZME_ERROR @"Foreground or Background required when using Location");
+                }
+            }
             
             NSDictionary *dict = [[NSDictionary alloc] initWithObjectsAndKeys:
                                   AZME_PLUGIN_VERSION, @"CDVAZMEVersion",  nil];

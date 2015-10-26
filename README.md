@@ -4,20 +4,26 @@ Cordova plugin for Azure Mobile Engagement
 
 Introduction
 --
-This plugin integrates the Azure Mobile Engagement (AZME) SDK into your Cordova/PhoneGap Application. It supports both *reporting* and *push* features. 
+This plugin integrates the Azure Mobile Engagement (AZME) SDK into your Cordova Application. It supports both *reporting* and *push* features. 
 
-*Please refer to the Azure Mobile Engagement documentation for more information about the various AZME concepts*.
+*Please refer to the Azure Mobile Engagement documentation for more information about the various AZME concept.*
 
 Supported Platforms
 --
 * iOS
 * Android
 
+Supported Framework
+--
+* Cordova
+* PhoneGap
+* CocoonJS
+* CrossWalk
+
 Installation
 --
 To install the plugin, just add it to your Cordova project using your proper AZME credentials through Cordova variables.
 ```sh
-cd <your project>
 cordova plugin add cordova-plugin-ms-azure-mobile-engagement --variable KEY=<value>
 ```
 #### Generic Variables
@@ -52,8 +58,32 @@ If you are using Xcode 7 and iOS 9, you have to perform the following additional
 * Set Enable Bitcode to No under Targets > Build Settings > set Enable Bitcode to Yes or No. (Make sure to select ALL from the top bar.)
 * Enable Push Notifications in Targets > Your Target Name > Capabilities.
 
+Location Reporting
+--
+Location reporting can be activated by adding two plugins to your project :
+* one to define the kind of location reporting : lazy area, realtime or runtime
+  * `cordova-plugin-ms-azure-mobile-engagement#:lazyarea-location`
+  * `cordova-plugin-ms-azure-mobile-engagement#:runtime-location`
+  * `cordova-plugin-ms-azure-mobile-engagement#:fineruntime-location`
 
-Methods
+* one to define whether the reporting is made in foreground only, or also when the application is in the background
+  * `cordova-plugin-ms-azure-mobile-engagement#:foreground-reporting`
+  * `cordova-plugin-ms-azure-mobile-engagement#:background-reporting`
+
+
+##### Example
+```sh
+cordova plugin add cordova-plugin-ms-azure-mobile-engagement#:realtime-location
+cordova plugin add cordova-plugin-ms-azure-mobile-engagement#:foreground-reporting
+```
+##### Remarks
+
+* By default, location report is being deactivated.
+* You need to add a plugin of each kind to enable the location reporting
+* Remove both plugins to disable the location
+
+
+Public Interface
 --
 Once the `deviceready` event has been triggered by the Cordova framework, a `AzureEngagement` object is available to interact with the native AZME SDK.
 
@@ -122,10 +152,10 @@ Set an event handler when an application specific URL is triggered (from a push 
 ```javascript
 AzureEngagement.onOpenURL( _urlHandler,[ _success], [_failure]);
 ```
-### Params
+##### Params
 * `_urlHandler`:  the handler that is passed the url that has been triggerd
 
-### Example
+##### Example
 ```javascript
     AzureEngagement.onOpenURL(function(_url) {
             console.log("user triggered url/action "+_url);
@@ -137,16 +167,16 @@ Set an event handler when data are being pushed to your application
 ```javascript
 AzureEngagement.onDataPushReceived( _dataPushHandler,[ _success], [_failure]);
 ```
-#### Params
+##### Params
 * `_dataPushHandler`:  the function handler to receive the data push. The function needs to accept two parameters : the `category` , and the `body` 
 
-#### Remarques
+##### Remarks
 * If no category was defined during the creation of the data push, the category will contain `None`
 * If the body contains non-text data, it will be  received encoded in base64 format 
   * If the data is an image, it can be directly displayed using the prefix  `data:image/png;base64` (cf. example)
   * If you want to extract the data bytes, you would need to use the `btoa()` function to convert base64 to binary
 
-#### Example
+##### Example
 ```javascript
     AzureEngagement.onDataPushReceived(function(_category,_body) {
             if (_category=="png")
@@ -184,6 +214,9 @@ AzureEngagement.getStatus( _statusCallback, [_failure]);
 
 History
 ----
+2.2.0
+* Added location reporting
+
 2.1.1
 * Refactor Native <-> JS Bridge
 

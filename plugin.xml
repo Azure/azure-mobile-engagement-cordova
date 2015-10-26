@@ -5,9 +5,9 @@
  * Licensed under the MIT license. See License.txt in the project root for license information.
  */
  -->
-<plugin id="cordova-plugin-ms-azure-mobile-engagement" version="2.1.1" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
-    <name>Cordova plugin for AZME</name>
-    <description>Cordova plugin for Azure Mobile Engagement</description>
+<plugin id="cordova-plugin-ms-azure-mobile-engagement" version="2.2.0" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
+    <name>Azure Mobile Engagement</name>
+    <description>Azure Mobile Engagement</description>
     <keywords>cordova,azme</keywords>
     <author>Olivier Goguel</author>
     <license>MIT</license>

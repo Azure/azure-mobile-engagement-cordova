@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/*
+ * Copyright (c) Microsoft Corporation.  All rights reserved.
+ * Licensed under the MIT license. See License.txt in the project root for license information.
+ */
+ -->
+<plugin id="cordova-plugin-ms-azure-mobile-engagement-foreground-reporting" version="2.2.0" xmlns="http://apache.org/cordova/ns/plugins/1.0">
+
+    <name>Azure Mobile Engagement Foreground Reporting</name>
+   
+    <platform name="android">
+         <config-file parent="/manifest/application" target="AndroidManifest.xml">
+            <meta-data android:name="AZME_FOREGROUND_REPORTING" android:value="true"/>
+        </config-file>
+    </platform>
+
+    <platform name="ios">
+        <config-file parent="AZME_FOREGROUND_REPORTING" target="*-Info.plist">
+            <string>true</string>
+        </config-file>
+         <config-file parent="NSLocationWhenInUseUsageDescription" target="*-Info.plist">
+             <string></string>
+        </config-file>
+        
+    </platform>
+      
+</plugin>
