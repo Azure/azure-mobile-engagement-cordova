@@ -12,7 +12,7 @@ module.exports = function(context) {
 	var pluginDir = context.opts.plugin.pluginInfo.dir + "#:"+location+"-location";
 	context.cordova.raw.plugin('add', pluginDir );
 
-	found = cmd.match(/--variable backgroundreporting=(\S*)/i);
+	found = cmd.match(/--variable backgroundreporting=(\S*)/);
 	var background = (found && found[1]=="true")?"background":"foreground";
 	
 	pluginDir = context.opts.plugin.pluginInfo.dir + "#:"+background+"-reporting";
