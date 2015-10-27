@@ -60,28 +60,23 @@ If you are using Xcode 7 and iOS 9, you have to perform the following additional
 
 Location Reporting
 --
-Location reporting can be activated by adding two plugins to your project :
-* one to define the kind of location reporting : lazy area, realtime or runtime
-  * `cordova-plugin-ms-azure-mobile-engagement#:lazyarea-location`
-  * `cordova-plugin-ms-azure-mobile-engagement#:runtime-location`
-  * `cordova-plugin-ms-azure-mobile-engagement#:fineruntime-location`
-
-* one to define whether the reporting is made in foreground only, or also when the application is in the background
-  * `cordova-plugin-ms-azure-mobile-engagement#:foreground-reporting`
-  * `cordova-plugin-ms-azure-mobile-engagement#:background-reporting`
-
+Location reporting can be activated by using two additional variables to define which location to report, and whether this reporting should be performed while the application is running in the background:
+* `--variable enableReporting` : `lazyarea`|`realtime`|`finerealtime`
+* `--variable backgroundReporting` : `true`|`false`
 
 ##### Example
 ```sh
-cordova plugin add cordova-plugin-ms-azure-mobile-engagement#:realtime-location
-cordova plugin add cordova-plugin-ms-azure-mobile-engagement#:foreground-reporting
+cordova plugin add cordova-plugin-ms-azure-mobile-engagement --variable enableLocation=realtime --variable backgroundReporting=true
 ```
 ##### Remarks
 
 * By default, location report is being deactivated.
-* You need to add a plugin of each kind to enable the location reporting
-* Remove both plugins to disable the location
-
+* Internally, some additional plugins are being added to your project, but they will be automatically removed when the AZME plugin is being removed
+  * `cordova-plugin-ms-azure-mobile-engagement-lazyarea-location`
+  * `cordova-plugin-ms-azure-mobile-engagement-runtime-location`
+  * `cordova-plugin-ms-azure-mobile-engagement-fineruntime-location`
+  * `cordova-plugin-ms-azure-mobile-engagement-foreground-reporting`
+  * `cordova-plugin-ms-azure-mobile-engagement-background-reporting`
 
 Public Interface
 --

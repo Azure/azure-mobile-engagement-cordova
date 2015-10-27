@@ -24,6 +24,10 @@
     <preference name="AZME_REDIRECT_URL" default="null"/>
     <preference name="AZME_ENABLE_LOG" default="true"/>
 
+    <!-- to add the permissions when location is enabled -->
+    <hook   type="after_plugin_install" src="hooks/after_plugin_install.js" />
+    <hook   type="before_plugin_uninstall" src="hooks/before_plugin_uninstall.js" />
+
     <!-- android -->
     <platform name="android">
         <preference name="AZME_ANDROID_GOOGLE_PROJECT_NUMBER" default="null"/>
