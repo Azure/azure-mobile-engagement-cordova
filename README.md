@@ -6,7 +6,7 @@ Introduction
 --
 This plugin integrates the Azure Mobile Engagement (AZME) SDK into your Cordova Application. It supports both *reporting* and *push* features. 
 
-*Please refer to the Azure Mobile Engagement documentation for more information about the various AZME concept.*
+*Please refer to the Azure Mobile Engagement documentation for more information about the various AZME concepts.*
 
 Supported Platforms
 --
