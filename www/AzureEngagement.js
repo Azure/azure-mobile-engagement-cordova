@@ -8,7 +8,7 @@
 module.exports = {
 
     pluginName : 'AzureEngagement',
-    pluginVersion : '2.1.1',
+    pluginVersion : '2.2.0',
 
     onError : function(_error) {
         console.error(_error);
@@ -21,7 +21,7 @@ module.exports = {
     },
 
     onDataPushReceived : function(_handler) {
-         var _this = this;
+        var _this = this;
         _this.dataPushHandler = _handler;
         cordova.exec( _this.handleDataPush, _this.onError, _this.pluginName, 'checkRedirect', ['data'] );
     },
@@ -34,12 +34,12 @@ module.exports = {
             handler(_url);
         }
         else
-            console.error("missing openURLHandler");
+            console.error('missing openURLHandler');
     },
 
     // called by the plugin
     handleDataPush : function(_result) {
-        if (!_result ||_result=="OK")
+        if (!_result ||_result=='OK')
              // ignore the checkredirect result
             return;
 
@@ -47,10 +47,10 @@ module.exports = {
         if (handler) {
             var decodedCategory = decodeURIComponent(_result.category);
             var decodedBody = decodeURIComponent(_result.body);
-           handler(decodedCategory,decodedBody);
+            handler(decodedCategory,decodedBody);
         }
         else
-            console.error("missing dataPushHandler");
+            console.error('missing dataPushHandler');
     },
 
     startActivity: function (_activityName,_extraInfos,_success,_failure) {

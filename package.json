@@ -1,6 +1,6 @@
 {
   "name": "cordova-plugin-ms-azure-mobile-engagement",
-  "version": "2.1.1",
+  "version": "2.2.0",
   "description": "Cordova plugin for Azure Mobile Engagement",
   "cordova": {
     "id": "cordova-plugin-ms-azure-mobile-engagement",
@@ -19,8 +19,8 @@
   },
   "scripts": {
     "test": "npm run jshint && npm run jscs",
-    "jshint": "node node_modules/jshint/bin/jshint www && node node_modules/jshint/bin/jshint tests  ",
-    "jscs": "node node_modules/jscs/bin/jscs www && node node_modules/jscs/bin/jscs tests"
+    "jshint": "jshint www && jshint tests  ",
+    "jscs": "jscs www && jscs tests"
   },
   "keywords": [
     "cordova",
