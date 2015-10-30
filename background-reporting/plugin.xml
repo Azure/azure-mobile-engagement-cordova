@@ -1,0 +1,38 @@
+<?xml version="2.2.0" encoding="UTF-8"?>
+<!--
+/*
+ * Copyright (c) Microsoft Corporation.  All rights reserved.
+ * Licensed under the MIT license. See License.txt in the project root for license information.
+ */
+ -->
+<plugin id="cordova-plugin-ms-azure-mobile-engagement-background-reporting" version="2.2.0" xmlns="http://apache.org/cordova/ns/plugins/1.0">
+
+    <name>Azure Mobile Engagement Background Reporting</name>
+   
+    <platform name="android">
+          <config-file parent="/manifest/application" target="AndroidManifest.xml">
+            <meta-data android:name="AZME_BACKGROUND_REPORTING" android:value="true"/>
+        </config-file>
+        <config-file parent="/manifest" target="AndroidManifest.xml">
+            <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+        </config-file>
+        <config-file parent="/manifest/application" target="AndroidManifest.xml">
+            <receiver android:name="com.microsoft.azure.engagement.EngagementLocationBootReceiver"
+               android:exported="false">
+               <intent-filter>
+                  <action android:name="android.intent.action.BOOT_COMPLETED" />
+               </intent-filter>
+            </receiver>
+        </config-file>
+    </platform>
+
+    <platform name="ios">
+        <config-file parent="AZME_BACKGROUND_REPORTING" target="*-Info.plist">
+            <string>true</string>
+        </config-file>
+         <config-file parent="NSLocationAlwaysUsageDescription" target="*-Info.plist">
+             <string></string>
+        </config-file>
+    </platform>
+      
+</plugin>

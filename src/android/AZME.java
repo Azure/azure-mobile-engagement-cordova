@@ -35,7 +35,7 @@ import com.microsoft.azure.engagement.EngagementAgent;
 public class AZME extends CordovaPlugin {
 
     public static final String LOG_TAG = "cdvazme-test";
-    private static final String pluginVersion = "2.1.1";
+    private static final String pluginVersion = "2.2.0";
     private static final String nativeSDKVersion = "4.1.0"; // to eventually retrieve from the SDK itself
 
     public static AZME singleton = null;
@@ -46,6 +46,11 @@ public class AZME extends CordovaPlugin {
     private String previousActivityName = null;
     private String lastRedirect = null;
     private boolean enableLog = false;
+    private boolean lazyAreaLocation = false;
+    private boolean realtimeLocation = false;
+    private boolean fineRealtimeLocation = false;
+    private boolean backgroundReporting = false;
+    private boolean foregroundReporting = false;
     public boolean readyForPush = false;
     private CallbackContext dataPushHandlerContext;
 
@@ -66,13 +71,59 @@ public class AZME extends CordovaPlugin {
             ApplicationInfo ai = activity.getPackageManager().getApplicationInfo(activity.getPackageName(), PackageManager.GET_META_DATA);
             Bundle bundle = ai.metaData;
           
-            enableLog = bundle.getBoolean("engagement:log:test");     
+            enableLog = bundle.getBoolean("engagement:log:test"); 
+            lazyAreaLocation = bundle.getBoolean("AZME_LAZYAREA_LOCATION");
+            realtimeLocation = bundle.getBoolean("AZME_REALTIME_LOCATION");
+            fineRealtimeLocation = bundle.getBoolean("AZME_REALTIME_LOCATION");
+            backgroundReporting= bundle.getBoolean("AZME_BACKGROUND_REPORTING");
+            foregroundReporting = bundle.getBoolean("AZME_FOREGROUND_REPORTING");
 
             String connectionString = bundle.getString("AZME_ANDROID_CONNECTION_STRING");     
             if (enableLog)
                 Log.i(AZME.LOG_TAG,"Initializing AZME with connectionString " + connectionString);
             EngagementConfiguration engagementConfiguration = new EngagementConfiguration();
             engagementConfiguration.setConnectionString(connectionString);
+            
+            if (lazyAreaLocation) {
+                engagementConfiguration.setLazyAreaLocationReport(true);
+                if (enableLog)
+                    Log.i(AZME.LOG_TAG,"Lazy Area Location enabled");
+            }
+            else
+            if (realtimeLocation) {
+                engagementConfiguration.setRealtimeLocationReport(true);
+                if (enableLog)
+                    Log.i(AZME.LOG_TAG,"Realtime Location enabled");
+            }
+            else
+            if (fineRealtimeLocation) {
+                engagementConfiguration.setRealtimeLocationReport(true);
+                engagementConfiguration.setFineRealtimeLocationReport(true);
+                if (enableLog)
+                    Log.i(AZME.LOG_TAG,"Fine Realtime Location enabled");
+            }
+
+            if (backgroundReporting) {
+                if (fineRealtimeLocation || realtimeLocation) {
+                    engagementConfiguration.setBackgroundRealtimeLocationReport(true);
+                    if (enableLog)
+                        Log.i(AZME.LOG_TAG,"Background Location enabled");
+                }
+                else
+                    Log.i(AZME.LOG_TAG,"Background mode requires realtime location");
+            }
+            else
+            if (foregroundReporting) {
+                if (lazyAreaLocation || fineRealtimeLocation || realtimeLocation) {
+                }
+                else
+                    Log.e(AZME.LOG_TAG,"Foreground mode requires location");
+            }
+            else {
+                if (lazyAreaLocation || fineRealtimeLocation || realtimeLocation) {
+                    Log.e(AZME.LOG_TAG, "Foreground or Background required when using location");
+                }
+            }
 
             EngagementAgent.getInstance(activity).init(engagementConfiguration);
 
