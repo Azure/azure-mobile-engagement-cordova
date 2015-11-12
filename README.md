@@ -61,7 +61,7 @@ If you are using Xcode 7 and iOS 9, you have to perform the following additional
 Location Reporting
 --
 Location reporting can be activated by using two additional variables to define which location to report, and whether this reporting should be performed while the application is running in the background:
-* `--variable enableReporting` : `lazyarea`|`realtime`|`finerealtime`
+* `--variable enableLocation` : `lazyarea`|`realtime`|`finerealtime`
 * `--variable backgroundReporting` : `true`|`false`
 
 ##### Example
