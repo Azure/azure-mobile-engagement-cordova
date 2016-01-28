@@ -72,7 +72,7 @@ cordova plugin add cordova-plugin-ms-azure-mobile-engagement --variable enableLo
   * `cordova-plugin-ms-azure-mobile-engagement-foreground-reporting`
   * `cordova-plugin-ms-azure-mobile-engagement-background-reporting`
 * If you are targetting AndroidM, your application needs to call  `Engagement.requestPermissions`at some point (cf. below)
-* For IOS, you can also add  `--variable AZME_LOCATION_REPORTING_DESCRIPTION : <desc> ` to define the message that will be displayed to the end user in the permission dialog
+* For IOS, you can also add  `--variable AZME_IOS_LOCATION_DESCRIPTION : <desc> ` to define the message that will be displayed to the end user in the permission dialog
 
 
 Push Notification Support
@@ -253,7 +253,7 @@ History
   * `AZME_ACTION_URL` instead of `AZME_REDIRECT_URL`
   * `initializeReach` instead of `registerForPushNotification`/`onHandleURL`/`onDataPushReceived`
   * Category is set to `null` instead of `None`if not defined within a campaign
-* Added `AZME_LOCATION_REPORTING_DESCRIPTION` variable
+* Added `AZME_IOS_LOCATION_DESCRIPTION` variable
 * Fix Location reporting hooks
 
 ##### 2.3.1

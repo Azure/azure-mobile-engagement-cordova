@@ -16,11 +16,8 @@
     </platform>
 
     <platform name="ios">
-
-<!--   
+  
         <preference name="AZME_IOS_LOCATION_DESCRIPTION" default="to report your location for analytics purposes"/>
--->
-       <preference name="AZME_IOS_LOCATION_DESCRIPTION"/>
 
         <config-file parent="AZME_FOREGROUND_REPORTING" target="*-Info.plist">
             <string>true</string>
