@@ -3,13 +3,10 @@
  * Licensed under the MIT license. See License.txt in the project root for license information.
  */
 
-#import <UIKit/UIKit.h>
+
 #import <Cordova/CDVPlugin.h>
-#import "AZME.h"
-#import "EngagementAgent.h"
-#import "AEReachDataPushDelegate.h"
-#import "AppDelegate.h"
-#import "AEReachModule.h"
+ #import "AppDelegate.h"
+#import "EngagementShared.h"
 
 @interface AppDelegate (AZME)
 - (void)application:(UIApplication *)application azmeDidRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken;
@@ -21,26 +18,29 @@
 + (void)load;
 @end
 
-@interface AZME : CDVPlugin <AEReachDataPushDelegate>
-{
-    bool readyForPush;
-    NSMutableArray*  dataPushes ;
-    bool readyForURL;
-    NSString*  lastURL ;
-}
+@interface AZME: CDVPlugin <EngagementDelegate>
+
 - (void)pluginInitialize;
-- (void)processDataPush;
-- (void)addDataPush:(NSString*)category withBody:(NSString*)body;
-- (BOOL)didReceiveStringDataPushWithCategory:(NSString*)category body:(NSString*)body;
-- (BOOL)didReceiveBase64DataPushWithCategory:(NSString*)category decodedBody:(NSData *)decodedBody encodedBody:(NSString *)encodedBody;
 - (void)startActivity:(CDVInvokedUrlCommand*)command;
 - (void)endActivity:(CDVInvokedUrlCommand*)command;
-- (void)sendAppInfo:(CDVInvokedUrlCommand*)command;
+
 - (void)sendEvent:(CDVInvokedUrlCommand*)command;
+- (void)sendAppInfo:(CDVInvokedUrlCommand*)command;
 - (void)startJob:(CDVInvokedUrlCommand*)command;
 - (void)endJob:(CDVInvokedUrlCommand*)command;
-- (void)checkRedirect:(CDVInvokedUrlCommand*)command;
+
 - (void)getStatus:(CDVInvokedUrlCommand*)command;
-- (void)handleOpenURL:(NSNotification*)notification;
-- (void)registerForPushNotification:(CDVInvokedUrlCommand*)command;
+- (void)handleOpenURL:(CDVInvokedUrlCommand*)command;
+- (void)handleDataPush:(CDVInvokedUrlCommand*)command;
+- (void)requestPermissions:(CDVInvokedUrlCommand*)command;
+
+- (void)sendSessionEvent:(CDVInvokedUrlCommand*)command;
+- (void)sendSessionError:(CDVInvokedUrlCommand*)command;
+- (void)sendError:(CDVInvokedUrlCommand*)command;
+- (void)sendJobEvent:(CDVInvokedUrlCommand*)command;
+- (void)sendJobError:(CDVInvokedUrlCommand*)command;
+
+
 @end
+
+

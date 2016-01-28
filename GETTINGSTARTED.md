@@ -11,14 +11,13 @@ cordova platform add ios
 Retrieve your credentials for the AZURE Portal to configure the AZME plugin
 ```sh
 cordova plugin add cordova-plugin-ms-azure-mobile-engagement --variable CONNECTION_STRING=<yourConnectionString> 
---variable AZME_REDIRECT_URL=myapp 
+--variable AZME_ACTION_URL=myapp 
 ```
 #### Send an activity to the AZME portal
 Edit `www/js/index.js`to add the call to AZME to declare a new activity once the ``deviceReady``event is received.
 ```js
  onDeviceReady: function() {
-        app.receivedEvent('deviceready');
-        AzureEngagement.startActivity("myPage",{});
+        Engagement.startActivity("myPage",{});
     },
 ```
 Launch your application...
@@ -38,10 +37,12 @@ cordova run ios
 Edit `www/js/index.js`to add the call to AZME to request push new notification, and declare an handler
 ```js
  onDeviceReady: function() {
-        app.receivedEvent('deviceready');
-        AzureEngagement.registerForPushNotification();
-        AzureEngagement.onOpenURL(function(_url) { alert(_url); });
-        AzureEngagement.startActivity("myPage",{});
+        Engagement.initializeReach(
+            // on OpenUrl
+            function(_url) { 
+            alert(_url); 
+            });
+        Engagement.startActivity("myPage",{});
     },
 ```
 Launch your application...
