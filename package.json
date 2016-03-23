@@ -1,6 +1,6 @@
 {
   "name": "cordova-plugin-ms-azure-mobile-engagement",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "description": "Cordova plugin for Azure Mobile Engagement",
   "cordova": {
     "id": "cordova-plugin-ms-azure-mobile-engagement",
@@ -25,6 +25,9 @@
   "keywords": [
     "cordova",
     "azme",
+    "engagement",
+    "azure",
+    "mobile",
     "ecosystem:cordova",
     "cordova-android",
     "cordova-ios"

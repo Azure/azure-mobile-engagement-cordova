@@ -5,24 +5,29 @@
  * Licensed under the MIT license. See License.txt in the project root for license information.
  */
  -->
-<plugin id="cordova-plugin-ms-azure-mobile-engagement" version="2.2.0" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
+<plugin id="cordova-plugin-ms-azure-mobile-engagement" version="3.0.0" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
     <name>Azure Mobile Engagement</name>
     <description>Azure Mobile Engagement</description>
-    <keywords>cordova,azme</keywords>
+    <keywords>cordova,azme, azure, mobile, engagement</keywords>
     <author>Olivier Goguel</author>
     <license>MIT</license>
 
     <engines>
         <!-- required for CB-9171 & CB-9162 -->
         <engine name="cordova-plugman" version=">=5.2.0" />
+        <!-- required for Android M Compatibility -->
+        <engine name="cordova-android" version=">=5.0.0" />
+        <!-- required for XCode7 Compatibility -->
+        <engine name="cordova-android" version=">=3.9.2" />
     </engines>
 
-    <js-module name="AzureEngagement" src="www/AzureEngagement.js">
-        <clobbers target="AzureEngagement"/>
+    <js-module name="Engagement" src="www/Engagement.js">
+        <clobbers target="Engagement"/>
     </js-module>
 
-    <preference name="AZME_REDIRECT_URL" default="null"/>
-    <preference name="AZME_ENABLE_LOG" default="true"/>
+    <preference name="AZME_ACTION_URL" default="null"/>
+    <preference name="AZME_ENABLE_PLUGIN_LOG" default="true"/>
+    <preference name="AZME_ENABLE_NATIVE_LOG" default="true"/>
 
     <!-- to add the permissions when location is enabled -->
     <hook   type="after_plugin_install" src="hooks/after_plugin_install.js" />
@@ -35,7 +40,7 @@
         <preference name="AZME_ANDROID_CONNECTION_STRING"/>
 
         <config-file parent="plugins" target="res/xml/config.xml">
-            <feature name="AzureEngagement">
+            <feature name="Engagement">
                 <param name="android-package" value="com.microsoft.azure.engagement.cordova.AZME"/>
                 <param name="onload" value="true"/>
             </feature>
@@ -48,7 +53,8 @@
             <!-- If only 1 sender, don't forget the \n, otherwise it will be parsed as a negative number... -->
             <meta-data android:name="engagement:gcm:sender" android:value="$AZME_ANDROID_GOOGLE_PROJECT_NUMBER\n"/>
             <service android:exported="false" android:label="$PACKAGE_NAME-Service" android:name="com.microsoft.azure.engagement.service.EngagementService" android:process=":Engagement"/>
-            <meta-data android:name="engagement:log:test" android:value="$AZME_ENABLE_LOG"/>
+            <meta-data android:name="engagement:log:test" android:value="$AZME_ENABLE_NATIVE_LOG"/>
+             <meta-data android:name="AZME_ENABLE_PLUGIN_LOG" android:value="$AZME_ENABLE_PLUGIN_LOG"/>
             <meta-data android:name="engagement:reach:notification:icon" android:value="$AZME_ANDROID_REACH_ICON"/>
             <activity android:name="com.microsoft.azure.engagement.reach.activity.EngagementTextAnnouncementActivity" android:theme="@android:style/Theme.Light">
                 <intent-filter>
@@ -103,7 +109,7 @@
                     <category android:name="$PACKAGE_NAME"/>
                 </intent-filter>
             </receiver>
-            <receiver android:name="com.microsoft.azure.engagement.cordova.AZMEDataPushReceiver"
+            <receiver android:name="com.microsoft.azure.engagement.shared.EngagementDataPushReceiver"
           android:exported="false">
           <intent-filter>
             <action android:name="com.microsoft.azure.engagement.reach.intent.action.DATA_PUSH" />
@@ -115,7 +121,7 @@
                 <action android:name="android.intent.action.VIEW"/>
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:scheme="$AZME_REDIRECT_URL"/>
+                <data android:scheme="$AZME_ACTION_URL"/>
             </intent-filter>
         </config-file>
         <config-file parent="/manifest" target="AndroidManifest.xml">
@@ -130,8 +136,10 @@
             <uses-permission android:name="$PACKAGE_NAME.permission.C2D_MESSAGE"/>
             <permission android:name="$PACKAGE_NAME.permission.C2D_MESSAGE" android:protectionLevel="signature"/>
         </config-file>
-        <source-file src="src/android/AZME.java" target-dir="src/com/microsoft/azure/engagement/cordova"/>
-        <source-file src="src/android/AZMEDataPushReceiver.java" target-dir="src/com/microsoft/azure/engagement/cordova"/>
+        <source-file src="src/android/cordova/AZME.java" target-dir="src/com/microsoft/azure/engagement/cordova"/>
+        <source-file src="src/android/shared/EngagementDataPushReceiver.java" target-dir="src/com/microsoft/azure/engagement/shared"/>
+        <source-file src="src/android/shared/EngagementShared.java" target-dir="src/com/microsoft/azure/engagement/shared"/>
+        <source-file src="src/android/shared/EngagementDelegate.java" target-dir="src/com/microsoft/azure/engagement/shared"/>
         <source-file src="src/android/EngagementSDK/mobile-engagement-4.1.0.jar" target-dir="libs"/>
         <framework src="com.android.support:support-v4:+" />
         <source-file src="src/android/EngagementSDK/res/drawable/engagement_close.png" target-dir="res/drawable"/>
@@ -153,7 +161,7 @@
         <preference name="AZME_IOS_REACH_ICON" default="icon.png"/>
 
         <config-file parent="/*" target="config.xml">
-            <feature name="AzureEngagement">
+            <feature name="Engagement">
                 <param name="ios-package" value="AZME"/>
                 <param name="onload" value="true"/>
             </feature>
@@ -165,8 +173,11 @@
         <config-file parent="AZME_IOS_REACH_ICON" target="*-Info.plist">
             <string>$AZME_IOS_REACH_ICON</string>
         </config-file>
-        <config-file parent="AZME_ENABLE_LOG" target="*-Info.plist">
-            <string>$AZME_ENABLE_LOG</string>
+        <config-file parent="AZME_ENABLE_PLUGIN_LOG" target="*-Info.plist">
+            <string>$AZME_ENABLE_PLUGIN_LOG</string>
+        </config-file>
+          <config-file parent="AZME_ENABLE_NATIVE_LOG" target="*-Info.plist">
+            <string>$AZME_ENABLE_NATIVE_LOG</string>
         </config-file>
         <config-file parent="CFBundleURLTypes" target="*-Info.plist">
             <array>
@@ -177,7 +188,7 @@
                     <string>$PACKAGE_NAME.redirect</string>
                     <key>CFBundleURLSchemes</key>
                     <array>
-                        <string>$AZME_REDIRECT_URL</string>
+                        <string>$AZME_ACTION_URL</string>
                     </array>
                 </dict>
             </array>
@@ -187,8 +198,10 @@
                 <key>remote-notification</key>
             </array>
         </config-file>
-        <header-file src="src/ios/AZME.h"/>
-        <source-file src="src/ios/AZME.m"/>
+        <header-file src="src/ios/AZMECordova.h"/>
+        <source-file src="src/ios/AZMECordova.m"/>
+        <header-file src="src/ios/EngagementShared.h"/>
+        <source-file src="src/ios/EngagementShared.m"/>
         <header-file src="src/ios/EngagementSDK/Classes/AEIdfaProvider.h"/>
         <source-file src="src/ios/EngagementSDK/Classes/AEIdfaProvider.m"/>
         <header-file src="src/ios/EngagementSDK/Headers/AEModule.h"/>
@@ -230,11 +243,5 @@
         <framework src="CoreLocation.framework"/>
         <framework src="AdSupport.framework"/>
         <framework src="libxml2.tbd"/>
-        <info>
-            *** If using XCode7 ***
-                Set Enable Bitcode to No in build settings
-                Enable "Push Notification" in target capabilities
-            ***
-        </info>
     </platform>
 </plugin>

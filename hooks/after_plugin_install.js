@@ -1,21 +1,44 @@
 
+azmeLocationExtensionAlreadyInstalled = false;
+
 module.exports = function(context) {
 	
-	var cmd = context.cmdLine.toLowerCase();
-	var found = cmd.match(/--variable\s*enablelocation=(\S*)/);
-	if (!found) 
+	// Do not install for each platform!
+	if (azmeLocationExtensionAlreadyInstalled == true)
 		return ;
-	var location = found[1];
+	azmeLocationExtensionAlreadyInstalled = true;
+	
+	var cmd = context.cmdLine;	
+	var regex = /--variable\s*(\w*)=([\S]*)/g
+	var variables = {};
+	var opts = { 
+			cli_variables:{}
+		};
+	var match = regex.exec(cmd);
+	while (match != null) {
+		var key = match[1];
+		var value = match[2];
+	    opts.cli_variables[key]=value	// keep variables as is to pass to sub plugin
+	    variables[key.toLowerCase()]=value // keep variables in lowercase to simplify detection
+	    match = regex.exec(cmd);
+	}
+	
+	var location = variables.enablelocation;
+	if (!location)
+		return ;
+
+	location = location.toLowerCase();
 	if (location != "lazyarera" && location != "realtime" && location != "finerealtime")
 		throw new Error( "Unsupported parameter with --variable enableLocation: "+location);
 
-	var pluginDir = context.opts.plugin.pluginInfo.dir + "#:"+location+"-location";
-	context.cordova.raw.plugin('add', pluginDir );
+	var locationPluginDir = context.opts.plugin.pluginInfo.dir + "#:"+location+"-location";
 
-	found = cmd.match(/--variable\s*backgroundreporting=(\S*)/);
-	var background = (found && found[1]=="true")?"background":"foreground";
-	
-	pluginDir = context.opts.plugin.pluginInfo.dir + "#:"+background+"-reporting";
-	context.cordova.raw.plugin('add', pluginDir );
+	context.cordova.raw.plugin('add', locationPluginDir, opts )
+	.then(function() {
 
+		var reporting = variables.backgroundreporting;
+		var background = (reporting && reporting.toLowerCase()=="true")?"background":"foreground";
+		var reportingPluginDir = context.opts.plugin.pluginInfo.dir + "#:"+background+"-reporting";
+		context.cordova.raw.plugin('add', reportingPluginDir , opts);		
+	});
 }
