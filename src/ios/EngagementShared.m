@@ -18,22 +18,33 @@ bool isStringNull(NSString*_string)
 
 @implementation EngagementShared
 
--(id)init:(NSString*)_sdkName withPluginVersion:(NSString*)_pluginVersion withNativeVersion:(NSString*)_nativeVersion
+
++ (EngagementShared*)instance {
+    static EngagementShared *_instance = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        _instance = [self alloc];
+        [_instance enablePluginLog:false];
+    });
+    return _instance;
+}
+
+
+-(void)initSDK:(NSString*)_sdkName withPluginVersion:(NSString*)_pluginVersion withNativeVersion:(NSString*)_nativeVersion
 {
    
     pluginVersion = _pluginVersion;
     nativeVersion = _nativeVersion;
     sdkName = _sdkName ;
-    enablePluginLog = false;
     readyForPush = false;
     readyForURL  = false;
     lastURL = nil;
     dataPushes  = [[NSMutableArray alloc] init];
     pendingNotifications = [[NSMutableArray alloc] init];
     
-    NSLog( @"%@Plugin %@ v%@ (SDK Version %@)",ENGAGEMENT_LOGTAG,_sdkName,_pluginVersion,_nativeVersion);
+    if (enablePluginLog)
+        NSLog( @"%@Plugin %@ v%@ (SDK Version %@)",ENGAGEMENT_LOGTAG,_sdkName,_pluginVersion,_nativeVersion);
     
-    return self;
 }
 
 -(void)enablePluginLog:(BOOL)_enablePluginLog

@@ -31,9 +31,6 @@ public class AZME extends CordovaPlugin {
     private static final String pluginVersion = "3.0.0";
     private static final String nativeSDKVersion = "4.1.0"; // to eventually retrieve from the SDK itself
 
-
-    private EngagementShared engagementSharedSingleton;
-
     public CordovaInterface cordova = null;
     public CordovaWebView webView = null;
     public boolean isPaused = true;
@@ -57,9 +54,7 @@ public class AZME extends CordovaPlugin {
     };
 
     public AZME() {
-        engagementSharedSingleton = new EngagementShared();
     }
-
 
     public void initialize(CordovaInterface _cordova, CordovaWebView _webView) {
         CordovaActivity activity =  (CordovaActivity) _cordova.getActivity();
@@ -76,12 +71,12 @@ public class AZME extends CordovaPlugin {
 
             boolean nativeLog = bundle.getBoolean("engagement:log:test");
             boolean pluginLog = bundle.getBoolean("AZME_ENABLE_PLUGIN_LOG");
-            engagementSharedSingleton.init(pluginName,pluginVersion,nativeSDKVersion);
-            engagementSharedSingleton.setPluginLog(pluginLog);
-
+            EngagementShared.instance().setPluginLog(pluginLog);
+            EngagementShared.instance().initSDK(pluginName,pluginVersion,nativeSDKVersion);
+         
              if ( invokeString != null && !invokeString.equals("") ) {
                 lastRedirect = invokeString;
-                engagementSharedSingleton.LogD("intent handleOpenURL="+lastRedirect);
+                EngagementShared.instance().logD("intent handleOpenURL="+lastRedirect);
             }
        
             lazyAreaLocation = bundle.getBoolean("AZME_LAZYAREA_LOCATION");
@@ -109,13 +104,13 @@ public class AZME extends CordovaPlugin {
             if (foregroundReporting)
                 background = EngagementShared.backgroundReportingType.BACKGROUNDREPORTING_FOREGROUND;
 
-            engagementSharedSingleton.initialize(activity,connectionString,locationReporting,background);
-            engagementSharedSingleton.setDelegate(delegate);
+            EngagementShared.instance().initialize(activity,connectionString,locationReporting,background);
+            EngagementShared.instance().setDelegate(delegate);
 
         } catch (PackageManager.NameNotFoundException e) {
-            engagementSharedSingleton.LogE("Failed to load meta-data, NameNotFound: " + e.getMessage());
+            EngagementShared.instance().logE("Failed to load meta-data, NameNotFound: " + e.getMessage());
         } catch (NullPointerException e) {
-            engagementSharedSingleton.LogE("Failed to load meta-data, NullPointer: " + e.getMessage());
+            EngagementShared.instance().logE("Failed to load meta-data, NullPointer: " + e.getMessage());
         }
 
     }
@@ -124,7 +119,7 @@ public class AZME extends CordovaPlugin {
        
           if (action.equals("enableURL")) {
 
-            engagementSharedSingleton.LogD("enableURL="+lastRedirect);
+            EngagementShared.instance().logD("enableURL="+lastRedirect);
             callbackContext.success(lastRedirect);
             lastRedirect = null;
             return true;
@@ -132,19 +127,19 @@ public class AZME extends CordovaPlugin {
         else
         if (action.equals("enableDataPush")) {
 
-            engagementSharedSingleton.LogD("enableDataPush");
+            EngagementShared.instance().logD("enableDataPush");
             PluginResult result = new PluginResult(PluginResult.Status.OK);
             result.setKeepCallback(true);
             callbackContext.sendPluginResult(result);
             dataPushHandlerContext = callbackContext;
-            engagementSharedSingleton.enableDataPush();
+            EngagementShared.instance().enableDataPush();
             return true;
         }
         else if (action.equals("getStatus")) {
 
             final CallbackContext cb = callbackContext;
 
-            engagementSharedSingleton.getStatus(new EngagementDelegate() {
+            EngagementShared.instance().getStatus(new EngagementDelegate() {
                 @Override
                 public void onGetStatusResult(JSONObject _result) {
                     cb.success(_result);
@@ -156,14 +151,14 @@ public class AZME extends CordovaPlugin {
             try {
                 String activityName = args.getString(0);
                 String extraInfos = args.getString(1);
-                engagementSharedSingleton.startActivity(activityName,extraInfos);
+                EngagementShared.instance().startActivity(activityName,extraInfos);
                 callbackContext.success();
             } catch (JSONException e) {
                 callbackContext.error("invalid args for startActivity");
             }
             return true;
         } else if (action.equals("endActivity")) {
-            engagementSharedSingleton.endActivity();
+            EngagementShared.instance().endActivity();
             callbackContext.success();
             return true;
         } else if (action.equals("sendEvent")) {
@@ -171,7 +166,7 @@ public class AZME extends CordovaPlugin {
             try {
                 String eventName = args.getString(0);
                 String extraInfos = args.getString(1);
-                engagementSharedSingleton.sendEvent(eventName, extraInfos);
+                EngagementShared.instance().sendEvent(eventName, extraInfos);
                 callbackContext.success();
             } catch (JSONException e) {
                 callbackContext.error("invalid args for sendEvent");
@@ -182,7 +177,7 @@ public class AZME extends CordovaPlugin {
             try {
                 String jobName = args.getString(0);
                 String extraInfos = args.getString(1);
-                engagementSharedSingleton.startJob(jobName, extraInfos);
+                EngagementShared.instance().startJob(jobName, extraInfos);
                 callbackContext.success();
 
             } catch (JSONException e) {
@@ -193,7 +188,7 @@ public class AZME extends CordovaPlugin {
 
             try {
                 String jobName = args.getString(0);
-                engagementSharedSingleton.endJob(jobName);
+                EngagementShared.instance().endJob(jobName);
                 callbackContext.success();
             } catch (JSONException e) {
                 callbackContext.error("invalid args for endJob");
@@ -204,7 +199,7 @@ public class AZME extends CordovaPlugin {
             try {
                 String eventName = args.getString(0);
                 String extraInfos = args.getString(1);
-                engagementSharedSingleton.sendSessionEvent(eventName, extraInfos);
+                EngagementShared.instance().sendSessionEvent(eventName, extraInfos);
                 callbackContext.success();
 
             } catch (JSONException e) {
@@ -216,7 +211,7 @@ public class AZME extends CordovaPlugin {
             try {
                 String error = args.getString(0);
                 String extraInfos = args.getString(1);
-                engagementSharedSingleton.sendSessionError(error, extraInfos);
+                EngagementShared.instance().sendSessionError(error, extraInfos);
                 callbackContext.success();
 
             } catch (JSONException e) {
@@ -228,7 +223,7 @@ public class AZME extends CordovaPlugin {
             try {
                 String error = args.getString(0);
                 String extraInfos = args.getString(1);
-                engagementSharedSingleton.sendError(error, extraInfos);
+                EngagementShared.instance().sendError(error, extraInfos);
                 callbackContext.success();
 
             } catch (JSONException e) {
@@ -241,7 +236,7 @@ public class AZME extends CordovaPlugin {
                 String eventName = args.getString(0);
                 String jobName = args.getString(1);
                 String extraInfos = args.getString(2);
-                engagementSharedSingleton.sendJobEvent(eventName, jobName, extraInfos);
+                EngagementShared.instance().sendJobEvent(eventName, jobName, extraInfos);
                 callbackContext.success();
 
             } catch (JSONException e) {
@@ -254,7 +249,7 @@ public class AZME extends CordovaPlugin {
                 String error = args.getString(0);
                 String jobName = args.getString(1);
                 String extraInfos = args.getString(2);
-                engagementSharedSingleton.sendJobError(error, jobName, extraInfos);
+                EngagementShared.instance().sendJobError(error, jobName, extraInfos);
                 callbackContext.success();
 
             } catch (JSONException e) {
@@ -265,7 +260,7 @@ public class AZME extends CordovaPlugin {
 
             try {
                 String extraInfos = args.getString(1);
-                engagementSharedSingleton.sendAppInfo(extraInfos);
+                EngagementShared.instance().sendAppInfo(extraInfos);
                 callbackContext.success();
             } catch (JSONException e) {
                 callbackContext.error("invalid args for sendAppInfo");
@@ -280,7 +275,7 @@ public class AZME extends CordovaPlugin {
             else if (lazyAreaLocation)
                 permissions.put("ACCESS_COARSE_LOCATION");
 
-            JSONObject ret =  engagementSharedSingleton.requestPermissions(permissions);
+            JSONObject ret =  EngagementShared.instance().requestPermissions(permissions);
             if (!ret.has("error"))
                 callbackContext.success(ret);
             else
@@ -298,25 +293,25 @@ public class AZME extends CordovaPlugin {
         }
       
         String str = "Unrecognized Command : "+action;
-        engagementSharedSingleton.LogE(str);
+        EngagementShared.instance().logE(str);
         callbackContext.error(str);
         return false;
     }
 
     public void onPause(boolean multitasking) {
 
-        engagementSharedSingleton.onPause();
+        EngagementShared.instance().onPause();
     }
 
     public void onResume(boolean multitasking) {
 
-        engagementSharedSingleton.onResume();
+        EngagementShared.instance().onResume();
     }
 
     public void onRequestPermissionResult(int requestCode, String[] permissions, int[] grantResults) throws JSONException {
         
         if (requestCode == 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
-          engagementSharedSingleton.refreshPermissions();
+          EngagementShared.instance().refreshPermissions();
     }
 
 }

@@ -47,6 +47,9 @@ typedef enum {
     id<EngagementDelegate> delegate;
 }
 
+// singleton
++ (EngagementShared*)instance;
+
 // private
 - (void)processDataPush;
 - (void)addDataPush:(NSString*)_category withBody:(NSString*)_body isBase64:(BOOL)_isBase64;
@@ -55,7 +58,7 @@ typedef enum {
 
 // public
 
--(id)init:(NSString*)_sdkName withPluginVersion:(NSString*)_pluginVersion withNativeVersion:(NSString*)_nativeVersion ;
+-(void)initSDK:(NSString*)_sdkName withPluginVersion:(NSString*)_pluginVersion withNativeVersion:(NSString*)_nativeVersion ;
 -(void)enablePluginLog:(BOOL)_enablePluginLog ;
 -(void)enableNativeLog:(BOOL)_enableNativeLog ;
 

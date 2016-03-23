@@ -14,8 +14,6 @@
 #define NATIVE_PLUGIN_VERSION @"3.1.0" 
 #define SDK_NAME @"CDVAZME"
 
-EngagementShared* engagementSharedSingleton;
-
 @implementation AppDelegate(AZME)
 
 // Use swizzling
@@ -23,7 +21,7 @@ EngagementShared* engagementSharedSingleton;
 
 - (void)application:(UIApplication *)application  azmeDidFailToRegisterForRemoteNotificationsWithError:(NSError *)error
 {
-    [engagementSharedSingleton didFailToRegisterForRemoteNotificationsWithError:error ];
+    [[EngagementShared instance] didFailToRegisterForRemoteNotificationsWithError:error ];
      
     // call the previous implementation (and not itself!)
     [self application:application azmeDidFailToRegisterForRemoteNotificationsWithError:error];
@@ -31,7 +29,7 @@ EngagementShared* engagementSharedSingleton;
 
 - (void)application:(UIApplication *)application  azmeDidReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))handler
 {
-    [engagementSharedSingleton didReceiveRemoteNotification:userInfo fetchCompletionHandler:handler ];
+    [[EngagementShared instance] didReceiveRemoteNotification:userInfo fetchCompletionHandler:handler ];
     
     // call the previous implementation (and not itself!)
     [self application:application azmeDidReceiveRemoteNotification:userInfo fetchCompletionHandler:handler];
@@ -40,7 +38,7 @@ EngagementShared* engagementSharedSingleton;
 // IOS6 Support
 - (void)application:(UIApplication*)application azmeDidReceiveRemoteNotification:(NSDictionary*)userInfo
 {
-    [engagementSharedSingleton didReceiveRemoteNotification:userInfo];
+    [[EngagementShared instance] didReceiveRemoteNotification:userInfo];
     
     // call the previous implementation (and not itself!)
     [self application:application azmeDidReceiveRemoteNotification:userInfo];
@@ -49,7 +47,7 @@ EngagementShared* engagementSharedSingleton;
 - (void)application:(UIApplication *)application azmeDidRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
 {
 
-    [engagementSharedSingleton didRegisterForRemoteNotificationsWithDeviceToken:deviceToken];
+    [[EngagementShared instance] didRegisterForRemoteNotificationsWithDeviceToken:deviceToken];
     
     // call the previous implementation (and not itself!)
     [self application:application azmeDidRegisterForRemoteNotificationsWithDeviceToken:deviceToken];
@@ -105,13 +103,14 @@ EngagementShared* engagementSharedSingleton;
 
 +(void)load
 {
-    NSString* str = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"AZME_ENABLE_LOG"];
-    BOOL enableLog = ([str compare:@"1"] == NSOrderedSame || [str caseInsensitiveCompare:@"true"] == NSOrderedSame );
+    NSString* str = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"AZME_ENABLE_PLUGIN_LOG"];
+    BOOL pluginLog = ([str compare:@"1"] == NSOrderedSame || [str caseInsensitiveCompare:@"true"] == NSOrderedSame );
+    str = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"AZME_ENABLE_NATIVE_LOG"];
+    BOOL nativeLog = ([str compare:@"1"] == NSOrderedSame || [str caseInsensitiveCompare:@"true"] == NSOrderedSame );
  
-    engagementSharedSingleton = [[EngagementShared alloc] init:SDK_NAME withPluginVersion:AZME_PLUGIN_VERSION withNativeVersion:NATIVE_PLUGIN_VERSION];
-    [engagementSharedSingleton enablePluginLog:enableLog];
-    [engagementSharedSingleton enableNativeLog:enableLog];
-
+    [[EngagementShared instance] enablePluginLog:pluginLog];
+    [[EngagementShared instance] enableNativeLog:nativeLog];
+    [[EngagementShared instance] initSDK:SDK_NAME withPluginVersion:AZME_PLUGIN_VERSION withNativeVersion:NATIVE_PLUGIN_VERSION];
 }
      
 - (void)pluginInitialize
@@ -149,7 +148,7 @@ EngagementShared* engagementSharedSingleton;
     if (backgroundReporting)
          reportingMode = BACKGROUNDREPORTING_BACKGROUND ;
 
-   [engagementSharedSingleton   initialize:AZME_IOS_CONNECTION_STRING
+   [[EngagementShared instance]   initialize:AZME_IOS_CONNECTION_STRING
                     withReachEnabled:[NSNumber numberWithBool:true] // Always on ON!
                     withReachIcon:AZME_IOS_REACH_ICON
                     withLocation:reportingType
@@ -178,19 +177,17 @@ EngagementShared* engagementSharedSingleton;
 - (void)didReceiveURL:(NSString*)_url
 {
     NSString* jsString = [NSString stringWithFormat:@"Engagement.handleOpenURL(\"%@\");", _url];
-    [self.commandDelegate evalJs:jsString];
-    
+    [self.commandDelegate evalJs:jsString];  
 }
 
 // JS Interface
                                   
-
 - (void)startActivity:(CDVInvokedUrlCommand*)command
 {
     NSString *name = [command.arguments objectAtIndex:0];
     NSString *param = [command.arguments objectAtIndex:1];
         
-    [engagementSharedSingleton startActivity:name withExtraInfos:param];
+    [[EngagementShared instance] startActivity:name withExtraInfos:param];
         
     CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK ];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
@@ -200,7 +197,7 @@ EngagementShared* engagementSharedSingleton;
 - (void)endActivity:(CDVInvokedUrlCommand*)command
 {
     
-    [engagementSharedSingleton endActivity];
+    [[EngagementShared instance] endActivity];
 
     CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK ];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
@@ -211,7 +208,7 @@ EngagementShared* engagementSharedSingleton;
    
     NSString *name = [command.arguments objectAtIndex:0];
     NSString *param = [command.arguments objectAtIndex:1];
-    [engagementSharedSingleton sendEvent:name withExtraInfos:param];
+    [[EngagementShared instance] sendEvent:name withExtraInfos:param];
 
     CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK ];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
@@ -221,7 +218,7 @@ EngagementShared* engagementSharedSingleton;
 {
    
     NSString *param = [command.arguments objectAtIndex:0];
-    [engagementSharedSingleton sendAppInfo:param];
+    [[EngagementShared instance] sendAppInfo:param];
 
     CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK ];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
@@ -234,7 +231,7 @@ EngagementShared* engagementSharedSingleton;
     NSString *name = [command.arguments objectAtIndex:0];
     NSString *param = [command.arguments objectAtIndex:1];
   
-    [engagementSharedSingleton startJob:name withExtraInfos:param];
+    [[EngagementShared instance] startJob:name withExtraInfos:param];
     
      CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK ];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
@@ -245,7 +242,7 @@ EngagementShared* engagementSharedSingleton;
    
     NSString *name = [command.arguments objectAtIndex:0];
     
-   [engagementSharedSingleton endJob:name];
+   [[EngagementShared instance] endJob:name];
     
      CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK ];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
@@ -256,7 +253,7 @@ EngagementShared* engagementSharedSingleton;
     NSString *evtname = [command.arguments objectAtIndex:0];
     NSString *extraInfos = [command.arguments objectAtIndex:1];
   
-    [engagementSharedSingleton sendSessionEvent:evtname withExtraInfos:extraInfos];
+    [[EngagementShared instance] sendSessionEvent:evtname withExtraInfos:extraInfos];
     
     CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK ];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
@@ -268,7 +265,7 @@ EngagementShared* engagementSharedSingleton;
     NSString *error = [command.arguments objectAtIndex:0];
     NSString *extraInfos = [command.arguments objectAtIndex:1];
   
-    [engagementSharedSingleton sendSessionError:error withExtraInfos:extraInfos];
+    [[EngagementShared instance] sendSessionError:error withExtraInfos:extraInfos];
     
     CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK ];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
@@ -279,7 +276,7 @@ EngagementShared* engagementSharedSingleton;
     NSString *error = [command.arguments objectAtIndex:0];
     NSString *extraInfos = [command.arguments objectAtIndex:1];
   
-    [engagementSharedSingleton sendError:error withExtraInfos:extraInfos];
+    [[EngagementShared instance] sendError:error withExtraInfos:extraInfos];
     
     CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK ];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
@@ -291,7 +288,7 @@ EngagementShared* engagementSharedSingleton;
     NSString *jobName = [command.arguments objectAtIndex:1];
     NSString *extraInfos = [command.arguments objectAtIndex:2];
   
-    [engagementSharedSingleton sendJobEvent:eventName inJob:jobName withExtraInfos:extraInfos];
+    [[EngagementShared instance] sendJobEvent:eventName inJob:jobName withExtraInfos:extraInfos];
     
     CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK ];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
@@ -303,7 +300,7 @@ EngagementShared* engagementSharedSingleton;
     NSString *jobName = [command.arguments objectAtIndex:1];
     NSString *extraInfos = [command.arguments objectAtIndex:2];
   
-    [engagementSharedSingleton sendJobError:error inJob:jobName withExtraInfos:extraInfos];
+    [[EngagementShared instance] sendJobError:error inJob:jobName withExtraInfos:extraInfos];
     
     CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK ];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
@@ -311,7 +308,7 @@ EngagementShared* engagementSharedSingleton;
 
 - (void)getStatus:(CDVInvokedUrlCommand*)command
 {
-    NSDictionary* dict = [engagementSharedSingleton getStatus];
+    NSDictionary* dict = [[EngagementShared instance] getStatus];
     
     CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK  messageAsDictionary:dict];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
@@ -321,7 +318,7 @@ EngagementShared* engagementSharedSingleton;
 - (void)enableURL:(CDVInvokedUrlCommand*)command
 {
     CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK  messageAsString:nil ];
-    [engagementSharedSingleton enableURL];
+    [[EngagementShared instance] enableURL];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
@@ -329,8 +326,8 @@ EngagementShared* engagementSharedSingleton;
 {
 
     CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK  messageAsString:nil ];
-    [engagementSharedSingleton registerForPushNotification];
-    [engagementSharedSingleton enablePush];
+    [[EngagementShared instance] registerForPushNotification];
+    [[EngagementShared instance] enablePush];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
@@ -347,7 +344,7 @@ EngagementShared* engagementSharedSingleton;
 - (void)handleOpenURL:(NSNotification*)notification
 {
     NSString* url = [notification object];
-    [engagementSharedSingleton handleOpenURL:url];
+    [[EngagementShared instance] handleOpenURL:url];
 }
  
 @end

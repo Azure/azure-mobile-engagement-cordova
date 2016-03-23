@@ -21,20 +21,6 @@ module.exports = {
         cordova.exec(this.handleDataPush,this.onError, this.pluginName, 'enableDataPush' , []);
     },
 
-/*
-    onOpenURL : function (_handler) {
-        var _this = this;
-        _this.openURLHandler  = _handler;
-        cordova.exec(_this.handleOpenURL,_this.onError, _this.pluginName, 'checkRedirect', ['url'] );
-    },
-
-    onDataPushReceived : function(_handler) {
-        var _this = this;
-        _this.dataPushHandler = _handler;
-        cordova.exec( _this.handleDataPush, _this.onError, _this.pluginName, 'checkRedirect', ['data'] );
-    },
-    */
-
     handleOpenURL : function(_url) {
         if (!_url)
             return ;
@@ -106,10 +92,6 @@ module.exports = {
 
     getStatus: function (_success,_failure) {
         cordova.exec(_success,_failure, this.pluginName, 'getStatus', [] );
-    },
-
-    registerForPushNotification: function (_success,_failure) {
-        cordova.exec(_success,_failure, this.pluginName, 'registerForPushNotification', [] );
     },
 
     requestPermissions: function (_success,_failure) {

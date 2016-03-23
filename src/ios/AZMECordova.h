@@ -21,6 +21,9 @@
 @interface AZME: CDVPlugin <EngagementDelegate>
 
 - (void)pluginInitialize;
+
+// JS Interface
+
 - (void)startActivity:(CDVInvokedUrlCommand*)command;
 - (void)endActivity:(CDVInvokedUrlCommand*)command;
 
@@ -30,8 +33,6 @@
 - (void)endJob:(CDVInvokedUrlCommand*)command;
 
 - (void)getStatus:(CDVInvokedUrlCommand*)command;
-- (void)handleOpenURL:(CDVInvokedUrlCommand*)command;
-- (void)handleDataPush:(CDVInvokedUrlCommand*)command;
 - (void)requestPermissions:(CDVInvokedUrlCommand*)command;
 
 - (void)sendSessionEvent:(CDVInvokedUrlCommand*)command;
@@ -39,6 +40,10 @@
 - (void)sendError:(CDVInvokedUrlCommand*)command;
 - (void)sendJobEvent:(CDVInvokedUrlCommand*)command;
 - (void)sendJobError:(CDVInvokedUrlCommand*)command;
+
+// Cordova Delegate
+
+- (void)handleOpenURL:(NSNotification*)notification;
 
 
 @end

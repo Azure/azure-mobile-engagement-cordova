@@ -81,7 +81,7 @@ public class EngagementShared  {
     } ;
 
     public final static String LOG_TAG = "engagement-plugin";
-    public String pluginVersion ;
+    public String pluginVersion = null;
     public String nativeVersion;
     public String pluginName ;
     public boolean enablePluginLog = false;
@@ -93,33 +93,33 @@ public class EngagementShared  {
     public EngagementDelegate delegate;
     public Activity androidActivity;
 
-    public static EngagementShared engagementSharedSingleton;
+    // Singleton Pattern
 
-    public void LogD(String _log)
+    private EngagementShared() {}
+    private static EngagementShared _instance = null;
+    public static EngagementShared instance()
     {
-        if (enablePluginLog)
-            Log.d(LOG_TAG,_log);
+        if (_instance != null)
+            return _instance;
+
+        _instance = new EngagementShared();
+        return _instance;
     }
 
-    public void LogE(String _log)
+    public boolean alreadyInitialized()
     {
-        Log.e(LOG_TAG,_log);
+        return pluginVersion != null;
     }
 
-    public void LogI(String _log)
+    public void initSDK(String _pluginName, String _pluginVersion, String _nativeVersion )
     {
-        Log.i(LOG_TAG,_log);
-    }
-
-    public void init(String _pluginName, String _pluginVersion, String _nativeVersion )
-    {
-        engagementSharedSingleton= this;
 
         pluginName = _pluginName;
         pluginVersion = _pluginVersion ;
         nativeVersion =  _nativeVersion ;
 
-        LogI("Plugin "+pluginName+" v"+_pluginVersion+" (nativeVersion "+_nativeVersion+")");
+        if (enablePluginLog)
+            Log.d(LOG_TAG,"Plugin "+pluginName+" v"+_pluginVersion+" (nativeVersion "+_nativeVersion+")");
     }
 
     public void setPluginLog(boolean _enablePluginLog)
@@ -136,47 +136,58 @@ public class EngagementShared  {
         delegate = _delegate;
     }
 
+    public void logD(String _message)
+    {
+        if (enablePluginLog)
+            Log.d(LOG_TAG,_message);
+    }
+
+    public void logE(String _message)
+    {
+        Log.e(LOG_TAG,_message);
+    }
+
     public void initialize(Activity _androidActivity,String _connectionString, locationReportingType _locationReporting, backgroundReportingType _background) {
 
         androidActivity = _androidActivity;
 
-        LogD("Initiliazing EngagementAgent");
+        logD("Initiliazing EngagementAgent");
 
         EngagementConfiguration engagementConfiguration = new EngagementConfiguration();
         engagementConfiguration.setConnectionString(_connectionString);
 
         if (_locationReporting ==  locationReportingType.LOCATIONREPORTING_LAZY) {
             engagementConfiguration.setLazyAreaLocationReport(true);
-            LogD("Lazy Area Location enabled");
+            logD("Lazy Area Location enabled");
         }
         else
         if (_locationReporting ==  locationReportingType.LOCATIONREPORTING_REALTIME) {
             engagementConfiguration.setRealtimeLocationReport(true);
-           LogD("Realtime Location enabled");
+            logD("Realtime Location enabled");
         }
         else
         if (_locationReporting ==  locationReportingType.LOCATIONREPORTING_FINEREALTIME) {
             engagementConfiguration.setRealtimeLocationReport(true);
             engagementConfiguration.setFineRealtimeLocationReport(true);
-            LogD("Fine Realtime Location enabled");
+            logD("Fine Realtime Location enabled");
         }
 
         if (_background == backgroundReportingType.BACKGROUNDREPORTING_BACKGROUND) {
             if (_locationReporting == locationReportingType.LOCATIONREPORTING_FINEREALTIME || _locationReporting == locationReportingType.LOCATIONREPORTING_REALTIME) {
                 engagementConfiguration.setBackgroundRealtimeLocationReport(true);
-                LogD("Background Location enabled");
+                logD("Background Location enabled");
             }
             else
-                LogE("Background mode requires realtime location");
+                logE("Background mode requires realtime location");
         }
         else
         if (_background == backgroundReportingType.BACKGROUNDREPORTING_FOREGROUND) {
             if (_locationReporting == locationReportingType.LOCATIONREPORTING_NONE)
-                LogE("Foreground mode requires location");
+                logE("Foreground mode requires location");
         }
         else {
             if (_locationReporting != locationReportingType.LOCATIONREPORTING_NONE) {
-                LogE("Foreground or Background required when using location");
+                logE("Foreground or Background required when using location");
             }
         }
 
@@ -185,12 +196,16 @@ public class EngagementShared  {
         Bundle b = new Bundle();
         b.putString(pluginName, pluginVersion);
         EngagementAgent.getInstance(androidActivity).sendAppInfo(b);
+
     }
 
     private Bundle stringToBundle(String _param) {
+
         Bundle b = new Bundle();
+
         if (_param == null || _param.equals("null") )
             return b;
+
         try {
             JSONObject jObj = new JSONObject(_param);
 
@@ -202,14 +217,15 @@ public class EngagementShared  {
                 b.putString(key, val);
             }
             return b;
+
         } catch (JSONException e) {
-            LogE("Failed to unserialize :"+_param+" => "+e.getMessage());
+
+            Log.e(LOG_TAG,"Failed to unserialize :"+_param+" => "+e.getMessage());
             return null;
         }
     }
 
     public void enableDataPush() {
-        LogD("enableDataPush");
         readyForPush = true;
     }
 
@@ -222,7 +238,7 @@ public class EngagementShared  {
         for (Map.Entry<String, ?> entry : m.entrySet())
         {
             String timestamp = entry.getKey();
-            LogD("handling data push ("+timestamp+")");
+            logD("handling data push ("+timestamp+")");
 
             String v = entry.getValue().toString();
             JSONObject json = null;
@@ -230,7 +246,7 @@ public class EngagementShared  {
                 json = new JSONObject(v);
                 delegate.didReceiveDataPush(json);
             } catch (JSONException e) {
-                LogE("Failed to prepare data push " + e.getMessage());;
+                logE("Failed to prepare data push " + e.getMessage());;
             }
         }
     }
@@ -250,12 +266,12 @@ public class EngagementShared  {
                     json.put("deviceId", deviceId);
                     json.put("isEnabled", EngagementAgent.getInstance(androidActivity).isEnabled());
 
-                    LogD("getStatus:"+json.toString());
+                    logD("getStatus:"+json.toString());
 
                     delegate.onGetStatusResult(json);
 
                 } catch (JSONException e) {
-                    LogE( "Failed to retrieve Status" + e.getMessage());
+                    logE("Failed to retrieve Status" + e.getMessage());
                 }
             }
         });
@@ -263,7 +279,7 @@ public class EngagementShared  {
 
     public void startActivity(String _activityName, String _extraInfos) {
 
-        LogD("startActivity:"+_activityName+", w/"+_extraInfos);
+        logD("startActivity:"+_activityName+", w/"+_extraInfos);
         Bundle extraInfos = stringToBundle(_extraInfos);
         previousActivityName = _activityName;
         EngagementAgent.getInstance(androidActivity).startActivity(androidActivity, _activityName, extraInfos);
@@ -271,15 +287,14 @@ public class EngagementShared  {
 
     public void endActivity() {
 
-        LogD("endActivity");
-
+        logD("endActivity");
         EngagementAgent.getInstance(androidActivity).endActivity();
         previousActivityName = null;
     }
 
     public void sendEvent(String _eventName, String _extraInfos) {
 
-        LogD("sendEvent:"+_eventName+", w/"+_extraInfos);
+        logD("sendEvent:"+_eventName+", w/"+_extraInfos);
 
         Bundle extraInfos = stringToBundle(_extraInfos);
         EngagementAgent.getInstance(androidActivity).sendEvent(_eventName, extraInfos);
@@ -287,7 +302,7 @@ public class EngagementShared  {
 
     public void sendSessionEvent(String _eventName, String _extraInfos) {
 
-        LogD("sendSessionEvent:"+_eventName+", w/"+_extraInfos);
+        logD("sendSessionEvent:"+_eventName+", w/"+_extraInfos);
 
         Bundle extraInfos = stringToBundle(_extraInfos);
         EngagementAgent.getInstance(androidActivity).sendSessionEvent(_eventName, extraInfos);
@@ -295,7 +310,7 @@ public class EngagementShared  {
 
     public void startJob(String _jobName, String _extraInfos) {
 
-        LogD("startJob:"+_jobName+", w/"+_extraInfos);
+        logD("startJob:"+_jobName+", w/"+_extraInfos);
 
         Bundle extraInfos = stringToBundle(_extraInfos);
         EngagementAgent.getInstance(androidActivity).startJob(_jobName, extraInfos);
@@ -303,14 +318,14 @@ public class EngagementShared  {
 
     public void endJob(String _jobName) {
 
-       LogD("endJob:"+_jobName);
+        logD("endJob:"+_jobName);
 
         EngagementAgent.getInstance(androidActivity).endJob(_jobName);
     }
 
     public void sendJobEvent(String _eventName, String _jobName, String _extraInfos) {
 
-        LogD("sendJobEvent:"+_eventName+", in job:"+_jobName+" w/"+_extraInfos);
+        logD("sendJobEvent:"+_eventName+", in job:"+_jobName+" w/"+_extraInfos);
 
         Bundle extraInfos = stringToBundle(_extraInfos);
         EngagementAgent.getInstance(androidActivity).sendJobEvent(_eventName, _jobName, extraInfos);
@@ -318,7 +333,7 @@ public class EngagementShared  {
 
     public void sendError(String _errorName, String _extraInfos) {
 
-        LogD("sendError:"+_errorName+", w/"+_extraInfos);
+        logD("sendError:"+_errorName+", w/"+_extraInfos);
 
         Bundle extraInfos = stringToBundle(_extraInfos);
         EngagementAgent.getInstance(androidActivity).sendError(_errorName, extraInfos);
@@ -326,7 +341,7 @@ public class EngagementShared  {
 
     public void sendSessionError(String _errorName, String _extraInfos) {
 
-        LogD("sendSessionError:"+_errorName+", w/"+_extraInfos);
+        logD("sendSessionError:"+_errorName+", w/"+_extraInfos);
 
         Bundle extraInfos = stringToBundle(_extraInfos);
         EngagementAgent.getInstance(androidActivity).sendSessionError(_errorName, extraInfos);
@@ -334,7 +349,7 @@ public class EngagementShared  {
 
     public void sendJobError(String _errorName, String _jobName, String _extraInfos) {
 
-        LogD("sendJobError:"+_errorName+", in job:"+_jobName+" w/"+_extraInfos);
+        logD("sendJobError:"+_errorName+", in job:"+_jobName+" w/"+_extraInfos);
 
         Bundle extraInfos = stringToBundle(_extraInfos);
         EngagementAgent.getInstance(androidActivity).sendJobError(_errorName, _jobName, extraInfos);
@@ -342,7 +357,7 @@ public class EngagementShared  {
 
     public void sendAppInfo(String _extraInfos) {
 
-        LogD("sendAppInfo:"+_extraInfos);
+        logD("sendAppInfo:"+_extraInfos);
 
         Bundle extraInfos = stringToBundle(_extraInfos);
         EngagementAgent.getInstance(androidActivity).sendAppInfo(extraInfos);
@@ -351,7 +366,7 @@ public class EngagementShared  {
 
     public void onPause() {
 
-        LogD("onPause: endActivity");
+        logD("onPause: endActivity");
 
         isPaused = true;
         EngagementAgent.getInstance(androidActivity).endActivity();
@@ -360,12 +375,13 @@ public class EngagementShared  {
     public void onResume() {
 
         if (previousActivityName != null) {
-            LogD( "onResume: startActivity:"+previousActivityName);
+            logD( "onResume: startActivity:"+previousActivityName);
             EngagementAgent.getInstance(androidActivity).startActivity(androidActivity, previousActivityName, null);
         }
         else
-           LogD( "onResume (no previous activity)");
-        
+        {
+            logD("onResume (no previous activity)");
+        }
         isPaused = false;
         checkDataPush();
     }
@@ -384,66 +400,66 @@ public class EngagementShared  {
                 
 
         } catch (PackageManager.NameNotFoundException e) {
-            LogE( "Failed to load permissions, NameNotFound: " + e.getMessage());
+            logE("Failed to load permissions, NameNotFound: " + e.getMessage());
         }
 
-       LogD("requestPermissions()");
+        logD("requestPermissions()");
 
-        int l = _permissions.length();
-        for(int i=0;i<l;i++)
-        {
-          try {
-              String permission = _permissions.getString(i);
-              String androidPermission = "android.permission."+permission;
-
-              int grant = androidActivity.checkCallingOrSelfPermission(androidPermission);
+          int l = _permissions.length();
+          for(int i=0;i<l;i++)
+          {
               try {
-                  p.put(permission,grant==PackageManager.PERMISSION_GRANTED);
-              } catch (JSONException e) {
-                  Log.e(LOG_TAG,"invalid permissions");
-              }
-              if (grant != PackageManager.PERMISSION_GRANTED) {
+                  String permission = _permissions.getString(i);
+                  String androidPermission = "android.permission."+permission;
+
+                  int grant = androidActivity.checkCallingOrSelfPermission(androidPermission);
+                  try {
+                      p.put(permission,grant==PackageManager.PERMISSION_GRANTED);
+                  } catch (JSONException e) {
+                      logE("invalid permissions "+ e.getMessage());
+                  }
+                  if (grant != PackageManager.PERMISSION_GRANTED) {
 
 
-                  if (!Arrays.asList(requestedPermissions).contains(androidPermission))
-                  {
-                      String errString = "requested permission "+androidPermission+" not set in Manifest";
-                      Log.e(LOG_TAG,errString);
-                      try {
-                          ret.put("error", errString);
-                      } catch (JSONException e) {
-                          LogE("invalid permissions "+ e.getMessage());
+                      if (!Arrays.asList(requestedPermissions).contains(androidPermission))
+                      {
+                          String errString = "requested permission "+androidPermission+" not set in Manifest";
+                          Log.e(LOG_TAG,errString);
+                          try {
+                              ret.put("error", errString);
+                          } catch (JSONException e) {
+                              logE("invalid permissions "+ e.getMessage());
+                          }
                       }
+                      else
+                      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                          // Trying to request the permission if running on AndroidM
+                          logD("requesting runtime permission " + androidPermission);
+                          androidActivity.requestPermissions(new String[]{androidPermission}, 0);
+                      }
+
                   }
                   else
-                  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                      // Trying to request the permission if running on AndroidM
-                      LogI("requesting runtime permission " + androidPermission);
-                      androidActivity.requestPermissions(new String[]{androidPermission}, 0);
-                  }
-
+                      logD(permission+" OK");
+              }catch (JSONException e) {
+                  logE("invalid permissions "+ e.getMessage());
               }
-              else
-                  LogI(permission+" OK");
-          }catch (JSONException e) {
-              LogE("invalid permission "+ e.getMessage());
+
           }
 
-        }
+          try {
+              ret.put("permissions", p);
+          } catch (JSONException e) {
+              logE("invalid permissions "+ e.getMessage());
+          }
 
-        try {
-          ret.put("permissions", p);
-        } catch (JSONException e) {
-          LogE("invalid permission "+ e.getMessage());
-        }
 
         return ret;
     }
 
     public void refreshPermissions()
     {
-        LogD("refreshPermissions()");
-
+        logD("refreshPermissions()");
         EngagementAgent.getInstance(androidActivity).refreshPermissions();
     }
 

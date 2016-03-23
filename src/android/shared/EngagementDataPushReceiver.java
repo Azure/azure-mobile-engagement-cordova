@@ -102,8 +102,7 @@ public class EngagementDataPushReceiver extends EngagementReachDataPushReceiver
         String encodedBody = encodeURIComponent(body);
        
         addDataPush(context.getApplicationContext(), encodedCategory, encodedBody, false);
-        if (EngagementShared.engagementSharedSingleton != null  )
-            EngagementShared.engagementSharedSingleton.checkDataPush();
+        EngagementShared.instance().checkDataPush();
 
         return true;
     }
@@ -113,8 +112,7 @@ public class EngagementDataPushReceiver extends EngagementReachDataPushReceiver
 
         String encodedCategory = encodeURIComponent(category);
         addDataPush(context.getApplicationContext(),encodedCategory,encodedBody,true);
-        if (EngagementShared.engagementSharedSingleton  != null  )
-            EngagementShared.engagementSharedSingleton.checkDataPush();
+        EngagementShared.instance().checkDataPush();
 
         return true;
     }
