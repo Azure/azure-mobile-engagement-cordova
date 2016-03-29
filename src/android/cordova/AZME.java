@@ -5,6 +5,7 @@
 
 package com.microsoft.azure.engagement.cordova;
 
+import android.content.Intent;
 import android.util.Log;
 
 import org.apache.cordova.CallbackContext;
@@ -28,14 +29,15 @@ import com.microsoft.azure.engagement.shared.EngagementShared;
 public class AZME extends CordovaPlugin {
 
     private static final String pluginName = "CDVAZME";
-    private static final String pluginVersion = "3.0.0";
+    private static final String pluginVersion = "3.0.1";
     private static final String nativeSDKVersion = "4.1.0"; // to eventually retrieve from the SDK itself
 
     public CordovaInterface cordova = null;
     public CordovaWebView webView = null;
     public boolean isPaused = true;
     public String lastRedirect;
-    private CallbackContext dataPushHandlerContext;
+    private CallbackContext dataPushHandlerContext = null;
+    private CallbackContext onOpenUrlHandlerContext = null;
 
     private boolean lazyAreaLocation;
     private boolean realtimeLocation ;
@@ -47,9 +49,13 @@ public class AZME extends CordovaPlugin {
 
         @Override
         public void didReceiveDataPush(JSONObject _data) {
-            PluginResult result = new PluginResult(PluginResult.Status.OK, _data);
-            result.setKeepCallback(true);
-            dataPushHandlerContext.sendPluginResult(result);
+            if (dataPushHandlerContext != null) {
+                PluginResult result = new PluginResult(PluginResult.Status.OK, _data);
+                result.setKeepCallback(true);
+                dataPushHandlerContext.sendPluginResult(result);
+            }
+            else
+                EngagementShared.instance().logD("Cannot receive datapush if enablePush not previously called");
         }
     };
 
@@ -59,7 +65,7 @@ public class AZME extends CordovaPlugin {
     public void initialize(CordovaInterface _cordova, CordovaWebView _webView) {
         CordovaActivity activity =  (CordovaActivity) _cordova.getActivity();
 
-        final String invokeString = activity.getIntent().getDataString();
+        String invokeString = activity.getIntent().getDataString();
         super.initialize(_cordova, _webView);
 
         cordova = _cordova;
@@ -74,9 +80,9 @@ public class AZME extends CordovaPlugin {
             EngagementShared.instance().setPluginLog(pluginLog);
             EngagementShared.instance().initSDK(pluginName,pluginVersion,nativeSDKVersion);
          
-             if ( invokeString != null && !invokeString.equals("") ) {
+            if ( invokeString != null && !invokeString.equals("") ) {
                 lastRedirect = invokeString;
-                EngagementShared.instance().logD("intent handleOpenURL="+lastRedirect);
+                EngagementShared.instance().logD("handleOpenURL="+lastRedirect);
             }
        
             lazyAreaLocation = bundle.getBoolean("AZME_LAZYAREA_LOCATION");
@@ -118,11 +124,12 @@ public class AZME extends CordovaPlugin {
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext)   {
        
           if (action.equals("enableURL")) {
-
-            EngagementShared.instance().logD("enableURL="+lastRedirect);
-            callbackContext.success(lastRedirect);
-            lastRedirect = null;
-            return true;
+              EngagementShared.instance().logD("enableURL=" + lastRedirect);
+              PluginResult result = new PluginResult(PluginResult.Status.OK,lastRedirect);
+              result.setKeepCallback(true);
+              callbackContext.sendPluginResult(result);
+              onOpenUrlHandlerContext = callbackContext;
+              return true;
         }
         else
         if (action.equals("enableDataPush")) {
@@ -312,6 +319,23 @@ public class AZME extends CordovaPlugin {
         
         if (requestCode == 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
           EngagementShared.instance().refreshPermissions();
+    }
+
+    public void onNewIntent(Intent intent)
+    {
+        super.onNewIntent(intent);
+        String invokeString = intent.getDataString();
+        if ( invokeString != null && !invokeString.equals("") ) {
+            EngagementShared.instance().logD("onNewIntent, handleOpenURL "+invokeString);
+            if (onOpenUrlHandlerContext != null) {
+                PluginResult result = new PluginResult(PluginResult.Status.OK, invokeString);
+                result.setKeepCallback(true);
+                onOpenUrlHandlerContext.sendPluginResult(result);
+            }
+            else
+                EngagementShared.instance().logD("Cannot trigger onOpenUrl if enableURL not previously called");
+
+        }
     }
 
 }

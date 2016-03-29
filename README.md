@@ -246,8 +246,10 @@ Engagement.getStatus( _statusCallback, [_failure]);
 
 History
 ----
-##### 3.0.0
+##### 3.0.1
+* Fixed onOpenURL not being called when using a notification with no additional view
 
+##### 3.0.0
 * API Breaking Change
   * `AZME_ENABLE_NATIVE_LOG`/`AZME_ENABLE_PLUGIN_LOG` instead of `AZME_ENABLE_LOG`
   * `AZME_ACTION_URL` instead of `AZME_REDIRECT_URL`
