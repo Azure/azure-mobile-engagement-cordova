@@ -1,11 +1,11 @@
-<?xml version="2.2.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
 /*
  * Copyright (c) Microsoft Corporation.  All rights reserved.
  * Licensed under the MIT license. See License.txt in the project root for license information.
  */
  -->
-<plugin id="cordova-plugin-ms-azure-mobile-engagement-background-reporting" version="2.2.0" xmlns="http://apache.org/cordova/ns/plugins/1.0">
+<plugin id="cordova-plugin-ms-azure-mobile-engagement-background-reporting" version="3.0.1" xmlns="http://apache.org/cordova/ns/plugins/1.0">
 
     <name>Azure Mobile Engagement Background Reporting</name>
    
@@ -27,11 +27,13 @@
     </platform>
 
     <platform name="ios">
+         <preference name="AZME_IOS_LOCATION_DESCRIPTION" default="to report your location for analytics purposes"/>
+
         <config-file parent="AZME_BACKGROUND_REPORTING" target="*-Info.plist">
             <string>true</string>
         </config-file>
          <config-file parent="NSLocationAlwaysUsageDescription" target="*-Info.plist">
-             <string></string>
+             <string>$AZME_IOS_LOCATION_DESCRIPTION</string>
         </config-file>
     </platform>
       
