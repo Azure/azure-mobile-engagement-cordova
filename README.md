@@ -246,6 +246,9 @@ Engagement.getStatus( _statusCallback, [_failure]);
 
 History
 ----
+##### 3.0.2
+* Fixed possible duplicate notifications
+
 ##### 3.0.1
 * Fixed onOpenURL not being called when using a notification with no additional view
 
@@ -254,7 +257,7 @@ History
   * `AZME_ENABLE_NATIVE_LOG`/`AZME_ENABLE_PLUGIN_LOG` instead of `AZME_ENABLE_LOG`
   * `AZME_ACTION_URL` instead of `AZME_REDIRECT_URL`
   * `initializeReach` instead of `registerForPushNotification`/`onHandleURL`/`onDataPushReceived`
-  * Category is set to `null` instead of `None`if not defined within a campaign
+  * Category is set to `null` instead of `None` if not defined within a campaign
   * APIs use "Engagement.<APIName>" convention instead of "AzureEngagement.<APIName>"
 * Added `AZME_IOS_LOCATION_DESCRIPTION` variable
 * Fix Location reporting hooks
