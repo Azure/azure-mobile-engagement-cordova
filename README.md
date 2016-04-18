@@ -257,7 +257,8 @@ History
   * `AZME_ENABLE_NATIVE_LOG`/`AZME_ENABLE_PLUGIN_LOG` instead of `AZME_ENABLE_LOG`
   * `AZME_ACTION_URL` instead of `AZME_REDIRECT_URL`
   * `initializeReach` instead of `registerForPushNotification`/`onHandleURL`/`onDataPushReceived`
-  * Category is set to `null` instead of `None`if not defined within a campaign
+  * Category is set to `null` instead of `None` if not defined within a campaign
+  * APIs use "Engagement.<APIName>" convention instead of "AzureEngagement.<APIName>"
 * Added `AZME_IOS_LOCATION_DESCRIPTION` variable
 * Fix Location reporting hooks
 
