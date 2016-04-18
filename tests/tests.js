@@ -5,50 +5,50 @@
 
 exports.defineAutoTests = function () {
 
-    describe('AzureEngagement Object', function () {
+    describe('Engagement Object', function () {
 
-        it('AzureEngagement should exist', function () {
-            expect(AzureEngagement).toBeDefined();
+        it('Engagement should exist', function () {
+            expect(Engagement).toBeDefined();
         });
 
-        it('AzureEngagement should contain a startActivity function', function () {
-            expect(AzureEngagement.startActivity).toBeDefined();
-            expect(typeof AzureEngagement.startActivity == 'function').toBe(true);
+        it('Engagement should contain a startActivity function', function () {
+            expect(Engagement.startActivity).toBeDefined();
+            expect(typeof Engagement.startActivity == 'function').toBe(true);
         });
 
-        it('AzureEngagement should contain a endActivity function', function () {
-            expect(AzureEngagement.endActivity).toBeDefined();
-            expect(typeof AzureEngagement.endActivity == 'function').toBe(true);
+        it('Engagement should contain a endActivity function', function () {
+            expect(Engagement.endActivity).toBeDefined();
+            expect(typeof Engagement.endActivity == 'function').toBe(true);
         });
 
-        it('AzureEngagement should contain a sendAppInfo function', function () {
-            expect(AzureEngagement.sendAppInfo).toBeDefined();
-            expect(typeof AzureEngagement.sendAppInfo == 'function').toBe(true);
+        it('Engagement should contain a sendAppInfo function', function () {
+            expect(Engagement.sendAppInfo).toBeDefined();
+            expect(typeof Engagement.sendAppInfo == 'function').toBe(true);
         });
 
-        it('AzureEngagement should contain a startJob function', function () {
-            expect(AzureEngagement.startJob).toBeDefined();
-            expect(typeof AzureEngagement.startJob == 'function').toBe(true);
+        it('Engagement should contain a startJob function', function () {
+            expect(Engagement.startJob).toBeDefined();
+            expect(typeof Engagement.startJob == 'function').toBe(true);
         });
 
-        it('AzureEngagement should contain a endJob function', function () {
-            expect(AzureEngagement.endJob).toBeDefined();
-            expect(typeof AzureEngagement.endJob == 'function').toBe(true);
+        it('Engagement should contain a endJob function', function () {
+            expect(Engagement.endJob).toBeDefined();
+            expect(typeof Engagement.endJob == 'function').toBe(true);
         });
 
-        it('AzureEngagement should contain a onOpenURL function', function () {
-            expect(AzureEngagement.onOpenURL).toBeDefined();
-            expect(typeof AzureEngagement.onOpenURL == 'function').toBe(true);
+        it('Engagement should contain a initializeReach function', function () {
+            expect(Engagement.initializeReach).toBeDefined();
+            expect(typeof Engagement.initializeReach == 'function').toBe(true);
         });
 
-        it('AzureEngagement should contain a handleOpenURL function', function () {
-            expect(AzureEngagement.handleOpenURL).toBeDefined();
-            expect(typeof AzureEngagement.handleOpenURL == 'function').toBe(true);
+        it('Engagement should contain a handleOpenURL function', function () {
+            expect(Engagement.handleOpenURL).toBeDefined();
+            expect(typeof Engagement.handleOpenURL == 'function').toBe(true);
         });
 
-        it('AzureEngagement should contain a getStatus function', function () {
-            expect(AzureEngagement.getStatus).toBeDefined();
-            expect(typeof AzureEngagement.getStatus == 'function').toBe(true);
+        it('Engagement should contain a getStatus function', function () {
+            expect(Engagement.getStatus).toBeDefined();
+            expect(typeof Engagement.getStatus == 'function').toBe(true);
         });
     });
 
@@ -56,15 +56,15 @@ exports.defineAutoTests = function () {
 
         var info;
         beforeEach(function(done) {
-            AzureEngagement.getStatus(function(_info) {
+            Engagement.getStatus(function(_info) {
                 info = _info;
                 done();
             });
         });
 
-        it('AzureEngagement plugin version should be the same as the js plugin version', function () {
+        it('Engagement plugin version should be the same as the js plugin version', function () {
             expect(info.pluginVersion).toBeDefined();
-            expect(info.pluginVersion == AzureEngagement.pluginVersion).toBe(true);
+            expect(info.pluginVersion == Engagement.pluginVersion).toBe(true);
         });
     });
 

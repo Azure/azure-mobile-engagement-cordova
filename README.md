@@ -246,6 +246,9 @@ Engagement.getStatus( _statusCallback, [_failure]);
 
 History
 ----
+##### 3.0.2
+* Fixed possible duplicate notifications
+
 ##### 3.0.1
 * Fixed onOpenURL not being called when using a notification with no additional view
 

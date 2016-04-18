@@ -70,38 +70,24 @@ bool isStringNull(NSString*_string)
 
 
 -(void)didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))handler
-{
-    
+{   
     if (!readyForPush)
     {
         NSLog( @"%@Delaying notification until application is initialized",ENGAGEMENT_LOGTAG);
-
         NSArray* notif = [NSArray arrayWithObjects:userInfo,handler,nil];
         [pendingNotifications addObject:notif];
     }
     else
-         NSLog( @"%@Processing notification",ENGAGEMENT_LOGTAG);
+    {
+        NSLog( @"%@Processing notification",ENGAGEMENT_LOGTAG);
+        [[EngagementAgent shared] applicationDidReceiveRemoteNotification:userInfo fetchCompletionHandler:handler];
+    }
     
-     [[EngagementAgent shared] applicationDidReceiveRemoteNotification:userInfo fetchCompletionHandler:handler];
 }
 
-
-- (void)didReceiveRemoteNotification:(NSDictionary *)userInfo
+- (void)didReceiveRemoteNotification:(NSDictionary *)userInfo 
 {
-    
-    if (!readyForPush)
-    {
-        NSLog( @"%@Delaying notification until application is initialized",ENGAGEMENT_LOGTAG);
-        
-        NSArray* notif = [NSArray arrayWithObjects:userInfo,nil,nil];
-        [pendingNotifications addObject:notif];
-    }
-    else
-        NSLog( @"%@Processing notification",ENGAGEMENT_LOGTAG);
-
-    
-    [[EngagementAgent shared] applicationDidReceiveRemoteNotification:userInfo fetchCompletionHandler:nil];
-    
+    [self didReceiveRemoteNotification:userInfo fetchCompletionHandler:nil];
 }
 
 - (void)didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken

@@ -5,7 +5,7 @@
  * Licensed under the MIT license. See License.txt in the project root for license information.
  */
  -->
-<plugin id="cordova-plugin-ms-azure-mobile-engagement-foreground-reporting" version="3.0.1" xmlns="http://apache.org/cordova/ns/plugins/1.0">
+<plugin id="cordova-plugin-ms-azure-mobile-engagement-foreground-reporting" version="3.0.2" xmlns="http://apache.org/cordova/ns/plugins/1.0">
 
     <name>Azure Mobile Engagement Foreground Reporting</name>
    
