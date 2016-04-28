@@ -18,7 +18,7 @@
         <!-- required for Android M Compatibility -->
         <engine name="cordova-android" version=">=5.0.0" />
         <!-- required for XCode7 Compatibility -->
-        <engine name="cordova-android" version=">=3.9.2" />
+        <engine name="cordova-ios" version=">=3.9.2" />
     </engines>
 
     <js-module name="Engagement" src="www/Engagement.js">
