@@ -8,7 +8,7 @@
 module.exports = {
 
     pluginName : 'Engagement',
-    pluginVersion : '3.0.2',
+    pluginVersion : '3.1.0',
 
     onError : function(_error) {
         console.error(_error);
@@ -88,6 +88,10 @@ module.exports = {
 
     sendJobError: function (_error,_jobName,_extraInfos,_success,_failure) {
         cordova.exec(_success,_failure, this.pluginName, 'sendJobError',[_error,_jobName, JSON.stringify(_extraInfos)] );
+    },
+
+    sendCrash: function (_crashId,_crash,_success,_failure) {
+        cordova.exec(_success,_failure, this.pluginName, 'sendCrash',[_crashId,_crash] );
     },
 
     getStatus: function (_success,_failure) {
