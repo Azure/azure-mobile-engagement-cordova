@@ -18,7 +18,7 @@
         <!-- required for Android M Compatibility -->
         <engine name="cordova-android" version=">=5.0.0" />
         <!-- required for XCode7 Compatibility -->
-        <engine name="cordova-android" version=">=3.9.2" />
+        <engine name="cordova-ios" version=">=3.9.2" />
     </engines>
 
     <js-module name="Engagement" src="www/Engagement.js">
@@ -55,7 +55,7 @@
             <meta-data android:name="engagement:reach:notification:icon" android:value="$AZME_ANDROID_REACH_ICON"/>
             <!-- If only 1 sender, don't forget the \n, otherwise it will be parsed as a negative number... -->
             <meta-data android:name="engagement:gcm:sender" android:value="$AZME_ANDROID_GOOGLE_PROJECT_NUMBER\n"/>
-            <service android:exported="false" android:label="$PACKAGE_NAME-Service" android:name="com.microsoft.azure.engagement.service.EngagementService" android:process=":Engagement"/>
+            <service android:exported="false" android:label="${applicationId}-Service" android:name="com.microsoft.azure.engagement.service.EngagementService" android:process=":Engagement"/>
             <meta-data android:name="engagement:log:test" android:value="$AZME_ENABLE_NATIVE_LOG"/>
              <meta-data android:name="AZME_ENABLE_PLUGIN_LOG" android:value="$AZME_ENABLE_PLUGIN_LOG"/>
             <meta-data android:name="engagement:reach:notification:icon" android:value="$AZME_ANDROID_REACH_ICON"/>
@@ -109,7 +109,7 @@
                 <intent-filter>
                     <action android:name="com.google.android.c2dm.intent.REGISTRATION"/>
                     <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
-                    <category android:name="$PACKAGE_NAME"/>
+                    <category android:name="${applicationId}"/>
                 </intent-filter>
             </receiver>
             <receiver android:name="com.microsoft.azure.engagement.shared.EngagementDataPushReceiver"
@@ -136,14 +136,15 @@
             <uses-permission android:name="android.permission.VIBRATE"/>
             <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
             <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
-            <uses-permission android:name="$PACKAGE_NAME.permission.C2D_MESSAGE"/>
-            <permission android:name="$PACKAGE_NAME.permission.C2D_MESSAGE" android:protectionLevel="signature"/>
+            <uses-permission android:name="${applicationId}.permission.C2D_MESSAGE"/>
+            <permission android:name="${applicationId}.permission.C2D_MESSAGE" android:protectionLevel="signature"/>
         </config-file>
         <source-file src="src/android/cordova/AZME.java" target-dir="src/com/microsoft/azure/engagement/cordova"/>
         <source-file src="src/android/shared/EngagementDataPushReceiver.java" target-dir="src/com/microsoft/azure/engagement/shared"/>
         <source-file src="src/android/shared/EngagementShared.java" target-dir="src/com/microsoft/azure/engagement/shared"/>
         <source-file src="src/android/shared/EngagementDelegate.java" target-dir="src/com/microsoft/azure/engagement/shared"/>
         <source-file src="src/android/EngagementSDK/mobile-engagement-4.1.0.jar" target-dir="libs"/>
+        <framework src="azure.gradle" custom="true" type="gradleReference" />
         <framework src="com.android.support:support-v4:+" />
         <source-file src="src/android/EngagementSDK/res/drawable/engagement_close.png" target-dir="res/drawable"/>
         <source-file src="src/android/EngagementSDK/res/drawable/engagement_content_title.xml" target-dir="res/drawable"/>
@@ -188,7 +189,7 @@
                     <key>CFBundleTypeRole</key>
                     <string>None</string>
                     <key>CFBundleURLName</key>
-                    <string>$PACKAGE_NAME.redirect</string>
+                    <string>${applicationId}.redirect</string>
                     <key>CFBundleURLSchemes</key>
                     <array>
                         <string>$AZME_ACTION_URL</string>
