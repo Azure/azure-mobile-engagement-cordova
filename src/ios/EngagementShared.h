@@ -92,7 +92,7 @@ typedef enum {
 -(void)saveUserPreferences;
 -(void)restoreUserPreferences;
 -(void)setEnabled:(BOOL)_enabled;
-
+-(BOOL) isEnabled;
 
 @end
 

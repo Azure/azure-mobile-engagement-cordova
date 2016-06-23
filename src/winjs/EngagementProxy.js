@@ -10,31 +10,33 @@ window.azureEngagement = {
     AZME_ENABLE_NATIVE_LOG: $AZME_ENABLE_NATIVE_LOG,
     connectionString: "$AZME_WINDOWS_CONNECTION_STRING",
     appVersionName: "$APP_VERSION_NAME",
-    appVersionCode: $APP_VERSION_CODE
+	lastActivityName: null,
+	lastActivityUserInfos: null
 };
 
-function engagementLogger(_log)
-{
+function engagementLogger(_log) {
     if (window.azureEngagement.AZME_ENABLE_PLUGIN_LOG)
         console.log("[Engagement Plugin] " + _log);
 }
 
 engagementLogger("AZME pluginVersion v"+window.azureEngagement.pluginVersion);
 
-var script = document.createElement('script');
-script.src =  "plugins/cordova-plugin-ms-azure-mobile-engagement/libs/azure-engagement.js";
-script.onload = function () {
-    engagementLogger("Native Library loaded!");
-}
-document.head.appendChild(script); 
+var xhrObj = new XMLHttpRequest();
+xhrObj.open('GET', "plugins/cordova-plugin-ms-azure-mobile-engagement/libs/azure-engagement.js", false);
+xhrObj.send('');
+var se = document.createElement('script');
+se.type = "text/javascript";
+se.text = xhrObj.responseText;
+document.getElementsByTagName('head')[0].appendChild(se);
+engagementLogger("JS SDK loaded");
 
 cordova.commandProxy.add("Engagement",{ 
 
     startActivity: function (successCallback, errorCallback, _params) {
-        var activityName = _params[0];
-        var userInfos = JSON.parse(_params[1]);
-        engagementLogger("startActivity " + activityName);
-        engagement.agent.startActivity(activityName , userInfos);
+        window.azureEngagement.lastActivityName = _params[0];
+        window.azureEngagement.lastActivityUserInfos = JSON.parse(_params[1]);
+        engagementLogger("startActivity " +  window.azureEngagement.lastActivityName );
+        engagement.agent.startActivity( window.azureEngagement.lastActivityName  ,  window.azureEngagement.lastActivityUserInfo);
         successCallback();
     },
 
@@ -111,6 +113,7 @@ cordova.commandProxy.add("Engagement",{
         var status = {
             nativeVersion: azureEngagement.serviceVersion,
             pluginVersion: azureEngagement.pluginVersion,
+            isEnabled : engagement.agent.isEnabled(),
             deviceId : null
         }
         engagementLogger("getStatus " + JSON.stringify(status));
@@ -125,9 +128,34 @@ cordova.commandProxy.add("Engagement",{
         successCallback();
     },
 
+    setEnabled: function (successCallback, errorCallback, _params) {
+        var _enabled = _params[0];
+        engagement.agent.setEnabled(_enabled);
+        successCallback(engagement.agent.isEnabled());
+    },
+
+    isEnabled: function (successCallback, errorCallback) {
+        successCallback(engagement.agent.isEnabled());
+    },
+
     requestPermissions:function(successCallback, errorCallback) {
         engagementLogger("not supported on Windows");
         successCallback();
     }
 });
 
+document.addEventListener("deviceready",function(){
+    document.addEventListener("pause", function() {
+        if (azureEngagement.lastActivityName != null) {
+            engagementLogger("Pausing activity " + window.azureEngagement.lastActivityName);
+            engagement.agent.endActivity();
+        }
+    }, false);
+    document.addEventListener("resume", function(){
+        if (azureEngagement.lastActivityName != null) {
+            engagementLogger("Resuming activity " + window.azureEngagement.lastActivityName);
+            engagement.agent.startActivity(window.azureEngagement.lastActivityName, window.azureEngagement.lastActivityUserInfos);
+        }
+    }, false);
+
+},false);

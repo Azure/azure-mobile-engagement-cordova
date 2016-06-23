@@ -128,7 +128,15 @@ public class EngagementShared  {
     }
 
     public void setEnabled(boolean _enabled)  {
+        logD("setEnabled:"+_enabled);
         EngagementAgent.getInstance(androidActivity).setEnabled(_enabled);
+    }
+
+    public boolean isEnabled()
+    { 
+        boolean b = EngagementAgent.getInstance(androidActivity).isEnabled();
+        logD("isEnabled:"+b);
+        return b;
     }
 
     public void setDelegate(EngagementDelegate _delegate)

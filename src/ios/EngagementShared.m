@@ -541,5 +541,14 @@ bool isStringNull(NSString*_string)
     [[EngagementAgent shared] setEnabled:_enabled];
 }
 
+-(BOOL) isEnabled
+{
+    BOOL b =  [[EngagementAgent shared] enabled];
+    if (enablePluginLog)
+        NSLog( @"%@isEnabled :%d", ENGAGEMENT_LOGTAG,b);
+    
+   return b;
+}
+
 
 @end

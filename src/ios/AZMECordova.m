@@ -331,6 +331,25 @@
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
+- (void)setEnabled:(CDVInvokedUrlCommand*)command
+{
+
+    BOOL enabled = [[command.arguments objectAtIndex:0] boolValue];
+
+    [[EngagementShared instance] setEnabled:enabled];
+    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK  messageAsBool:enabled ];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
+
+- (void)isEnabled:(CDVInvokedUrlCommand*)command
+{
+
+    BOOL enabled = [[EngagementShared instance] isEnabled];
+
+    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK  messageAsBool:enabled ];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
+
 
 // Does nothing on iOS
 - (void)requestPermissions:(CDVInvokedUrlCommand*)command

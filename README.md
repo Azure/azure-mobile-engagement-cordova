@@ -134,6 +134,8 @@ Once the `deviceready` event has been triggered by the Cordova framework, a `Eng
 * Engagement.sendJobEvent
 * Engagement.sendJobError
 * Engagement.sendCrash
+* Engagement.isEnabled
+* Engagement.setEnabled
 
 ### Engagement.startActivity
 
@@ -223,6 +225,21 @@ Engagement.sendCrash( _crashId, _crash,[ _success], [_failure]);
 * `_crashId`: the crashid argument is a string used to identify the type of the crash.
 * `_crash`: usually the stack trace of the crash as a string.
 
+### Engagement.setEnabled
+Active or deactivate the agent
+
+```javascript
+Engagement.setEnabled( _enabled,[ _success], [_failure]);
+```
+##### Params
+* `_enabled`: boolean 
+
+### Engagement.isEnabled
+Returns the status of the agent
+
+```javascript
+Engagement.isEnabled(function(_enabled){...},[_failure]);
+```
 
 ### Engagement.requestPermissions
 
@@ -258,6 +275,7 @@ Engagement.getStatus( _statusCallback, [_failure]);
             console.log("AZME native Version : "+_info.nativeVersion);
             console.log("AZME plugin Version : "+_info.pluginVersion);
             console.log("Device ID : "+_info.deviceId);
+             console.log("Enabled : "+_info.isEnabled);
         });
 ```
 
@@ -266,12 +284,14 @@ History
 ----
 ##### 3.1.0
 * Added Windows support (Analytics only)
+* Fix `SendAppInfos` on Android
+* Added `SetEnabled`/`IsEnabled` interface
 
 ##### 3.0.2
 * Fixed possible duplicate notifications
 
 ##### 3.0.1
-* Fixed onOpenURL not being called when using a notification with no additional view
+* Fixed `onOpenURL` not being called when using a notification with no additional view
 
 ##### 3.0.0
 * API Breaking Change

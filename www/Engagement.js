@@ -1,9 +1,7 @@
-
 /*
  * Copyright (c) Microsoft Corporation.  All rights reserved.
  * Licensed under the MIT license. See License.txt in the project root for license information.
  */
-
 
 module.exports = {
 
@@ -94,6 +92,14 @@ module.exports = {
         cordova.exec(_success,_failure, this.pluginName, 'sendCrash',[_crashId,_crash] );
     },
 
+    setEnabled: function (_enabled, _success, _failure) {
+        cordova.exec(_success, _failure, this.pluginName, 'setEnabled', [_enabled]);
+    },
+
+    isEnabled: function (_success, _failure) {
+        cordova.exec(_success, _failure, this.pluginName, 'isEnabled', []);
+    },
+
     getStatus: function (_success,_failure) {
         cordova.exec(_success,_failure, this.pluginName, 'getStatus', [] );
     },
@@ -103,6 +109,4 @@ module.exports = {
     },
 
 };
-
-
 

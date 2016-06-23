@@ -266,7 +266,7 @@ public class AZME extends CordovaPlugin {
         } else if (action.equals("sendAppInfo")) {
 
             try {
-                String extraInfos = args.getString(1);
+                String extraInfos = args.getString(0);
                 EngagementShared.instance().sendAppInfo(extraInfos);
                 callbackContext.success();
             } catch (JSONException e) {
@@ -297,6 +297,23 @@ public class AZME extends CordovaPlugin {
             }
 
             return true;
+        }
+        else if (action.equals("setEnabled")) {
+
+            try {
+                boolean enabled = args.getBoolean(0);
+                EngagementShared.instance().setEnabled(enabled);
+                callbackContext.success(enabled?1:0);
+            } catch (JSONException e) {
+                callbackContext.error("invalid args for setEnabled");
+            }
+            return true;
+           
+        }
+         else if (action.equals("isEnabled")) {
+            callbackContext.success(EngagementShared.instance().isEnabled()?1:0);
+            return true;
+           
         }
       
         String str = "Unrecognized Command : "+action;
