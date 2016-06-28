@@ -11,7 +11,7 @@ window.azureEngagement = {
     connectionString: "$AZME_WINDOWS_CONNECTION_STRING",
     appVersionName: "$APP_VERSION_NAME",
 	lastActivityName: null,
-	lastActivityUserInfos: null
+	lastActivityUserInfo: null
 };
 
 function engagementLogger(_log) {
@@ -33,10 +33,15 @@ engagementLogger("JS SDK loaded");
 cordova.commandProxy.add("Engagement",{ 
 
     startActivity: function (successCallback, errorCallback, _params) {
-        window.azureEngagement.lastActivityName = _params[0];
-        window.azureEngagement.lastActivityUserInfos = JSON.parse(_params[1]);
-        engagementLogger("startActivity " +  window.azureEngagement.lastActivityName );
-        engagement.agent.startActivity( window.azureEngagement.lastActivityName  ,  window.azureEngagement.lastActivityUserInfo);
+        var activityName = _params[0];
+        var userInfo = JSON.parse(_params[1]);
+
+        engagementLogger("startActivity " + activityName );
+        engagement.agent.startActivity( activityName, userInfo);
+
+        window.azureEngagement.lastActivityName = activityName;
+        window.azureEngagement.lastActivityUserInfo = userInfo;
+        
         successCallback();
     },
 
@@ -48,33 +53,33 @@ cordova.commandProxy.add("Engagement",{
 
     sendSessionEvent: function (successCallback, errorCallback, _params) {
         var sessionName = _params[0];
-        var userInfos = JSON.parse(_params[1]);
+        var userInfo = JSON.parse(_params[1]);
         engagementLogger("sendSessionEvent " + sessionName);
-        engagement.agent.sendSessionEvent(sessionName , userInfos);
+        engagement.agent.sendSessionEvent(sessionName , userInfo);
         successCallback();
     },
 
     sendSessionError: function (successCallback, errorCallback, _params) {
         var errorName = _params[0];
-        var userInfos = JSON.parse(_params[1]);
+        var userInfo = JSON.parse(_params[1]);
         engagementLogger("sendSessionError " + errorName);
-        engagement.agent.sendSessionError(errorName , userInfos);
+        engagement.agent.sendSessionError(errorName , userInfo);
         successCallback();
     },
 
     sendEvent: function (successCallback, errorCallback, _params) {
         var eventName = _params[0];
-        var userInfos = JSON.parse(_params[1]);
+        var userInfo = JSON.parse(_params[1]);
         engagementLogger("sendEvent " + eventName);
-        engagement.agent.sendEvent(eventName , userInfos);
+        engagement.agent.sendEvent(eventName , userInfo);
         successCallback();
     },
 
     startJob: function (successCallback, errorCallback, _params) {
         var jobName = _params[0];
-        var userInfos = JSON.parse(_params[1]);
+        var userInfo = JSON.parse(_params[1]);
         engagementLogger("startJob " + jobName);
-        engagement.agent.startJob(jobName , userInfos);
+        engagement.agent.startJob(jobName , userInfo);
         successCallback();
     },
 
@@ -88,9 +93,9 @@ cordova.commandProxy.add("Engagement",{
     sendJobError: function (successCallback, errorCallback, _params) {
         var errorName = _params[0];
         var jobName = _params[1];
-        var userInfos = JSON.parse(_params[2]);
+        var userInfo = JSON.parse(_params[2]);
         engagementLogger("sendJobError " + errorName+", job "+jobName);
-        engagement.agent.sendJobError(errorName , jobName, userInfos);
+        engagement.agent.sendJobError(errorName , jobName, userInfo);
         successCallback();
     },
 
@@ -154,7 +159,7 @@ document.addEventListener("deviceready",function(){
     document.addEventListener("resume", function(){
         if (azureEngagement.lastActivityName != null) {
             engagementLogger("Resuming activity " + window.azureEngagement.lastActivityName);
-            engagement.agent.startActivity(window.azureEngagement.lastActivityName, window.azureEngagement.lastActivityUserInfos);
+            engagement.agent.startActivity(window.azureEngagement.lastActivityName, window.azureEngagement.lastActivityUserInfo);
         }
     }, false);
 
