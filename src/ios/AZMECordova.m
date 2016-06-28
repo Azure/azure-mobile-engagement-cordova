@@ -10,7 +10,7 @@
 #import <objc/message.h>
 #include "AZMECordova.h"
 
-#define AZME_PLUGIN_VERSION @"3.0.2"
+#define AZME_PLUGIN_VERSION @"3.1.0"
 #define NATIVE_PLUGIN_VERSION @"3.1.0" 
 #define SDK_NAME @"CDVAZME"
 
@@ -328,6 +328,25 @@
     CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK  messageAsString:nil ];
     [[EngagementShared instance] registerForPushNotification];
     [[EngagementShared instance] enablePush];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
+
+- (void)setEnabled:(CDVInvokedUrlCommand*)command
+{
+
+    BOOL enabled = [[command.arguments objectAtIndex:0] boolValue];
+
+    [[EngagementShared instance] setEnabled:enabled];
+    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK  messageAsBool:enabled ];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
+
+- (void)isEnabled:(CDVInvokedUrlCommand*)command
+{
+
+    BOOL enabled = [[EngagementShared instance] isEnabled];
+
+    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK  messageAsBool:enabled ];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 

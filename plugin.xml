@@ -5,7 +5,7 @@
  * Licensed under the MIT license. See License.txt in the project root for license information.
  */
  -->
-<plugin id="cordova-plugin-ms-azure-mobile-engagement" version="3.0.2" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
+<plugin id="cordova-plugin-ms-azure-mobile-engagement" version="3.1.0" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
     <name>Azure Mobile Engagement</name>
     <description>Azure Mobile Engagement</description>
     <keywords>cordova,azme, azure, mobile, engagement</keywords>
@@ -30,8 +30,11 @@
     <preference name="AZME_ENABLE_NATIVE_LOG" default="true"/>
 
     <!-- to add the permissions when location is enabled -->
-    <hook   type="after_plugin_install" src="hooks/after_plugin_install.js" />
-    <hook   type="before_plugin_uninstall" src="hooks/before_plugin_uninstall.js" />
+    <hook type="after_plugin_install" src="hooks/after_plugin_install.js" />
+    <hook type="before_plugin_uninstall" src="hooks/before_plugin_uninstall.js" />
+    
+    <!-- to add the variables for the windows plugin -->
+    <hook type="after_build" src="hooks/after_build.js" />
 
     <!-- android -->
     <platform name="android">
@@ -245,4 +248,15 @@
         <framework src="AdSupport.framework"/>
         <framework src="libxml2.tbd"/>
     </platform>
+    <!-- windows -->
+    <platform name="windows">
+        
+        <preference name="AZME_WINDOWS_CONNECTION_STRING"/>
+
+        <js-module  name="EngagementProxy" src="src/winjs/EngagementProxy.js"  >
+            <merges target="" />
+        </js-module>
+
+        <asset src="src/winjs/azure-engagement.js" target="plugins/cordova-plugin-ms-azure-mobile-engagement/libs/azure-engagement.js" />
+    </platform>  
 </plugin>

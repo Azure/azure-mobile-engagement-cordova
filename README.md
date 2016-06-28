@@ -12,6 +12,7 @@ Supported Platforms
 --
 * iOS
 * Android
+* Windows 10 Universal & Windows 8.1
 
 Supported Framework
 --
@@ -37,11 +38,16 @@ cordova plugin add cordova-plugin-ms-azure-mobile-engagement --variable KEY=<val
 - `AZME_IOS_REACH_ICON` : the icon used for reach notification : must be the name of the resource with its extension (ex: `mynotificationicon.png`), and the icon file must be added into your iOS project with XCode (using the Add Files Menu)
 
 #### Android Variables
-- `AZME_ANDROID_CONNECTION_STRING` : the iOS connection string (to retrive from the AZME portal)
+- `AZME_ANDROID_CONNECTION_STRING` : the Android connection string (to retrieve from the AZME portal)
 - `AZME_ANDROID_REACH_ICON` : the icon used for reach notification : must be the name of the resource without any extension, nor drawable prefix  (ex: `mynotificationicon`), and the icon file must be copied into your android project (`platforms/android/res/drawable)`
 - `AZME_ANDROID_GOOGLE_PROJECT_NUMBER` : the project number used as the GCM (Google Cloud Messaging) sender ID
- 
-Only the `AZME_ANDROID_CONNECTION_STRING` and/or `AZME_IOS_CONNECTION_STRING` are required : all the other variables are optionals.
+
+#### Windows Variables
+- `AZME_WINDOWS_CONNECTION_STRING` : the WINDOWS connection string (to retrieve from the AZME portal)
+
+#### NB
+* Only the `AZME_*_CONNECTION_STRING`  are required : all the other variables are optionals.
+
 
 Example:
 ```sh
@@ -73,6 +79,7 @@ cordova plugin add cordova-plugin-ms-azure-mobile-engagement --variable enableLo
   * `cordova-plugin-ms-azure-mobile-engagement-background-reporting`
 * If you are targetting AndroidM, your application needs to call  `Engagement.requestPermissions`at some point (cf. below)
 * For IOS, you can also add  `--variable AZME_IOS_LOCATION_DESCRIPTION : <desc> ` to define the message that will be displayed to the end user in the permission dialog
+* Not supported on Windows
 
 
 Push Notification Support
@@ -107,7 +114,7 @@ Engagement.initializeReach( _openURLHandler, _dataPushHandler, [_success], [_fai
 * If the body contains non-text data, it will be  received encoded in base64 format 
   * If the data is an image, it can be directly displayed using the prefix  `data:image/png;base64` (cf. example)
   * If you want to extract the data bytes, you would need to use the `btoa()` function to convert base64 to binary
-
+* Reach is not available on Windows yet!
 
 Public Interface
 --
@@ -126,6 +133,9 @@ Once the `deviceready` event has been triggered by the Cordova framework, a `Eng
 * Engagement.sendError
 * Engagement.sendJobEvent
 * Engagement.sendJobError
+* Engagement.sendCrash
+* Engagement.isEnabled
+* Engagement.setEnabled
 
 ### Engagement.startActivity
 
@@ -205,6 +215,31 @@ Engagement.sendAppInfo( _appInfos,[ _success], [_failure]);
 ##### Params
 * `_appInfos`: the json object containing the app infos to be sent
 
+### Engagement.sendCrash
+Report crashes manually (Windows Only)
+
+```javascript
+Engagement.sendCrash( _crashId, _crash,[ _success], [_failure]);
+```
+##### Params
+* `_crashId`: the crashid argument is a string used to identify the type of the crash.
+* `_crash`: usually the stack trace of the crash as a string.
+
+### Engagement.setEnabled
+Active or deactivate the agent
+
+```javascript
+Engagement.setEnabled( _enabled,[ _success], [_failure]);
+```
+##### Params
+* `_enabled`: boolean 
+
+### Engagement.isEnabled
+Returns the status of the agent
+
+```javascript
+Engagement.isEnabled(function(_enabled){...},[_failure]);
+```
 
 ### Engagement.requestPermissions
 
@@ -240,17 +275,23 @@ Engagement.getStatus( _statusCallback, [_failure]);
             console.log("AZME native Version : "+_info.nativeVersion);
             console.log("AZME plugin Version : "+_info.pluginVersion);
             console.log("Device ID : "+_info.deviceId);
+             console.log("Enabled : "+_info.isEnabled);
         });
 ```
 
 
 History
 ----
+##### 3.1.0
+* Added Windows support (Analytics only)
+* Fix `SendAppInfos` on Android
+* Added `SetEnabled`/`IsEnabled` interface
+
 ##### 3.0.2
 * Fixed possible duplicate notifications
 
 ##### 3.0.1
-* Fixed onOpenURL not being called when using a notification with no additional view
+* Fixed `onOpenURL` not being called when using a notification with no additional view
 
 ##### 3.0.0
 * API Breaking Change
@@ -258,7 +299,7 @@ History
   * `AZME_ACTION_URL` instead of `AZME_REDIRECT_URL`
   * `initializeReach` instead of `registerForPushNotification`/`onHandleURL`/`onDataPushReceived`
   * Category is set to `null` instead of `None` if not defined within a campaign
-  * APIs use "Engagement.<APIName>" convention instead of "AzureEngagement.<APIName>"
+  * APIs use `Engagement.<APIName>` convention instead of `AzureEngagement.<APIName>`
 * Added `AZME_IOS_LOCATION_DESCRIPTION` variable
 * Fix Location reporting hooks
 
