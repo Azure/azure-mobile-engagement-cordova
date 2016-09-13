@@ -57,6 +57,11 @@ typedef enum _AEReachModuleState
   /* Storage */
   AEStorage* _db;
   AEStorage* _feedbackDb;
+  
+  /* Background/Inactive state tracking */
+  BOOL _didEnterBackground;
+  BOOL _willResignActive;
+  BOOL _applicationLaunchedViaSystemPush;
 
   /* Set of DLCs that are pending download (key = localId) */
   NSMutableIndexSet* _pendingDlcs;

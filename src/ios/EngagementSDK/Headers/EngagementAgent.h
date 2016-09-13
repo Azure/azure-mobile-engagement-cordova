@@ -3,6 +3,8 @@
  */
 
 #import <Foundation/Foundation.h>
+#import <UserNotifications/UserNotifications.h>
+#import <UIKit/UIKit.h>
 
 extern NSString* const kEngagementAgentEnabled;
 
@@ -379,5 +381,43 @@ extern NSString* const kEngagementAgentEnabled;
  * @param msgId Message dlc id
  */
 - (void)getMessage:(NSString*)msgId;
+
+/**
+ * Get campaigns activated within certain time frame
+ * @param timeFrame The target time frame.
+ */
+- (void)getCampaigns:(NSNumber*)timeFrame;
+
+/**
+ * Use this method to determine if a notification comes from Engagement or not.
+ * @return A boolean that indicates whether the given notification's payload dictionary is from Engagement or not.
+ */
++ (BOOL)isEngagementPushPayload:(NSDictionary *)userInfo;
+
+/**
+ * This method can be used within the userNotificationCenter:willPresentNotification:withCompletionHandler: 
+ * method of your UNUserNotificationCenterDelegate to process Engagement notifications.
+ * This implementation forces system notifications from Engagement to NOT be presented
+ * while the application is in foreground.
+ * The completionHandler, if not nil, is called on Engagement notifications only.
+ * @param center The notification center that received the notification.
+ * @param notification The notification that is about to be delivered.
+ * @param completionHandler The block to execute with the presentation option for the notification.
+ * @return A boolean that indicates whether the given notification as been processed by this method or not.
+ */
+- (BOOL)userNotificationCenterWillPresentNotification:(UNNotification *)notification withCompletionHandler:(void (^)(UNNotificationPresentationOptions options))completionHandler;
+
+/**
+ * This method can be used within the userNotificationCenter:didReceiveNotificationResponse:withCompletionHandler:
+ * method of your UNUserNotificationCenterDelegate to process Engagement notifications.
+ * This implementation handles Engagement notifications being actioned by the user.
+ * A notification is not actioned if it has been dismissed by the user.
+ * The completionHandler, if not nil, is called on Engagement notifications only.
+ * @param center The notification center that received the notification.
+ * @param notification The user’s response to the notification.
+ * @param completionHandler The block to execute when the user’s response is finished processing.
+ * @return A boolean that indicates whether the given notification as been processed by this method or not.
+ */
+- (BOOL)userNotificationCenterDidReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void(^)())completionHandler;
 
 @end

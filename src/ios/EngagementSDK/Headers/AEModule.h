@@ -66,10 +66,21 @@
 - (void)dlcDownloaded:(AEPushMessage*)message;
 
 /**
- * Called when a content of a messsage has failed to download.
+ * Called when content of a message has failed to download.
  * @param messageId Message Id.
  */
 - (void)dlcDownloadFailed:(NSString*)messageId;
+
+/**
+ * Called when campaigns are polled.
+ * @param campaigns Polled campaigns.
+ */
+- (void)campaignsPolled:(NSArray*)campaigns;
+
+/**
+ * Called when failed to poll campaigns.
+ */
+- (void)campaignsPollFailed;
 
 /**
  * Called when Engagement has detected that the current activity has changed.
