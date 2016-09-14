@@ -123,6 +123,7 @@
     NSString* AZME_FINEREALTIME_LOCATION = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"AZME_FINEREALTIME_LOCATION"];
     NSString* AZME_BACKGROUND_REPORTING = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"AZME_BACKGROUND_REPORTING"];
     NSString* AZME_FOREGROUND_REPORTING = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"AZME_FOREGROUND_REPORTING"];
+    NSString* AZME_ACTION_URL = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"AZME_ACTION_URL"];
     
     bool lazyareaLocation =  AZME_LAZYAREA_LOCATION && [ AZME_LAZYAREA_LOCATION caseInsensitiveCompare:@"true"] == NSOrderedSame ;
     bool realtimeLocation =  AZME_REALTIME_LOCATION && [ AZME_REALTIME_LOCATION caseInsensitiveCompare:@"true"] == NSOrderedSame ;
@@ -153,6 +154,7 @@
                     withReachIcon:AZME_IOS_REACH_ICON
                     withLocation:reportingType
                     backgroundReporting:reportingMode
+                    withActionURL:AZME_ACTION_URL
                     withDelegate:self] ;
 }
 

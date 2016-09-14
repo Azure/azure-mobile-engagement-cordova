@@ -8,12 +8,16 @@
 
 const NSString* ENGAGEMENT_LOGTAG = @"[Engagement-Plugin] ";
 const NSString* ENGAGEMENT_ERRORTAG =  @"[Engagement-Plugin] ERROR: ";
+const NSString* ENGAGEMENT_WARNINGTAG =  @"[Engagement-Plugin] WARN: ";
 
 // helper
 
 bool isStringNull(NSString*_string)
 {
-    return _string==(id) [NSNull null] || [_string length]==0 || [_string isEqualToString:@""];
+    return _string==(id) [NSNull null]
+        || [_string length]==0
+        || [_string isEqualToString:@""]
+        || ([_string caseInsensitiveCompare:@"null"] == NSOrderedSame );
 }
 
 @implementation EngagementShared
@@ -101,7 +105,7 @@ bool isStringNull(NSString*_string)
 
 
 
--(void)initialize: (NSString*)_connectionString  withReachEnabled:(NSNumber*)_enableReach  withReachIcon:(NSString*)_reachIcon withLocation:(locationReportingType)_locationReporting backgroundReporting:(backgroundReportingType)_backgroundReporting withDelegate:(id<EngagementDelegate>)_delegate
+-(void)initialize: (NSString*)_connectionString  withReachEnabled:(NSNumber*)_enableReach  withReachIcon:(NSString*)_reachIcon withLocation:(locationReportingType)_locationReporting backgroundReporting:(backgroundReportingType)_backgroundReporting withActionURL:(NSString*)_actionURL withDelegate:(id<EngagementDelegate>)_delegate
 {
     
     delegate = _delegate;
@@ -144,6 +148,9 @@ bool isStringNull(NSString*_string)
             #if TARGET_IPHONE_SIMULATOR
                 NSLog( @"%@Running on iOS Simulator -- push notifications are disabled",ENGAGEMENT_LOGTAG);
             #endif
+                
+                if ( enablePluginLog && isStringNull(_actionURL))
+                    NSLog( @"%@AZME_ACTION_URL not set : deep linking won't work.",ENGAGEMENT_WARNINGTAG);
 
             }
         }
