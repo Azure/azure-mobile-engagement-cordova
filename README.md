@@ -282,6 +282,10 @@ Engagement.getStatus( _statusCallback, [_failure]);
 
 History
 ----
+
+##### 3.2.0
+* Updated iOS SDK to 4.0.0 to support iOS 10 / XCode 8
+
 ##### 3.1.0
 * Added Windows support (Analytics only)
 * Fix `SendAppInfos` on Android
@@ -328,5 +332,4 @@ History
 ##### 1.0.0
 * Initial Release
     
-## Open Source Code of Conduct
-This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/). For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
+

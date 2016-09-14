@@ -62,7 +62,7 @@ typedef enum {
 -(void)enablePluginLog:(BOOL)_enablePluginLog ;
 -(void)enableNativeLog:(BOOL)_enableNativeLog ;
 
--(void)initialize: (NSString*)_connectionString   withReachEnabled:(NSNumber*)_enableReach withReachIcon:(NSString*)_reachIcon withLocation:(locationReportingType)_locationReporting backgroundReporting:(backgroundReportingType)_backgroundReporting withDelegate:(id<EngagementDelegate>)_delegate;
+-(void)initialize: (NSString*)_connectionString   withReachEnabled:(NSNumber*)_enableReach withReachIcon:(NSString*)_reachIcon withLocation:(locationReportingType)_locationReporting backgroundReporting:(backgroundReportingType)_backgroundReporting withActionURL:(NSString*)_actionURL withDelegate:(id<EngagementDelegate>)_delegate;
 
 -(void)enablePush;
 -(void)enableURL;
@@ -92,8 +92,6 @@ typedef enum {
 -(void)saveUserPreferences;
 -(void)restoreUserPreferences;
 -(void)setEnabled:(BOOL)_enabled;
--(BOOL) isEnabled;
+-(BOOL)isEnabled;
 
 @end
-
-

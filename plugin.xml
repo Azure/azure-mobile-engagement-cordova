@@ -5,7 +5,7 @@
  * Licensed under the MIT license. See License.txt in the project root for license information.
  */
  -->
-<plugin id="cordova-plugin-ms-azure-mobile-engagement" version="3.1.0" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
+<plugin id="cordova-plugin-ms-azure-mobile-engagement" version="3.2.0" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
     <name>Azure Mobile Engagement</name>
     <description>Azure Mobile Engagement</description>
     <keywords>cordova,azme, azure, mobile, engagement</keywords>
@@ -173,15 +173,17 @@
         <config-file parent="AZME_IOS_CONNECTION_STRING" target="*-Info.plist">
             <string>$AZME_IOS_CONNECTION_STRING</string>
         </config-file>
-      
         <config-file parent="AZME_IOS_REACH_ICON" target="*-Info.plist">
             <string>$AZME_IOS_REACH_ICON</string>
         </config-file>
         <config-file parent="AZME_ENABLE_PLUGIN_LOG" target="*-Info.plist">
             <string>$AZME_ENABLE_PLUGIN_LOG</string>
         </config-file>
-          <config-file parent="AZME_ENABLE_NATIVE_LOG" target="*-Info.plist">
+        <config-file parent="AZME_ENABLE_NATIVE_LOG" target="*-Info.plist">
             <string>$AZME_ENABLE_NATIVE_LOG</string>
+        </config-file>
+        <config-file parent="AZME_ACTION_URL" target="*-Info.plist">
+            <string>$AZME_ACTION_URL</string>
         </config-file>
         <config-file parent="CFBundleURLTypes" target="*-Info.plist">
             <array>
@@ -214,6 +216,7 @@
         <header-file src="src/ios/EngagementSDK/Headers/EngagementAgent.h"/>
         <header-file src="src/ios/EngagementSDK/Headers/EngagementTableViewController.h"/>
         <header-file src="src/ios/EngagementSDK/Headers/EngagementViewController.h"/>
+        <header-file src="src/ios/EngagementSDK/Headers/AEUserNotificationHandler.h"/>
         <source-file framework="true" src="src/ios/EngagementSDK/libengagement.a"/>
         <header-file src="src/ios/EngagementReach/Headers/AEAnnouncementViewController.h"/>
         <header-file src="src/ios/EngagementReach/Headers/AEAutorotateView.h"/>
@@ -247,6 +250,7 @@
         <framework src="CoreLocation.framework"/>
         <framework src="AdSupport.framework"/>
         <framework src="libxml2.tbd"/>
+        <framework src="UserNotifications.framework"  weak="true" />
     </platform>
     <!-- windows -->
     <platform name="windows">
