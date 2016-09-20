@@ -268,20 +268,27 @@ Engagement.getStatus( _statusCallback, [_failure]);
 ```
 ##### Params
 * `_statusCallback`:  the handler that is passed a json object containing information about the AZME library
+ *  `nativeVersion`: the version number of the AZME native SDK
+ *  `pluginVersion`: the version number of the Cordova plugin
+ *  `deviceId`: the deviceId as defined by AZME
+ *  `isEnabled`: if the plugin has been enabled (iOS only)
+ *  `notificationGranted`: if the user has alredy accepted to receive notifications (iOS only)
 
 ##### Example
 ```javascript
     Engagement.getStatus(function(_info) {
             console.log("AZME native Version : "+_info.nativeVersion);
             console.log("AZME plugin Version : "+_info.pluginVersion);
-            console.log("Device ID : "+_info.deviceId);
-             console.log("Enabled : "+_info.isEnabled);
+            console.log("Device ID : "+_info.deviceId); 
         });
 ```
 
 
 History
 ----
+
+##### 3.2.1
+* Added `permissionAllowed in `getStatus() 
 
 ##### 3.2.0
 * Updated iOS SDK to 4.0.0 to support iOS 10 / XCode 8

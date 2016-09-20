@@ -5,7 +5,6 @@
 
 #include "EngagementShared.h"
 
-
 const NSString* ENGAGEMENT_LOGTAG = @"[Engagement-Plugin] ";
 const NSString* ENGAGEMENT_ERRORTAG =  @"[Engagement-Plugin] ERROR: ";
 const NSString* ENGAGEMENT_WARNINGTAG =  @"[Engagement-Plugin] WARN: ";
@@ -22,7 +21,6 @@ bool isStringNull(NSString*_string)
 
 @implementation EngagementShared
 
-
 + (EngagementShared*)instance {
     static EngagementShared *_instance = nil;
     static dispatch_once_t onceToken;
@@ -33,10 +31,8 @@ bool isStringNull(NSString*_string)
     return _instance;
 }
 
-
 -(void)initSDK:(NSString*)_sdkName withPluginVersion:(NSString*)_pluginVersion withNativeVersion:(NSString*)_nativeVersion
 {
-   
     pluginVersion = _pluginVersion;
     nativeVersion = _nativeVersion;
     sdkName = _sdkName ;
@@ -47,8 +43,7 @@ bool isStringNull(NSString*_string)
     pendingNotifications = [[NSMutableArray alloc] init];
     
     if (enablePluginLog)
-        NSLog( @"%@Plugin %@ v%@ (SDK Version %@)",ENGAGEMENT_LOGTAG,_sdkName,_pluginVersion,_nativeVersion);
-    
+        NSLog( @"%@Plugin %@ v%@ (SDK Version %@)",ENGAGEMENT_LOGTAG,_sdkName,_pluginVersion,_nativeVersion);  
 }
 
 -(void)enablePluginLog:(BOOL)_enablePluginLog
@@ -71,7 +66,6 @@ bool isStringNull(NSString*_string)
 {
     NSLog( @"%@didFailToRegisterForRemoteNotificationsWithError %@", ENGAGEMENT_ERRORTAG,error);
 }
-
 
 -(void)didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))handler
 {   
@@ -102,12 +96,8 @@ bool isStringNull(NSString*_string)
     [[EngagementAgent shared] registerDeviceToken:deviceToken];
 }
 
-
-
-
 -(void)initialize: (NSString*)_connectionString  withReachEnabled:(NSNumber*)_enableReach  withReachIcon:(NSString*)_reachIcon withLocation:(locationReportingType)_locationReporting backgroundReporting:(backgroundReportingType)_backgroundReporting withActionURL:(NSString*)_actionURL withDelegate:(id<EngagementDelegate>)_delegate
-{
-    
+{    
     delegate = _delegate;
     
     if (enablePluginLog)
@@ -238,8 +228,7 @@ bool isStringNull(NSString*_string)
         [delegate didReceiveDataPush:encodedCategory withBody:encodedBody isBase64:isBase64];
     }
     
-    [dataPushes removeAllObjects];
-    
+    [dataPushes removeAllObjects];   
 }
 
 -(void)addDataPush:(NSString*)_category withBody:(NSString*)_body isBase64:(BOOL)_isBase64
@@ -258,7 +247,6 @@ bool isStringNull(NSString*_string)
 
 -(BOOL)didReceiveStringDataPushWithCategory:(NSString*)category body:(NSString*)body
 {
- 
     if (enablePluginLog)
         NSLog( @"%@received string data push message w/ category: %@", ENGAGEMENT_LOGTAG,category);
 
@@ -271,7 +259,6 @@ bool isStringNull(NSString*_string)
 
 -(BOOL)didReceiveBase64DataPushWithCategory:(NSString*)category decodedBody:(NSData *)decodedBody encodedBody:(NSString *)encodedBody
 {
-  
     if (enablePluginLog)
          NSLog( @"%@received base64 data push message w/ category: %@",ENGAGEMENT_LOGTAG, category);
 
@@ -283,7 +270,6 @@ bool isStringNull(NSString*_string)
 
 - (void)startActivity:(NSString*)_activityName withExtraInfos:(NSString*)_extraInfos
 {
-  
     if (enablePluginLog)
         NSLog( @"%@startActivity:%@",ENGAGEMENT_LOGTAG,_activityName);
     
@@ -295,8 +281,7 @@ bool isStringNull(NSString*_string)
 }
 
 - (void)endActivity
-{
-    
+{  
     if (enablePluginLog)
         NSLog( @"%@endActivity",ENGAGEMENT_LOGTAG);
     
@@ -314,12 +299,10 @@ bool isStringNull(NSString*_string)
                                                                error: nil];
     
     [[EngagementAgent shared] sendEvent:_eventName extras:JSON];
-
 }
 
 - (void)startJob:(NSString*)_jobName withExtraInfos:(NSString*)_extraInfos
-{
-    
+{   
     if (enablePluginLog)
         NSLog( @"%@startJob:%@",ENGAGEMENT_LOGTAG,_jobName);
     
@@ -327,18 +310,15 @@ bool isStringNull(NSString*_string)
                                                              options: NSJSONReadingMutableContainers
                                                                error: nil];
    
-    [[EngagementAgent shared] startJob:_jobName extras:JSON];
-    
+    [[EngagementAgent shared] startJob:_jobName extras:JSON]; 
 }
 
 - (void)endJob:(NSString*)_jobName
-{
-    
+{ 
     if (enablePluginLog)
         NSLog( @"%@endJob:%@",ENGAGEMENT_LOGTAG,_jobName);
     
-    [[EngagementAgent shared] endJob:_jobName];
-    
+    [[EngagementAgent shared] endJob:_jobName]; 
 }
 
 - (void)sendAppInfo:(NSString*)_extraInfos
@@ -410,8 +390,7 @@ bool isStringNull(NSString*_string)
 }
 
 - (void)sendJobError:(NSString*)_errorName inJob:(NSString*)_jobName withExtraInfos:(NSString*)_extraInfos
-{
-    
+{  
     if (enablePluginLog)
         NSLog( @"%@sendJobError:%@ %@ %@",ENGAGEMENT_LOGTAG,_errorName,_jobName,_extraInfos);
     
@@ -422,19 +401,38 @@ bool isStringNull(NSString*_string)
     [[EngagementAgent shared] sendJobError:_errorName jobName:_jobName extras:JSON];
 }
 
-
-
-
 - (NSDictionary*)getStatus
 {
+    BOOL notificationGranted = NO;
+
+    if ([[UIApplication sharedApplication] respondsToSelector:@selector(currentUserNotificationSettings)]){
+        UIUserNotificationSettings *notificationSettings = [[UIApplication sharedApplication] currentUserNotificationSettings];
+
+        if (!notificationSettings || (notificationSettings.types == UIUserNotificationTypeNone)) {
+            notificationGranted = NO;
+        } else {
+            notificationGranted = YES;
+        }
+    } else {
+        UIRemoteNotificationType types = [[UIApplication sharedApplication] enabledRemoteNotificationTypes];
+        if (types & UIRemoteNotificationTypeAlert) {
+            notificationGranted = YES;
+        } else{
+            notificationGranted = NO;
+        }
+    }
 
     NSDictionary* dict = [NSDictionary dictionaryWithObjectsAndKeys:
                           pluginVersion, @"pluginVersion",
                           nativeVersion, @"nativeVersion",
                           [NSNumber numberWithBool: [[EngagementAgent shared] enabled] ],@"isEnabled",
+                          [NSNumber numberWithBool: notificationGranted ],@"notificationGranted",
                           [[EngagementAgent shared] deviceId], @"deviceId",
                           nil];
-    
+
+    if (enablePluginLog)
+        NSLog( @"%@getStatus returned: %@",ENGAGEMENT_LOGTAG,[dict description]);
+   
     return dict;
 }
 
@@ -456,8 +454,6 @@ bool isStringNull(NSString*_string)
     }
     
     [pendingNotifications removeAllObjects];
-    
-  
     [self processDataPush];
 }
 
@@ -482,18 +478,15 @@ bool isStringNull(NSString*_string)
 
 - (void)handleOpenURL:(NSString*)_url
 {
-  
     if (enablePluginLog)
         NSLog( @"%@handling URL :%@",ENGAGEMENT_LOGTAG,_url);
     
     lastURL = _url;
     [self processURL];
-   
 }
 
 - (void)registerForPushNotification
 {
-    
     if (enablePluginLog)
         NSLog( @"%@register the application for Push notifications",ENGAGEMENT_LOGTAG);
     
@@ -503,8 +496,7 @@ bool isStringNull(NSString*_string)
     }
     else {
         [[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
-    }
-    
+    }   
 }
 
 -(void) saveUserPreferences
@@ -536,8 +528,7 @@ bool isStringNull(NSString*_string)
     [userPreferences enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
         [[NSUserDefaults standardUserDefaults] setObject:obj forKey:key];
     }];
-    userPreferences = nil;
-    
+    userPreferences = nil; 
 }
 
 -(void) setEnabled:(BOOL)_enabled
@@ -556,6 +547,5 @@ bool isStringNull(NSString*_string)
     
    return b;
 }
-
 
 @end

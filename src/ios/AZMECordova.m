@@ -10,7 +10,7 @@
 #import <objc/message.h>
 #include "AZMECordova.h"
 
-#define AZME_PLUGIN_VERSION @"3.2.0"
+#define AZME_PLUGIN_VERSION @"3.2.1"
 #define NATIVE_PLUGIN_VERSION @"4.0.0" 
 #define SDK_NAME @"CDVAZME"
 
