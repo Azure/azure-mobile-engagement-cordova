@@ -10,6 +10,18 @@
       "windows"
     ]
   },
+  "engines": {
+    "cordovaDependencies": {
+      "3.2.0": {
+        "cordova": ">=5.2.0",
+        "cordova-android": ">=5.0.0",
+        "cordova-ios": ">=3.9.2"
+      },
+      "4.0.0": {
+        "cordova": ">100"
+      }
+    }
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/Azure/azure-mobile-engagement-cordova"
