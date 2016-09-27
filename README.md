@@ -289,13 +289,15 @@ History
 
 ##### 3.2.1
 * Added `permissionAllowed in `getStatus() 
+* Fixed exception during first run on Windows
+
 
 ##### 3.2.0
 * Updated iOS SDK to 4.0.0 to support iOS 10 / XCode 8
 
 ##### 3.1.0
 * Added Windows support (Analytics only)
-* Fix `SendAppInfos` on Android
+* Fixed `SendAppInfos` on Android
 * Added `SetEnabled`/`IsEnabled` interface
 
 ##### 3.0.2

@@ -40,12 +40,9 @@ module.exports = function(context) {
 	var proxy = process.cwd()+"/platforms/windows/www/plugins/cordova-plugin-ms-azure-mobile-engagement/src/winjs/EngagementProxy.js";
 	try {
 	     var contents = fs.readFileSync(proxy,'utf8');
-		for( var k in azme_variables)
-		{
+		for( var k in azme_variables) {
 			var v = azme_variables[k];
-			contents = contents.replace("\$"+k,v);
-			console.log("--> replacing "+k+" by "+v);
-	
+			contents = contents.replace("\$"+k,v);	
 		}
 		fs.writeFileSync(proxy,contents);
 	} catch (e) {
