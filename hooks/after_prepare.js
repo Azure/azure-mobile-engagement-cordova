@@ -36,6 +36,13 @@ module.exports = function(context) {
 	var version = cfg.doc._root.attrib['version'];
 
 	azme_variables.APP_VERSION_NAME = version;
+	
+// Fill default variables if not set by the user 
+	if (azme_variables.AZME_ENABLE_PLUGIN_LOG === undefined)
+		azme_variables.AZME_ENABLE_PLUGIN_LOG = true;
+	if (azme_variables.AZME_ENABLE_NATIVE_LOG === undefined)
+		azme_variables.AZME_ENABLE_NATIVE_LOG = true;
+
 
 	var proxy = process.cwd()+"/platforms/windows/www/plugins/cordova-plugin-ms-azure-mobile-engagement/src/winjs/EngagementProxy.js";
 	try {
