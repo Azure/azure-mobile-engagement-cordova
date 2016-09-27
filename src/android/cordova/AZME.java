@@ -29,7 +29,7 @@ import com.microsoft.azure.engagement.shared.EngagementShared;
 public class AZME extends CordovaPlugin {
 
     private static final String pluginName = "CDVAZME";
-    private static final String pluginVersion = "3.2.0";
+    private static final String pluginVersion = "3.2.1";
     private static final String nativeSDKVersion = "4.1.0"; // to eventually retrieve from the SDK itself
 
     public CordovaInterface cordova = null;

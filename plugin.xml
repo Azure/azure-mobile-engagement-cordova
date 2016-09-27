@@ -5,7 +5,7 @@
  * Licensed under the MIT license. See License.txt in the project root for license information.
  */
  -->
-<plugin id="cordova-plugin-ms-azure-mobile-engagement" version="3.2.0" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
+<plugin id="cordova-plugin-ms-azure-mobile-engagement" version="3.2.1" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
     <name>Azure Mobile Engagement</name>
     <description>Azure Mobile Engagement</description>
     <keywords>cordova,azme, azure, mobile, engagement</keywords>
@@ -34,7 +34,7 @@
     <hook type="before_plugin_uninstall" src="hooks/before_plugin_uninstall.js" />
     
     <!-- to add the variables for the windows plugin -->
-    <hook type="after_build" src="hooks/after_build.js" />
+    <hook type="after_prepare" src="hooks/after_prepare.js" />
 
     <!-- android -->
     <platform name="android">

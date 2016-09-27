@@ -6,7 +6,7 @@
 module.exports = {
 
     pluginName : 'Engagement',
-    pluginVersion : '3.2.0',
+    pluginVersion : '3.2.1',
 
     onError : function(_error) {
         console.error(_error);
