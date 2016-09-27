@@ -34,7 +34,7 @@
     <hook type="before_plugin_uninstall" src="hooks/before_plugin_uninstall.js" />
     
     <!-- to add the variables for the windows plugin -->
-    <hook type="after_build" src="hooks/after_build.js" />
+    <hook type="after_prepare" src="hooks/after_prepare.js" />
 
     <!-- android -->
     <platform name="android">

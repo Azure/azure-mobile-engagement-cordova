@@ -44,6 +44,8 @@ module.exports = function(context) {
 		{
 			var v = azme_variables[k];
 			contents = contents.replace("\$"+k,v);
+			console.log("--> replacing "+k+" by "+v);
+	
 		}
 		fs.writeFileSync(proxy,contents);
 	} catch (e) {
