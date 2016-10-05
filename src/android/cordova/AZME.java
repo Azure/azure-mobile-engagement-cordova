@@ -276,17 +276,10 @@ public class AZME extends CordovaPlugin {
            
         } else if (action.equals("requestPermissions")) {
 
-            JSONArray permissions = new JSONArray();
-            if (realtimeLocation || fineRealtimeLocation)
-                permissions.put("ACCESS_FINE_LOCATION");
-            else if (lazyAreaLocation)
-                permissions.put("ACCESS_COARSE_LOCATION");
-
-            JSONObject ret =  EngagementShared.instance().requestPermissions(permissions);
+            JSONObject ret =  EngagementShared.instance().requestPermissions(realtimeLocation,fineRealtimeLocation,lazyAreaLocation);
             if (!ret.has("error"))
                 callbackContext.success(ret);
-            else
-            {
+            else {
                 String errString = null;
                 try {
                     errString = ret.getString("error");
@@ -295,7 +288,6 @@ public class AZME extends CordovaPlugin {
                 }
                 callbackContext.error(errString);
             }
-
             return true;
         }
         else if (action.equals("setEnabled")) {

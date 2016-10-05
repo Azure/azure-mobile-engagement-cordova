@@ -35,14 +35,12 @@ module.exports = function(context) {
 	if (location != "lazyarea" && location != "realtime" && location != "finerealtime")
 		throw new Error( "Unsupported parameter with --variable enableLocation: "+location);
 
-	var locationPluginDir = context.opts.plugin.pluginInfo.dir + "#:"+location+"-location";
-
+	var locationPluginDir = context.opts.plugin.pluginInfo.dir + "/"+location+"-location";
 	context.cordova.raw.plugin('add', locationPluginDir, opts )
 	.then(function() {
-
 		var reporting = variables.backgroundreporting;
 		var background = (reporting && reporting.toLowerCase()=="true")?"background":"foreground";
-		var reportingPluginDir = context.opts.plugin.pluginInfo.dir + "#:"+background+"-reporting";
+		var reportingPluginDir = context.opts.plugin.pluginInfo.dir + "/"+background+"-reporting";
 		context.cordova.raw.plugin('add', reportingPluginDir , opts);
 	});
 }
