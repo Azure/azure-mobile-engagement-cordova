@@ -5,13 +5,13 @@
 
 
 window.azureEngagement = {
-    pluginVersion : "3.1.0",    
-    AZME_ENABLE_PLUGIN_LOG: $AZME_ENABLE_PLUGIN_LOG, // set by the after_prepare.js hook
-    AZME_ENABLE_NATIVE_LOG: $AZME_ENABLE_NATIVE_LOG,
-    connectionString: "$AZME_WINDOWS_CONNECTION_STRING",
-    appVersionName: "$APP_VERSION_NAME",
-	lastActivityName: null,
-	lastActivityUserInfo: null
+    pluginVersion : "3.2.1",    
+    AZME_ENABLE_PLUGIN_LOG: ${AZME_ENABLE_PLUGIN_LOG}, // set by the after_prepare.js hook
+    AZME_ENABLE_NATIVE_LOG: ${AZME_ENABLE_NATIVE_LOG},
+    connectionString: "${AZME_WINDOWS_CONNECTION_STRING}",
+    appVersionName: "${APP_VERSION_NAME}",
+    lastActivityName: null,
+    lastActivityUserInfo: null
 };
 
 function engagementLogger(_log) {
@@ -22,7 +22,7 @@ function engagementLogger(_log) {
 engagementLogger("AZME pluginVersion v"+window.azureEngagement.pluginVersion);
 
 var xhrObj = new XMLHttpRequest();
-xhrObj.open('GET', "plugins/cordova-plugin-ms-azure-mobile-engagement/libs/azure-engagement.js", false);
+xhrObj.open('GET', "ms-appx-web://${BUNDLE_ID}/www/plugins/cordova-plugin-ms-azure-mobile-engagement/libs/azure-engagement.js", false);
 xhrObj.send('');
 var se = document.createElement('script');
 se.type = "text/javascript";
@@ -119,7 +119,7 @@ cordova.commandProxy.add("Engagement",{
             nativeVersion: azureEngagement.serviceVersion,
             pluginVersion: azureEngagement.pluginVersion,
             isEnabled : engagement.agent.isEnabled(),
-            deviceId : null
+            deviceId : engagement.deviceId
         }
         engagementLogger("getStatus " + JSON.stringify(status));
         successCallback(status);
