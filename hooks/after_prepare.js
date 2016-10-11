@@ -36,6 +36,7 @@ module.exports = function(context) {
 	var version = cfg.doc._root.attrib['version'];
 
 	azme_variables.APP_VERSION_NAME = version;
+	azme_variables.BUNDLE_ID =  cfg.doc._root.attrib['id'];;
 	
 // Fill default variables if not set by the user 
 	if (azme_variables.AZME_ENABLE_PLUGIN_LOG === undefined)
@@ -49,7 +50,7 @@ module.exports = function(context) {
 	     var contents = fs.readFileSync(proxy,'utf8');
 		for( var k in azme_variables) {
 			var v = azme_variables[k];
-			contents = contents.replace("\$"+k,v);	
+			contents = contents.replace("\$\{"+k+"\}",v);	
 		}
 		fs.writeFileSync(proxy,contents);
 	} catch (e) {
