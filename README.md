@@ -287,6 +287,12 @@ Engagement.getStatus( _statusCallback, [_failure]);
 History
 ----
 
+##### 3.2.2
+* Fixed location reporting support for Cordova 6.3.x+
+* Fixed permissions support when using Fine Location reporting on Android
+* Updated Android SDK to 4.2.3
+* Updated Windows SDK to 2.0.1
+
 ##### 3.2.1
 * Added `permissionAllowed in `getStatus() 
 * Fixed exception during first run on Windows
