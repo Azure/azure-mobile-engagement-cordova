@@ -5,7 +5,7 @@
 
 
 window.azureEngagement = {
-    pluginVersion : "3.2.1",    
+    pluginVersion = "3.2.2",    
     AZME_ENABLE_PLUGIN_LOG: ${AZME_ENABLE_PLUGIN_LOG}, // set by the after_prepare.js hook
     AZME_ENABLE_NATIVE_LOG: ${AZME_ENABLE_NATIVE_LOG},
     connectionString: "${AZME_WINDOWS_CONNECTION_STRING}",
