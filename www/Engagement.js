@@ -6,7 +6,7 @@
 module.exports = {
 
     pluginName : 'Engagement',
-    pluginVersion : '3.2.1',
+    pluginVersion : '3.2.2',
 
     onError : function(_error) {
         console.error(_error);
@@ -14,7 +14,7 @@ module.exports = {
 
     initializeReach : function(_onOpenURL,_onDataPushReceived) {
         this.openURLHandler  = _onOpenURL;
-        this.dataPushHandler  = _onDataPushReceived;  
+        this.dataPushHandler  = _onDataPushReceived;
         cordova.exec(this.handleOpenURL,this.onError, this.pluginName, 'enableURL' , []);
         cordova.exec(this.handleDataPush,this.onError, this.pluginName, 'enableDataPush' , []);
     },

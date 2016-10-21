@@ -287,10 +287,15 @@ Engagement.getStatus( _statusCallback, [_failure]);
 History
 ----
 
+##### 3.2.2
+* Fixed location reporting support for Cordova 6.3.x+
+* Fixed permissions support when using Fine Location reporting on Android
+* Updated Android SDK to 4.2.3
+* Updated Windows SDK to 2.0.1
+
 ##### 3.2.1
 * Added `permissionAllowed in `getStatus() 
 * Fixed exception during first run on Windows
-
 
 ##### 3.2.0
 * Updated iOS SDK to 4.0.0 to support iOS 10 / XCode 8
@@ -341,4 +346,5 @@ History
 ##### 1.0.0
 * Initial Release
     
-
+## Open Source Code of Conduct
+This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/). For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.

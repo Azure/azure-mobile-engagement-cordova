@@ -29,8 +29,8 @@ import com.microsoft.azure.engagement.shared.EngagementShared;
 public class AZME extends CordovaPlugin {
 
     private static final String pluginName = "CDVAZME";
-    private static final String pluginVersion = "3.2.1";
-    private static final String nativeSDKVersion = "4.1.0"; // to eventually retrieve from the SDK itself
+    private static final String pluginVersion = "3.2.2";
+    private static final String nativeSDKVersion = "4.2.3"; // to eventually retrieve from the SDK itself
 
     public CordovaInterface cordova = null;
     public CordovaWebView webView = null;
@@ -276,17 +276,10 @@ public class AZME extends CordovaPlugin {
            
         } else if (action.equals("requestPermissions")) {
 
-            JSONArray permissions = new JSONArray();
-            if (realtimeLocation || fineRealtimeLocation)
-                permissions.put("ACCESS_FINE_LOCATION");
-            else if (lazyAreaLocation)
-                permissions.put("ACCESS_COARSE_LOCATION");
-
-            JSONObject ret =  EngagementShared.instance().requestPermissions(permissions);
+            JSONObject ret =  EngagementShared.instance().requestPermissions(realtimeLocation,fineRealtimeLocation,lazyAreaLocation);
             if (!ret.has("error"))
                 callbackContext.success(ret);
-            else
-            {
+            else {
                 String errString = null;
                 try {
                     errString = ret.getString("error");
@@ -295,7 +288,6 @@ public class AZME extends CordovaPlugin {
                 }
                 callbackContext.error(errString);
             }
-
             return true;
         }
         else if (action.equals("setEnabled")) {

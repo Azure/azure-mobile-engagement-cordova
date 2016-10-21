@@ -19,6 +19,6 @@
         /* CORDOVA */
         "cordova" : false,
         /* AZME */
-        "AzureEngagement" : false
+        "Engagement" : false
   }
 }
