@@ -39,7 +39,10 @@ cordova plugin add cordova-plugin-ms-azure-mobile-engagement --variable KEY=<val
 
 #### Android Variables
 - `AZME_ANDROID_CONNECTION_STRING` : the Android connection string (to retrieve from the AZME portal)
-- `AZME_ANDROID_REACH_ICON` : the icon used for reach notification : must be the name of the resource without any extension, nor drawable prefix  (ex: `mynotificationicon`), and the icon file must be copied into your android project (`platforms/android/res/drawable)`
+- `AZME_ANDROID_REACH_ICON` : the icon used for reach notification
+  - must be the name of the resource without any extension, nor drawable prefix  (ex: `mynotificationicon`) 
+  - the icon file must be copied into your android project with its extension (ex: `platforms/android/res/drawable/mynotificationicon.png`) 
+ 
 - `AZME_ANDROID_GOOGLE_PROJECT_NUMBER` : the project number used as the GCM (Google Cloud Messaging) sender ID
 
 #### Windows Variables
@@ -286,6 +289,9 @@ Engagement.getStatus( _statusCallback, [_failure]);
 
 History
 ----
+
+##### 3.2.3
+* Updated iOS SDK to 4.0.1
 
 ##### 3.2.2
 * Fixed location reporting support for Cordova 6.3.x+
