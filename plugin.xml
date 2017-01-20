@@ -258,7 +258,7 @@
         <preference name="AZME_WINDOWS_CONNECTION_STRING"/>
 
         <js-module  name="EngagementProxy" src="src/winjs/EngagementProxy.js"  >
-            <merges target="" />
+            <runs />
         </js-module>
 
         <asset src="src/winjs/azure-engagement.js" target="plugins/cordova-plugin-ms-azure-mobile-engagement/libs/azure-engagement.js" />
