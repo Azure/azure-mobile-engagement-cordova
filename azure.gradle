@@ -18,4 +18,9 @@ android {
     defaultConfig {
         applicationId = doExtractStringFromManifest("package")
     }
+
+    packagingOptions { 
+        exclude "META-INF/MSFTSIG.SF" 
+        exclude "META-INF/MSFTSIG.RSA" 
+    }
 }
