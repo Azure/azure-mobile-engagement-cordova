@@ -10,9 +10,9 @@ This plugin integrates the Azure Mobile Engagement (AZME) SDK into your Cordova 
 
 Supported Platforms
 --
-* iOS
-* Android
-* Windows 10 Universal & Windows 8.1
+* iOS - [azure-mobile-engagement-app-ios](https://github.com/Azure/azure-mobile-engagement-app-ios)
+* Android - [azure-mobile-engagement-app-android](https://github.com/Azure/azure-mobile-engagement-app-android)
+* Windows 10 Universal & Windows 8.1 - [azure-mobile-engagement-app-windows](https://github.com/Azure/azure-mobile-engagement-app-windows)
 
 Supported Framework
 --
