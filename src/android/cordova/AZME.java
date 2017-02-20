@@ -324,6 +324,11 @@ public class AZME extends CordovaPlugin {
         EngagementShared.instance().onResume();
     }
 
+    public void onDestroy() {
+
+        EngagementShared.instance().onDestroy();
+    }
+
     public void onRequestPermissionResult(int requestCode, String[] permissions, int[] grantResults) throws JSONException {
         
         if (requestCode == 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)

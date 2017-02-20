@@ -394,6 +394,13 @@ public class EngagementShared  {
         checkDataPush();
     }
 
+    public void onDestroy() {
+
+        logD("onDestroy: endActivity");
+
+        EngagementAgent.getInstance(androidActivity).endActivity();
+    }
+
     @TargetApi(Build.VERSION_CODES.M)
     public JSONObject requestPermissions(boolean _realtimeLocation, boolean _fineRealtimeLocation, boolean _lazyAreaLocation)
     {
