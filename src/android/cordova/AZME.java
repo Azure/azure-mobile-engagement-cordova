@@ -324,6 +324,11 @@ public class AZME extends CordovaPlugin {
         EngagementShared.instance().onResume();
     }
 
+    public void onStop() {
+
+        EngagementShared.instance().onStop();
+    }
+
     public void onDestroy() {
 
         EngagementShared.instance().onDestroy();
