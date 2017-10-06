@@ -290,6 +290,10 @@ Engagement.getStatus( _statusCallback, [_failure]);
 History
 ----
 
+##### 3.3.0
+* Updated iOS SDK to 4.1.0 (iOS 6 deprecation, iOS 11 support)
+* Updated iOS SDK to 4.3.1 (Android O support)
+
 ##### 3.2.3
 * Updated iOS SDK to 4.0.1
 
