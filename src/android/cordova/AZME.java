@@ -30,7 +30,7 @@ public class AZME extends CordovaPlugin {
 
     private static final String pluginName = "CDVAZME";
     private static final String pluginVersion = "3.2.3";
-    private static final String nativeSDKVersion = "4.2.3"; // to eventually retrieve from the SDK itself
+    private static final String nativeSDKVersion = "4.3.1"; // to eventually retrieve from the SDK itself
 
     public CordovaInterface cordova = null;
     public CordovaWebView webView = null;

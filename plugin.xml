@@ -143,9 +143,8 @@
         <source-file src="src/android/shared/EngagementDataPushReceiver.java" target-dir="src/com/microsoft/azure/engagement/shared"/>
         <source-file src="src/android/shared/EngagementShared.java" target-dir="src/com/microsoft/azure/engagement/shared"/>
         <source-file src="src/android/shared/EngagementDelegate.java" target-dir="src/com/microsoft/azure/engagement/shared"/>
-        <source-file src="src/android/EngagementSDK/mobile-engagement-4.2.3.jar" target-dir="libs"/>
+        <source-file src="src/android/EngagementSDK/mobile-engagement-4.3.1.jar" target-dir="libs"/>
         <framework src="azure.gradle" custom="true" type="gradleReference" />
-        <framework src="com.android.support:support-v4:+" />
         <source-file src="src/android/EngagementSDK/res/drawable/engagement_close.png" target-dir="res/drawable"/>
         <source-file src="src/android/EngagementSDK/res/drawable/engagement_content_title.xml" target-dir="res/drawable"/>
         <source-file src="src/android/EngagementSDK/res/layout/engagement_button_bar.xml" target-dir="res/layout"/>
