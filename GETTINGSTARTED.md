@@ -10,7 +10,7 @@ cordova platform add ios
 ```
 Retrieve your credentials for the AZURE Portal to configure the AZME plugin
 ```sh
-cordova plugin add cordova-plugin-ms-azure-mobile-engagement --variable CONNECTION_STRING=<yourConnectionString> 
+cordova plugin add cordova-plugin-ms-azure-mobile-engagement --variable AZME_IOS_CONNECTION_STRING=<yourConnectionString> 
 --variable AZME_ACTION_URL=myapp 
 ```
 #### Send an activity to the AZME portal
