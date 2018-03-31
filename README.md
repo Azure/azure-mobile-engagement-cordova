@@ -1,4 +1,5 @@
-    
+# Azure Mobile Engagement service has been retired and is no longer available.
+
 Cordova plugin for Azure Mobile Engagement
 ----
 
