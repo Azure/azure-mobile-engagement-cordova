@@ -11,9 +11,9 @@ This plugin integrates the Azure Mobile Engagement (AZME) SDK into your Cordova 
 
 Supported Platforms
 --
-* iOS
-* Android
-* Windows 10 Universal & Windows 8.1
+* iOS - [azure-mobile-engagement-app-ios](https://github.com/Azure/azure-mobile-engagement-app-ios)
+* Android - [azure-mobile-engagement-app-android](https://github.com/Azure/azure-mobile-engagement-app-android)
+* Windows 10 Universal & Windows 8.1 - [azure-mobile-engagement-app-windows](https://github.com/Azure/azure-mobile-engagement-app-windows)
 
 Supported Framework
 --
@@ -140,6 +140,7 @@ Once the `deviceready` event has been triggered by the Cordova framework, a `Eng
 * Engagement.sendCrash
 * Engagement.isEnabled
 * Engagement.setEnabled
+* Engagement.initializeReach
 
 ### Engagement.startActivity
 
@@ -286,6 +287,40 @@ Engagement.getStatus( _statusCallback, [_failure]);
             console.log("Device ID : "+_info.deviceId); 
         });
 ```
+
+### Engagement.initializeReach
+Enables Reach and registers the application to receive push notification.
+
+```javascript
+Engagement.initializeReach( _openURLHandler, _dataPushHandler, [_success], [_failure]);
+```
+##### Params
+* `_onOpenURLHandler`:  the function to be called when an application specific URL is triggered (from a push campaign for example). The URL scheme must match the one defined in the `$AZME_ACTION_URL` setting
+* `_dataPushHandler`:  the function handler to receive the data push. The function needs to accept two parameters : the `category` , and the `body` 
+
+##### Example
+```javascript
+    onOpenURL = function(_url) {
+        console.log("user triggered url/action "+_url);
+    };
+    onDataPushReceived = function(_category,_body) {
+        if (_category=="png") {
+            str += '<img src="data:image/png;base64,'+_body+'" width="128" height="128" />';
+        } else {
+            str += _body;
+            // ....
+        }
+        return str;
+    };  
+    Engagement.initializeReach(onOpenURL,onDataPushReceived);
+```
+
+##### Notes
+* on IOS, this call will ask the user to autorize push notifications for your application, so it is recommended to trigger that call at the proper time (ie: once the users are engaged into your application)
+* If the body contains non-text data, it will be  received encoded in base64 format 
+  * If the data is an image, it can be directly displayed using the prefix  `data:image/png;base64` (cf. example)
+  * If you want to extract the data bytes, you would need to use the `btoa()` function to convert base64 to binary
+* Reach is not available on Windows yet!
 
 
 History
